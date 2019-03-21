@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "baseUrl": "",
+        "rootDir": "src",
+        "outDir": "lib",
+        "target": "es2018",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "noUnusedParameters": true,
+        "noUnusedLocals": true
+    },
+    "typedocOptions": {
+        "excludeExternals": true,
+        "excludePrivate": true,
+        "mode": "modules",
+        "name": "SetMeUp",
+        "out": "docs"
+    }
+}

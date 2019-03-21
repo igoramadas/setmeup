@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for setmeup/lib/crypto.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">setmeup/lib/</a> crypto.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">87.8% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>72/82</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">70.59% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>36/51</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>2/2</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">87.8% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>72/82</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">10×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+/**
+ * SetMeUp: Crypto Helper
+ */
+Object.defineProperty(exports, "__esModule", { value: true });
+const utils = require("./utils");
+const child_process_1 = require("child_process");
+const _ = require("lodash");
+const crypto = require("crypto");
+const fs = require("fs");
+/** Default IV value in case one is not provided */
+let defaultIV = "8407198407191984";
+/**
+ * Helper to encrypt or decrypt settings files. The default encryption key
+ * defined on the `Settings.coffee` file is a static string (see below) , which
+ * you should change to your desired value, along with the IV. You can also
+ * set them via the SETMEUP_CRYPTOKEY and SETMEUP_CRYPTOIV environment variables.
+ * The default cipher algorithm is AES 256.
+ * Failure to encrypt or decrypt will throw an exception.
+ * @param action Action can be "encrypt" or "decrypt"
+ * @param filename The file to be encrypted or decrypted.
+ * @param options Encryption options with cipher, key and IV.
+ */
+function CryptoMethod(action, filename, options) {
+    let env = process.env.NODE_ENV || <span class="branch-1 cbranch-no" title="branch not covered" >"development";</span>
+    if (options == null) {
+        options = {};
+    }
+    action = action.toString().toLowerCase();
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (action != "encrypt" &amp;&amp; action != "decrypt") {
+<span class="cstat-no" title="statement not covered" >        throw new Error("The action must be 'encrypt' or 'decrypt'.");</span>
+    }
+    options = _.defaults(options, {
+        cipher: "aes256",
+        key: env["SETMEUP_CRYPTOKEY"],
+        iv: env["SETMEUP_CRYPTOIV"]
+    });
+    if (!options.key) {
+        options.key = getMachineID();
+    }
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (!options.iv) {
+        options.iv = defaultIV;
+    }
+    const settingsJson = utils.loadJson(filename);
+    // Settings file not found or invalid? Stop here.
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (settingsJson == null) {
+<span class="cstat-no" title="statement not covered" >        throw new Error("Can't (de)encrypt, settings file not found or empty.");</span>
+    }
+    // If trying to encrypt and settings property `encrypted` is true,
+    // abort encryption and log to the console.
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (settingsJson.encrypted &amp;&amp; action == "encrypt") {
+<span class="cstat-no" title="statement not covered" >        console.warn("Settings.cryptoHelper", action, filename, "Property 'encrypted' is true, abort!");</span>
+<span class="cstat-no" title="statement not covered" >        return;</span>
+    }
+    // Helper to parse and encrypt / decrypt settings data.
+    var parser = obj =&gt; {
+        let currentValue = null;
+        for (let prop in obj) {
+            const value = obj[prop];
+            if ((value != null ? value.constructor : <span class="branch-1 cbranch-no" title="branch not covered" >undefined)</span> === Object) {
+                parser(obj[prop]);
+            }
+            else {
+                var newValue;
+                try {
+                    var c;
+                    currentValue = obj[prop];
+                    if (action == "encrypt") {
+                        // Check the property data type and prefix the new value.
+                        if (_.isBoolean(currentValue)) {
+                            newValue = "bool:";
+                        }
+                        else if (_.isNumber(currentValue)) {
+                            newValue = "number:";
+                        }
+                        else {
+                            newValue = "string:";
+                        }
+                        // Create cipher amd encrypt data.
+                        c = crypto.createCipheriv(options.cipher, options.key, options.iv);
+                        newValue += c.update(currentValue.toString(), "utf8", "hex");
+                        newValue += c.final("hex");
+                    }
+                    else <span class="missing-if-branch" title="else path not taken" >E</span>if (action == "decrypt") {
+                        // Split the data as "datatype:encryptedValue".
+                        const arrValue = currentValue.split(":");
+                        newValue = "";
+                        // Create cipher and decrypt.
+                        c = crypto.createDecipheriv(options.cipher, options.key, options.iv);
+                        newValue += c.update(arrValue[1], "hex", "utf8");
+                        newValue += c.final("utf8");
+                        // Cast data type (boolean, number or string).
+                        if (arrValue[0] === "bool") {
+                            <span class="missing-if-branch" title="else path not taken" >E</span>if (newValue === "true" || <span class="branch-1 cbranch-no" title="branch not covered" >newValue === "1")</span> {
+                                newValue = true;
+                            }
+                            else {
+<span class="cstat-no" title="statement not covered" >                                newValue = false;</span>
+                            }
+                        }
+                        else if (arrValue[0] === "number") {
+                            newValue = parseFloat(newValue);
+                        }
+                    }
+                }
+                catch (ex) {
+                    ex.friendlyMessage = `Can't ${action}: ${currentValue}. Make sure key and IV are correct for encryption.`;
+                    throw ex;
+                }
+                // Update settings property value.
+                obj[prop] = newValue;
+            }
+        }
+    };
+    // Remove `encrypted` property prior to decrypting.
+    if (action == "decrypt") {
+        delete settingsJson["encrypted"];
+    }
+    // Process settings data.
+    parser(settingsJson);
+    // Add `encrypted` property after file is encrypted.
+    if (action == "encrypt") {
+        settingsJson.encrypted = true;
+    }
+    // Stringify and save the new settings file.
+    const newSettingsJson = JSON.stringify(settingsJson, null, 4);
+    fs.writeFileSync(filename, newSettingsJson, { encoding: "utf8" });
+}
+exports.CryptoMethod = CryptoMethod;
+function getMachineID() {
+    let windowsArc = null;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (process.arch == "ia32" &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >process.env.hasOwnProperty("PROCESSOR_ARCHITEW6432"))</span> {
+<span class="cstat-no" title="statement not covered" >        windowsArc = "mixed";</span>
+    }
+    else {
+        windowsArc = "native";
+    }
+    let { platform } = process;
+    let win32RegBinPath = {
+        native: "%windir%\\System32",
+        mixed: "%windir%\\sysnative\\cmd.exe /c %windir%\\System32"
+    };
+    let guid = {
+        darwin: "ioreg -rd1 -c IOPlatformExpertDevice",
+        win32: `${win32RegBinPath[windowsArc]}\\REG ` + "QUERY HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Cryptography " + "/v MachineGuid",
+        linux: "( cat /var/lib/dbus/machine-id /etc/machine-id 2&gt; /dev/null || hostname ) | head -n 1 || :",
+        freebsd: "kenv -q smbios.system.uuid"
+    };
+    let result = child_process_1.execSync(guid[platform]).toString();
+    switch (platform) {
+        case "darwin":
+            return result
+                .split("IOPlatformUUID")[1]
+                .split("\n")[0]
+                .replace(/\=|\s+|\"/gi, "")
+                .toLowerCase()
+                .substring(0, 32);
+<span class="branch-1 cbranch-no" title="branch not covered" >        case "win32":</span>
+<span class="cstat-no" title="statement not covered" >            return result</span>
+                .toString()
+                .split("REG_SZ")[1]
+                .replace(/\r+|\n+|\s+/gi, "")
+                .toLowerCase()
+                .substring(0, 32);
+<span class="branch-2 cbranch-no" title="branch not covered" >        case "linux":</span>
+<span class="cstat-no" title="statement not covered" >            return result</span>
+                .toString()
+                .replace(/\r+|\n+|\s+/gi, "")
+                .toLowerCase()
+                .substring(0, 32);
+<span class="branch-3 cbranch-no" title="branch not covered" >        case "freebsd":</span>
+<span class="cstat-no" title="statement not covered" >            return result</span>
+                .toString()
+                .replace(/\r+|\n+|\s+/gi, "")
+                .toLowerCase()
+                .substring(0, 32);
+<span class="branch-4 cbranch-no" title="branch not covered" >        default:</span>
+<span class="cstat-no" title="statement not covered" >            return "ExpresserSettingsEncryptionKey32";</span>
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Mar 21 2019 23:34:40 GMT+0100 (Central European Standard Time)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

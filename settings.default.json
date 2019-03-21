@@ -1,0 +1,12 @@
+// DEFAULT SETMEUP SETTINGS
+
+{
+    // GENERAL
+    // -------------------------------------------------------------------------
+    "general": {
+        // Enable or disable debugging messages. Should be false on production environments.
+        "debug": false,
+        // Default encoding to be used when reading and writing data.
+        "encoding": "utf8"
+    }
+}

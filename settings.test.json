@@ -1,0 +1,7 @@
+{
+    "something": {
+        "number": 1,
+        "string": "abc",
+        "boolean": true
+    }
+}
