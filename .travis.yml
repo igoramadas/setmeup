@@ -1,0 +1,15 @@
+sudo: false
+language: node_js
+node_js:
+  - "11.12"
+  - "10.15"
+after_success:
+  - "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+env:
+  - CXX=g++-5
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-5
