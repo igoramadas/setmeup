@@ -22,8 +22,7 @@
     },
     "scripts": {
         "docs": "make docs",
-        "cover": "make cover",
-        "test": "make test"
+        "test": "make test-cover"
     },
     "dependencies": {
         "eventemitter3": "^3.1.0",
