@@ -5,5 +5,3 @@ node_js:
   - "10.15"
 after_success:
   - "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
-env:
-  - CXX=g++-5
