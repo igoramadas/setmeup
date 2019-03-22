@@ -1,19 +1,19 @@
 // TEST: MAIN
 
-var env = process.env
-var chai = require("chai")
-var mocha = require("mocha")
-var describe = mocha.describe
-var before = mocha.before
-var after = mocha.after
-var it = mocha.it
+let chai = require("chai")
+let mocha = require("mocha")
+let before = mocha.before
+let describe = mocha.describe
+let it = mocha.it
+
 chai.should()
 
 describe("SetMeUp Main Tests", function() {
-    env.NODE_ENV = "test"
-    process.setMaxListeners(20)
+    let setmeup = null
 
-    var setmeup = require("../index")
+    before(function() {
+        setmeup = require("../index")
+    })
 
     it("Load test settings", function(done) {
         setmeup.load("./settings.test.json")
@@ -22,6 +22,28 @@ describe("SetMeUp Main Tests", function() {
             done()
         } else {
             done("Loaded settings should have property something.number = 1")
+        }
+    })
+
+    it("Creates new instance that differs from original", function(done) {
+        let otherInstance = setmeup.newInstance()
+
+        setmeup.settings.updatedValue = true
+
+        if (otherInstance.settings.updatedValue) {
+            done("Settting a property on updatedValue instance should not reflect on new instance.")
+        } else {
+            done()
+        }
+    })
+
+    it("Resets to original", function(done) {
+        setmeup.reset()
+
+        if (setmeup.settings.updatedValue) {
+            done("Calling reset should clear the updatedValue property.")
+        } else {
+            done()
         }
     })
 })

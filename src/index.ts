@@ -23,10 +23,17 @@ class SetMeUp {
         return this._instance || (this._instance = new this())
     }
 
-    /** Returns a new fresh instance of the SetMeUp module. */
-    static newInstance(): SetMeUp {
+    /**
+     * Returns a new fresh instance of the SetMeUp module.
+     * @param clean Optional, if true will not load settings from file on new instance.
+     */
+    newInstance(clean?: boolean): SetMeUp {
         const obj = new SetMeUp()
-        obj.load()
+
+        if (!clean) {
+            obj.load()
+        }
+
         return obj
     }
 
@@ -39,12 +46,20 @@ class SetMeUp {
     /** Array of loaded files */
     files: LoadedFile[]
 
-    constructor() {
+    /**
+     * Default SetMeUp constructor.
+     * @param clean Optional, if true will not load settings from file on new instance.
+     */
+    constructor(clean?: boolean) {
         env = process.env.NODE_ENV || "development"
 
         this.events = new EventEmitter()
         this.files = []
         this.settings = {general: {debug: false}}
+
+        if (!clean) {
+            this.load()
+        }
     }
 
     on(eventName: string, callback: EventEmitter.ListenerFn) {
@@ -72,8 +87,12 @@ class SetMeUp {
             overwrite = true
         }
 
+        // No filenames passed? Load the default ones.
+        if (!filenames) {
+            filenames = ["settings.default.json", "settings.json", `settings.${env}.json`]
+        }
         // Make sure we're dealing with array of filenames by default.
-        if (_.isString(filenames)) {
+        else if (_.isString(filenames)) {
             filenames = [filenames as string]
         }
 
@@ -114,8 +133,7 @@ class SetMeUp {
     reset(): void {
         this.unwatch()
         this.files = []
-        SetMeUp._instance = new SetMeUp()
-        SetMeUp._instance.load()
+        this.settings = {general: {debug: false}}
     }
 
     // ENCRYPTION

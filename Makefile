@@ -1,25 +1,15 @@
-ifeq ($(OS),Windows_NT)
-	MOCHA:= node_modules/.bin/mocha.cmd
-	MOCHAEXEC:= node_modules/.bin/_mocha
-	ISTANBUL:= node_modules/istanbul/lib/cli.js
-	TESTPATH:= test/*.js
-	TYPEDOC:= node_modules/.bin/typedoc.cmd
-else
-	MOCHA:= ./node_modules/.bin/mocha
-	MOCHAEXEC:= ./node_modules/.bin/_mocha
-	ISTANBUL:= ./node_modules/istanbul/lib/cli.js
-	TESTPATH:= ./test/*.js
-	TYPEDOC:= ./node_modules/.bin/typedoc
-endif
-
-build:
-
+MOCHA:= @NODE_ENV=test ./node_modules/.bin/mocha
+MOCHAEXEC:= ./node_modules/.bin/_mocha
+ISTANBUL:= ./node_modules/istanbul/lib/cli.js
+TESTPATH:= ./test/*.js
+TYPEDOC:= ./node_modules/.bin/typedoc
 
 test:
 	tsc
-	$(MOCHA) --trace-warnings --exit -u tdd -R spec
+	@NODE_ENV=test $(MOCHA) --trace-warnings --exit -u tdd -R spec
 
 cover:
+	tsc
 	$(ISTANBUL) cover $(MOCHAEXEC) -- -R spec $(TESTPATH)
 
 docs:

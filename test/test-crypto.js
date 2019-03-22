@@ -1,23 +1,24 @@
 // TEST: CRYPTO
 
-var env = process.env
-var chai = require("chai")
-var mocha = require("mocha")
-var describe = mocha.describe
-var before = mocha.before
-var after = mocha.after
-var it = mocha.it
+let chai = require("chai")
+let fs = require("fs")
+let mocha = require("mocha")
+let after = mocha.after
+let before = mocha.before
+let describe = mocha.describe
+let it = mocha.it
+
 chai.should()
 
 describe("SetMeUp Crypto Tests", function() {
-    env.NODE_ENV = "test"
-    process.setMaxListeners(20)
-
-    var setmeup = require("../index")
-    var fs = require("fs")
-    var cryptoFilename = null
+    let setmeup = null
+    let crypto = null
+    let utils = null
+    let cryptoFilename = null
 
     before(function() {
+        setmeup = require("../index")
+        crypto = require("../lib/crypto")
         utils = require("../lib/utils")
 
         const originalFilename = utils.getFilePath("./settings.test.json")
@@ -28,7 +29,7 @@ describe("SetMeUp Crypto Tests", function() {
 
     after(function() {
         if (fs.existsSync(cryptoFilename)) {
-            //fs.unlinkSync(cryptoFilename)
+            fs.unlinkSync(cryptoFilename)
         }
     })
 
@@ -51,6 +52,14 @@ describe("SetMeUp Crypto Tests", function() {
         done()
     })
 
+    it("Fails to encrypt already encrypted file", function(done) {
+        if (setmeup.encrypt(cryptoFilename)) {
+            done("Encrypting an already encrypted file should return false.")
+        } else {
+            done()
+        }
+    })
+
     it("Fails to decrypt settings with wrong key", function(done) {
         try {
             setmeup.decrypt(cryptoFilename, {
@@ -58,6 +67,16 @@ describe("SetMeUp Crypto Tests", function() {
             })
 
             done("Decryption with wrong key should have thrown an exception.")
+        } catch (ex) {
+            done()
+        }
+    })
+
+    it("Fails to decrypt non existing file", function(done) {
+        try {
+            setmeup.decrypt("wrongfile.json")
+
+            done("Decrypting non existing file should thrown an exception.")
         } catch (ex) {
             done()
         }

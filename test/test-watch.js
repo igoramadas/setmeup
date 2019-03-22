@@ -1,25 +1,23 @@
 // TEST: WATCH
 
-var env = process.env
-var chai = require("chai")
-var mocha = require("mocha")
-var describe = mocha.describe
-var before = mocha.before
-var after = mocha.after
-var it = mocha.it
+let chai = require("chai")
+let fs = require("fs")
+let mocha = require("mocha")
+let after = mocha.after
+let before = mocha.before
+let describe = mocha.describe
+let it = mocha.it
+
 chai.should()
 
 describe("SetMeUp Watch Tests", function() {
-    env.NODE_ENV = "test"
-    process.setMaxListeners(20)
-
-    var setmeup = require("../index")
-    var fs = require("fs")
-    var utils = null
+    let setmeup = null
+    let utils = null
 
     var filename = "./settings.test.json"
 
     before(function() {
+        setmeup = require("../index")
         setmeup.load("settings.test.json")
 
         utils = require("../lib/utils")
@@ -30,7 +28,7 @@ describe("SetMeUp Watch Tests", function() {
     })
 
     it("Settings file watchers properly working", function(done) {
-        this.timeout(8000)
+        this.timeout(7000)
 
         var doneCalled = false
 
@@ -51,6 +49,8 @@ describe("SetMeUp Watch Tests", function() {
             fs.writeFileSync(filename, originalJson, {
                 encoding: "utf8"
             })
+
+            setmeup.off("load", callback)
 
             done()
         }
@@ -74,6 +74,6 @@ describe("SetMeUp Watch Tests", function() {
             }
         }
 
-        setTimeout(writer, 800)
+        setTimeout(writer, 500)
     })
 })

@@ -29,8 +29,10 @@ export interface CryptoOptions {
  * @param action Action can be "encrypt" or "decrypt"
  * @param filename The file to be encrypted or decrypted.
  * @param options Encryption options with cipher, key and IV.
+ * @returns True if file is encrypted successfully, false (or exception throw) otherwise
+ * @protected
  */
-export function CryptoMethod(action: string, filename: string, options?: CryptoOptions): void {
+export function CryptoMethod(action: string, filename: string, options?: CryptoOptions): boolean {
     let env = process.env.NODE_ENV || "development"
 
     if (options == null) {
@@ -39,19 +41,18 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
 
     action = action.toString().toLowerCase()
 
-    if (action != "encrypt" && action != "decrypt") {
-        throw new Error("The action must be 'encrypt' or 'decrypt'.")
-    }
-
     options = _.defaults(options, {
         cipher: "aes256",
         key: env["SETMEUP_CRYPTOKEY"],
         iv: env["SETMEUP_CRYPTOIV"]
     })
 
+    // No encryption key specified? Use the Machine ID then.
     if (!options.key) {
         options.key = getMachineID()
     }
+
+    // No IV specified? Use default (set on top of this file).
     if (!options.iv) {
         options.iv = defaultIV
     }
@@ -65,9 +66,9 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
 
     // If trying to encrypt and settings property `encrypted` is true,
     // abort encryption and log to the console.
-    if (settingsJson.encrypted && action == "encrypt") {
+    if (settingsJson.encrypted && action == "encrypt" && env != "test") {
         console.warn("Settings.cryptoHelper", action, filename, "Property 'encrypted' is true, abort!")
-        return
+        return false
     }
 
     // Helper to parse and encrypt / decrypt settings data.
@@ -146,8 +147,14 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
     // Stringify and save the new settings file.
     const newSettingsJson = JSON.stringify(settingsJson, null, 4)
     fs.writeFileSync(filename, newSettingsJson, {encoding: "utf8"})
-}
 
+    return true
+}
+/**
+ * Gets a unique machine ID. This is mainly used to get a valid encryption key
+ * in case none is specified when encrypting / decrypting.
+ * @protected
+ */
 function getMachineID(): string {
     let windowsArc = null
 
@@ -199,6 +206,6 @@ function getMachineID(): string {
                 .toLowerCase()
                 .substring(0, 32)
         default:
-            return "ExpresserSettingsEncryptionKey32"
+            return "SetMeUp32SettingsEncryptionKey32"
     }
 }

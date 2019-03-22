@@ -7,17 +7,28 @@ const fs = require("fs")
 const path = require("path")
 
 /**
- * Finds the correct path to the file looking first on current directory, then the running
- * directory, then the root directory of the app, then the parent of the root.
+ * Finds the correct path to the file looking first on the (optional) base path
+ * then the current or running directory, finally the root directory.
  * Returns null if file is not found.
- * @param filename - The filename to be searched
+ * @param filename The filename to be searched
+ * @param basepath Optional, basepath where to look for the file.
  * @returns The full path to the file if one was found, or null if not found.
  */
-export function getFilePath(filename: string) {
+export function getFilePath(filename: string, basepath?: string): string {
     const originalFilename = filename.toString()
+    let hasFile = false
 
-    // Check if file exists on current directory.
-    let hasFile = fs.existsSync(`./${filename}`)
+    // A basepath was passed? Try there first.
+    if (basepath) {
+        filename = path.resolve(basepath, originalFilename)
+        hasFile = fs.existsSync(filename)
+        if (hasFile) {
+            return filename
+        }
+    }
+
+    // Check if correct full path was passed.
+    hasFile = fs.existsSync(filename)
     if (hasFile) {
         return filename
     }
@@ -31,19 +42,6 @@ export function getFilePath(filename: string) {
 
     // Try application root path.
     filename = path.resolve(path.dirname(require.main.filename), originalFilename)
-    hasFile = fs.existsSync(filename)
-    if (hasFile) {
-        return filename
-    }
-
-    // Try parent paths...
-    filename = path.resolve(__dirname, "../../", originalFilename)
-    hasFile = fs.existsSync(filename)
-    if (hasFile) {
-        return filename
-    }
-
-    filename = path.resolve(__dirname, "../", originalFilename)
     hasFile = fs.existsSync(filename)
     if (hasFile) {
         return filename
