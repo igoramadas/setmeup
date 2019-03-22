@@ -1,7 +1,7 @@
+COVERALLS :=./node_modules/coveralls/bin/coveralls.js
 MOCHA:= ./node_modules/.bin/mocha
 MOCHAEXEC:= ./node_modules/.bin/_mocha
-ISTANBUL:= ./node_modules/istanbul/lib/cli.js
-TESTPATH:= ./test/*.js
+ISTANBUL:= ./node_modules/.bin/istanbul
 TYPEDOC:= ./node_modules/.bin/typedoc
 
 test:
@@ -10,9 +10,13 @@ test:
 
 test-cover:
 	echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
-	@NODE_ENV=test ./node_modules/.bin/istanbul cover \
-	./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && \
-	cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js || true
+	@NODE_ENV=test $(ISTANBUL) cover \
+	$(MOCHAEXEC) --report lcovonly -- -R spec && \
+	cat ./coverage/lcov.info | $(COVERALLS) || true
+
+cover:
+	tsc
+	$(ISTANBUL) cover $(MOCHAEXEC) -- -R spec ./test/*.js
 
 docs:
 	$(TYPEDOC)
