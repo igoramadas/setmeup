@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "description": "SetMeUp, your single and only settings manager.",
     "keywords": [
+        "setmeup",
         "app settings",
         "configuration",
-        "setmeup",
         "settings"
     ],
     "author": "Igor Ramadas <igor@devv.com>",
