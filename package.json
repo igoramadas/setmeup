@@ -29,7 +29,7 @@
         "lodash": "^4.17.11"
     },
     "devDependencies": {
-        "@types/node": "^11.11.4",
+        "@types/node": "^11.11.5",
         "anyhow": "^0.9.0",
         "chai": "^4.2.0",
         "coveralls": "^3.0.3",
