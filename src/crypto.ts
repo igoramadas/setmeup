@@ -9,6 +9,8 @@ const _ = require("lodash")
 const crypto = require("crypto")
 const fs = require("fs")
 
+let anyhow = null
+
 /** Default IV value in case one is not provided */
 let defaultIV = "8407198407191984"
 
@@ -64,10 +66,8 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
         throw new Error("Can't (de)encrypt, settings file not found or empty.")
     }
 
-    // If trying to encrypt and settings property `encrypted` is true,
-    // abort encryption and log to the console.
+    // If trying to encrypt and settings property `encrypted` is true, return false.
     if (settingsJson.encrypted && action == "encrypt" && env != "test") {
-        console.warn("Settings.cryptoHelper", action, filename, "Property 'encrypted' is true, abort!")
         return false
     }
 

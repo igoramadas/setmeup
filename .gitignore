@@ -1,2 +1,6 @@
-.history
+.DS_Store
+.history/
+.vscode/
 coverage/
+node_modules/
+npm-debug.log

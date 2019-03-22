@@ -8,7 +8,9 @@ import EventEmitter = require("eventemitter3")
 
 const _ = require("lodash")
 const fs = require("fs")
-let env = null
+
+let env = process.env.NODE_ENV || "development"
+let anyhow = null
 
 /** Represents a loaded file. */
 interface LoadedFile {
@@ -38,24 +40,26 @@ class SetMeUp {
     }
 
     /** Event emitter, internal only */
-    events: EventEmitter
+    events: EventEmitter = new EventEmitter()
 
     /** Object that hold the actual settings */
-    settings: any
+    settings: any = {}
 
     /** Array of loaded files */
-    files: LoadedFile[]
+    files: LoadedFile[] = []
 
     /**
      * Default SetMeUp constructor.
      * @param clean Optional, if true will not load settings from file on new instance.
      */
     constructor(clean?: boolean) {
-        env = process.env.NODE_ENV || "development"
-
-        this.events = new EventEmitter()
-        this.files = []
-        this.settings = {general: {debug: false}}
+        if (!anyhow) {
+            try {
+                anyhow = require("anyhow")
+            } catch (ex) {
+                // Anyhow module not found
+            }
+        }
 
         if (!clean) {
             this.load()
@@ -104,8 +108,8 @@ class SetMeUp {
                 this.files.push({filename, watching: false})
             }
 
-            if (this.settings.general.debug && env != "test") {
-                console.log("Settings.load", filename)
+            if (env != "test" && anyhow) {
+                anyhow.debug("SetMeUp.load", filename)
             }
 
             // Extend loaded settings.
@@ -177,16 +181,16 @@ class SetMeUp {
                     return fs.watchFile(filename, {persistent: true}, () => {
                         this.load(filename)
 
-                        if (env != "test") {
-                            console.log("Settings.watch", f, "Reloaded")
+                        if (env != "test" && anyhow) {
+                            anyhow.info("Settings.watch", f, "Reloaded")
                         }
                     })
                 }
             })(f)
         }
 
-        if (this.settings.general.debug && env != "test") {
-            return console.log("Settings.watch")
+        if (env != "test" && anyhow) {
+            anyhow.info("Settings.watch")
         }
     }
 
@@ -206,11 +210,13 @@ class SetMeUp {
                 }
             }
         } catch (ex) {
-            console.error("Settings.unwatch", ex)
+            if (anyhow) {
+                anyhow.error("Settings.unwatch", ex)
+            }
         }
 
-        if (this.settings.general.debug && env != "test") {
-            return console.log("Settings.unwatch")
+        if (env != "test" && anyhow) {
+            return anyhow.info("Settings.unwatch")
         }
     }
 }
