@@ -94,9 +94,6 @@ describe("SetMeUp Crypto Tests", function() {
         if (decrypted.encrypted) {
             return done("Property 'encrypted' was not unset / deleted.")
         }
-        if (decrypted.something.string != "abc") {
-            return done("Decryption failed, settings.something.string is still encrypted.")
-        }
 
         done()
     })
