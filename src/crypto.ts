@@ -11,6 +11,12 @@ const fs = require("fs")
 
 let anyhow = null
 
+try {
+    anyhow = require("anyhow")
+} catch (ex) {
+    // Anyhow module not found
+}
+
 /** Default IV value in case one is not provided */
 let defaultIV = "8407198407191984"
 
@@ -68,6 +74,9 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
 
     // If trying to encrypt and settings property `encrypted` is true, return false.
     if (settingsJson.encrypted && action == "encrypt" && env != "test") {
+        if (anyhow) {
+            anyhow.warn("Setmeup.CryptoMethod", filename, "Already encrypted, abort!")
+        }
         return false
     }
 
