@@ -10,7 +10,7 @@ const _ = require("lodash")
 const fs = require("fs")
 
 let env = process.env.NODE_ENV || "development"
-let anyhow = null
+let logger = null
 
 /** Represents a loaded file. */
 interface LoadedFile {
@@ -39,7 +39,7 @@ class SetMeUp {
         return obj
     }
 
-    /** Event emitter, internal only */
+    /** Event emitter */
     events: EventEmitter = new EventEmitter()
 
     /** Object that hold the actual settings */
@@ -53,9 +53,9 @@ class SetMeUp {
      * @param clean Optional, if true will not load settings from file on new instance.
      */
     constructor(clean?: boolean) {
-        if (!anyhow) {
+        if (!logger) {
             try {
-                anyhow = require("anyhow")
+                logger = require("anyhow")
             } catch (ex) {
                 // Anyhow module not found
             }
@@ -109,7 +109,7 @@ class SetMeUp {
             }
 
             if (env != "test" && anyhow) {
-                anyhow.debug("SetMeUp.load", filename)
+                logger.debug("SetMeUp.load", filename)
             }
 
             // Extend loaded settings.
@@ -182,7 +182,7 @@ class SetMeUp {
                         this.load(filename)
 
                         if (env != "test" && anyhow) {
-                            anyhow.info("Settings.watch", f, "Reloaded")
+                            logger.info("Settings.watch", f, "Reloaded")
                         }
                     })
                 }
@@ -190,7 +190,7 @@ class SetMeUp {
         }
 
         if (env != "test" && anyhow) {
-            anyhow.info("Settings.watch")
+            logger.info("Settings.watch")
         }
     }
 
@@ -211,12 +211,12 @@ class SetMeUp {
             }
         } catch (ex) {
             if (anyhow) {
-                anyhow.error("Settings.unwatch", ex)
+                logger.error("Settings.unwatch", ex)
             }
         }
 
         if (env != "test" && anyhow) {
-            return anyhow.info("Settings.unwatch")
+            return logger.info("Settings.unwatch")
         }
     }
 }

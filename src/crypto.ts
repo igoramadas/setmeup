@@ -9,10 +9,10 @@ const _ = require("lodash")
 const crypto = require("crypto")
 const fs = require("fs")
 
-let anyhow = null
+let logger = null
 
 try {
-    anyhow = require("anyhow")
+    logger = require("anyhow")
 } catch (ex) {
     // Anyhow module not found
 }
@@ -75,7 +75,7 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
     // If trying to encrypt and settings property `encrypted` is true, return false.
     if (settingsJson.encrypted && action == "encrypt" && env != "test") {
         if (anyhow) {
-            anyhow.warn("Setmeup.CryptoMethod", filename, "Already encrypted, abort!")
+            logger.warn("Setmeup.CryptoMethod", filename, "Already encrypted, abort!")
         }
         return false
     }
