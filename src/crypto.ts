@@ -86,10 +86,12 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
 
         for (let prop in obj) {
             const value = obj[prop]
-            if ((value != null ? value.constructor : undefined) === Object) {
+
+            if (value && value.constructor === Object) {
                 parser(obj[prop])
             } else {
                 var newValue
+
                 try {
                     var c
                     currentValue = obj[prop]

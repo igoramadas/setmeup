@@ -15,6 +15,14 @@ describe("SetMeUp Main Tests", function() {
         setmeup = require("../index")
     })
 
+    it("Try loading settings from invalid file", function(done) {
+        if (setmeup.load("invalid-settings") == null) {
+            done()
+        } else {
+            done("The load() call should have returned null.")
+        }
+    })
+
     it("Load test settings", function(done) {
         setmeup.load("./settings.test.json")
 
