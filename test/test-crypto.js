@@ -12,13 +12,13 @@ chai.should()
 
 describe("SetMeUp Crypto Tests", function() {
     let setmeup = null
-    let crypto = null
     let utils = null
     let cryptoFilename = null
 
     before(function() {
+        require("anyhow").setup("none")
+
         setmeup = require("../index")
-        crypto = require("../lib/crypto")
         utils = require("../lib/utils")
 
         const originalFilename = utils.getFilePath("./settings.test.json")
@@ -96,5 +96,23 @@ describe("SetMeUp Crypto Tests", function() {
         }
 
         done()
+    })
+
+    it("Encrypt and decrypt with custom key and IV", function(done) {
+        let iv = "1234567890987654"
+
+        try {
+            setmeup.encrypt(cryptoFilename, {
+                iv: iv
+            })
+
+            setmeup.decrypt(cryptoFilename, {
+                iv: iv
+            })
+
+            done()
+        } catch (ex) {
+            done(`Error (de)encrypting using custom parameters: ${ex.toString()}`)
+        }
     })
 })

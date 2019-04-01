@@ -12,6 +12,8 @@ describe("SetMeUp Crypto Tests", function() {
     let utils = null
 
     before(function() {
+        require("anyhow").setup("none")
+
         utils = require("../lib/utils")
     })
 

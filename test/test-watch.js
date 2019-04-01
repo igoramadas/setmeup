@@ -17,6 +17,8 @@ describe("SetMeUp Watch Tests", function() {
     var filename = "./settings.test.json"
 
     before(function() {
+        require("anyhow").setup("none")
+
         setmeup = require("../index")
         setmeup.load("settings.test.json")
 

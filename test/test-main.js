@@ -12,6 +12,8 @@ describe("SetMeUp Main Tests", function() {
     let setmeup = null
 
     before(function() {
+        require("anyhow").setup("none")
+
         setmeup = require("../index")
     })
 

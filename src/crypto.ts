@@ -73,7 +73,7 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
     }
 
     // If trying to encrypt and settings property `encrypted` is true, return false.
-    if (settingsJson.encrypted && action == "encrypt" && env != "test") {
+    if (settingsJson.encrypted && action == "encrypt") {
         if (logger) {
             logger.warn("Setmeup.CryptoMethod", filename, "Already encrypted, abort!")
         }
