@@ -62,8 +62,29 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="appsettings">appsettings</h1>
-				<p>Easy to use app settings module.</p>
+				<h1 id="setmeup">SetMeUp</h1>
+				<p><a href="https://travis-ci.org/igoramadas/setmeup"><img src="https://img.shields.io/travis/igoramadas/setmeup.svg?style=flat-square" alt="Build Status"></a>
+				<a href="https://coveralls.io/github/igoramadas/setmeup?branch=master"><img src="https://img.shields.io/travis/igoramadas/setmeup.svg?style=flat-square" alt="Coverage Status"></a></p>
+				<p>Easy to use app settings module. Settings are mainly defined on JSON files, but can
+				also be loaded from environment variables.</p>
+				<h2 id="loading-from-json-files">Loading from JSON files</h2>
+				<pre><code>setmeup = require(<span class="hljs-string">"setmeup"</span>)
+
+<span class="hljs-comment">// By default it will load from settings.default.json, settings.json and settings.ENV.json.</span>
+<span class="hljs-comment">// Here we load settings from a custom file:</span>
+<span class="hljs-comment">// {</span>
+<span class="hljs-comment">//   "app": {</span>
+<span class="hljs-comment">//     "port": 8080,</span>
+<span class="hljs-comment">//     "title": "My App"</span>
+<span class="hljs-comment">//   }</span>
+<span class="hljs-comment">// }</span>
+setmeup.load(<span class="hljs-string">"settings.custom.json"</span>)
+
+settings = setmeup<span class="hljs-selector-class">.settings</span>
+
+<span class="hljs-comment">// Server listens to port defined on settings.</span>
+myExpressApp.listen(settings<span class="hljs-selector-class">.app</span><span class="hljs-selector-class">.port</span>)</code></pre><h2 id="loading-from-environment-variables">Loading from environment variables</h2>
+				<p>Soon...</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
