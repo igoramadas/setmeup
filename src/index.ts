@@ -20,39 +20,44 @@ interface LoadedFile {
 
 /** Main SetMeUp class. */
 class SetMeUp {
-    private static _instance: SetMeUp
+    private static _instance: SetMeUp = null
     static get Instance() {
         return this._instance || (this._instance = new this())
     }
 
     /**
      * Returns a new fresh instance of the SetMeUp module.
-     * @param clean Optional, if true will not load settings from file on new instance.
+     * @param doNotLoad Optional, if true will not load settings from file on new instance.
      */
-    newInstance(clean?: boolean): SetMeUp {
+    newInstance(doNotLoad?: boolean): SetMeUp {
         const obj = new SetMeUp()
 
-        if (!clean) {
+        if (!doNotLoad) {
             obj.load()
         }
 
         return obj
     }
 
+    /** The actual settings object. */
+    private _settings: any = {}
+
+    /** Exposes the settings object to read only. */
+    get settings() {
+        return this._settings
+    }
+
     /** Event emitter */
     events: EventEmitter = new EventEmitter()
-
-    /** Object that hold the actual settings */
-    settings: any = {}
 
     /** Array of loaded files */
     files: LoadedFile[] = []
 
     /**
      * Default SetMeUp constructor.
-     * @param clean Optional, if true will not load settings from file on new instance.
+     * @param doNotLoad Optional, if true will not load settings from file on new instance.
      */
-    constructor(clean?: boolean) {
+    constructor(doNotLoad?: boolean) {
         if (!logger) {
             try {
                 logger = require("anyhow")
@@ -61,7 +66,7 @@ class SetMeUp {
             }
         }
 
-        if (!clean) {
+        if (!doNotLoad) {
             this.load()
         }
     }
@@ -108,7 +113,7 @@ class SetMeUp {
                 this.files.push({filename, watching: false})
             }
 
-            if (env != "test" && anyhow) {
+            if (env != "test" && logger) {
                 logger.debug("SetMeUp.load", filename)
             }
 
@@ -137,7 +142,7 @@ class SetMeUp {
     reset(): void {
         this.unwatch()
         this.files = []
-        this.settings = {general: {debug: false}}
+        this._settings = {}
     }
 
     // ENCRYPTION
@@ -181,7 +186,7 @@ class SetMeUp {
                     return fs.watchFile(filename, {persistent: true}, () => {
                         this.load(filename)
 
-                        if (env != "test" && anyhow) {
+                        if (env != "test" && logger) {
                             logger.info("Settings.watch", f, "Reloaded")
                         }
                     })
@@ -189,7 +194,7 @@ class SetMeUp {
             })(f)
         }
 
-        if (env != "test" && anyhow) {
+        if (env != "test" && logger) {
             logger.info("Settings.watch")
         }
     }
@@ -210,12 +215,12 @@ class SetMeUp {
                 }
             }
         } catch (ex) {
-            if (anyhow) {
+            if (logger) {
                 logger.error("Settings.unwatch", ex)
             }
         }
 
-        if (env != "test" && anyhow) {
+        if (env != "test" && logger) {
             return logger.info("Settings.unwatch")
         }
     }

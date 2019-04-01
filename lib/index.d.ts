@@ -14,20 +14,22 @@ declare class SetMeUp {
     static readonly Instance: SetMeUp;
     /**
      * Returns a new fresh instance of the SetMeUp module.
-     * @param clean Optional, if true will not load settings from file on new instance.
+     * @param doNotLoad Optional, if true will not load settings from file on new instance.
      */
-    newInstance(clean?: boolean): SetMeUp;
+    newInstance(doNotLoad?: boolean): SetMeUp;
+    /** The actual settings object. */
+    private _settings;
+    /** Exposes the settings object to read only. */
+    readonly settings: any;
     /** Event emitter */
     events: EventEmitter;
-    /** Object that hold the actual settings */
-    settings: any;
     /** Array of loaded files */
     files: LoadedFile[];
     /**
      * Default SetMeUp constructor.
-     * @param clean Optional, if true will not load settings from file on new instance.
+     * @param doNotLoad Optional, if true will not load settings from file on new instance.
      */
-    constructor(clean?: boolean);
+    constructor(doNotLoad?: boolean);
     on(eventName: string, callback: EventEmitter.ListenerFn): void;
     off(eventName: string, callback: EventEmitter.ListenerFn): void;
     /**
