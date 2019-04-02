@@ -35,6 +35,18 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
+    it("Load test settings from a specific root key", function(done) {
+        setmeup.load("./settings.test.json", {
+            rootKey: "root"
+        })
+
+        if (setmeup.settings.date == "01/01/2000") {
+            done()
+        } else {
+            done("Loaded settings from 'root' should have a property date = '01/01/2000'.")
+        }
+    })
+
     it("Creates new instance that differs from original", function(done) {
         let otherInstance = setmeup.newInstance()
 

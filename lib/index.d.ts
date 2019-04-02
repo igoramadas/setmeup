@@ -8,6 +8,11 @@ interface LoadedFile {
     filename: string;
     watching: boolean;
 }
+/** Represents loading options. */
+interface LoadOptions {
+    overwrite?: boolean;
+    rootKey?: string;
+}
 /** Main SetMeUp class. */
 declare class SetMeUp {
     private static _instance;
@@ -36,10 +41,10 @@ declare class SetMeUp {
      * Load settings from the specified JSON files. If not files are specified, load
      * from the default filenames (settings.default.json, settings.json and settings.ENV.json).
      * @param filenames The filename or array of filenames, using relative or full path.
-     * @param overwrite If false it won't update settings that are already defined, default is true.
+     * @param options Load options defining if properties should be overwritten, and root settings key.
      * @returns Returns the JSON representation object of the loaded files. Will return null if nothing was loaded.
      */
-    load(filenames?: string | string[], overwrite?: boolean): any;
+    load(filenames?: string | string[], options?: LoadOptions): any;
     /**
      * Reset to default settings by clearing values and listeners, and re-calling `load`.
      */

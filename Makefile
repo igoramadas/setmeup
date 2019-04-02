@@ -11,7 +11,7 @@ test:
 test-cover:
 	echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
 	@NODE_ENV=test $(ISTANBUL) cover \
-	$(MOCHAEXEC) --report lcovonly -- -R spec && \
+	$(MOCHAEXEC) -exit --report lcovonly -- -R spec && \
 	cat ./coverage/lcov.info | $(COVERALLS) || true
 
 cover:
