@@ -22,6 +22,11 @@ declare class SetMeUp {
      * @param doNotLoad Optional, if true will not load settings from file on new instance.
      */
     newInstance(doNotLoad?: boolean): SetMeUp;
+    /**
+     * Default SetMeUp constructor.
+     * @param doNotLoad Optional, if true will not load settings from file on new instance.
+     */
+    constructor(doNotLoad?: boolean);
     /** The actual settings object. */
     private _settings;
     /** Exposes the settings object to read only. */
@@ -30,11 +35,6 @@ declare class SetMeUp {
     events: EventEmitter;
     /** Array of loaded files */
     files: LoadedFile[];
-    /**
-     * Default SetMeUp constructor.
-     * @param doNotLoad Optional, if true will not load settings from file on new instance.
-     */
-    constructor(doNotLoad?: boolean);
     on(eventName: string, callback: EventEmitter.ListenerFn): void;
     off(eventName: string, callback: EventEmitter.ListenerFn): void;
     /**

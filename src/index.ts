@@ -36,28 +36,8 @@ class SetMeUp {
      * @param doNotLoad Optional, if true will not load settings from file on new instance.
      */
     newInstance(doNotLoad?: boolean): SetMeUp {
-        const obj = new SetMeUp()
-
-        if (!doNotLoad) {
-            obj.load()
-        }
-
-        return obj
+        return new SetMeUp(doNotLoad)
     }
-
-    /** The actual settings object. */
-    private _settings: any = {}
-
-    /** Exposes the settings object to read only. */
-    get settings() {
-        return this._settings
-    }
-
-    /** Event emitter */
-    events: EventEmitter = new EventEmitter()
-
-    /** Array of loaded files */
-    files: LoadedFile[] = []
 
     /**
      * Default SetMeUp constructor.
@@ -76,6 +56,20 @@ class SetMeUp {
             this.load()
         }
     }
+
+    /** The actual settings object. */
+    private _settings: any = {}
+
+    /** Exposes the settings object to read only. */
+    get settings() {
+        return this._settings
+    }
+
+    /** Event emitter */
+    events: EventEmitter = new EventEmitter()
+
+    /** Array of loaded files */
+    files: LoadedFile[] = []
 
     on(eventName: string, callback: EventEmitter.ListenerFn) {
         this.events.on(eventName, callback)
