@@ -64,7 +64,7 @@
 			<div class="tsd-panel tsd-typography">
 				<h1 id="setmeup">SetMeUp</h1>
 				<p><a href="https://travis-ci.org/igoramadas/setmeup"><img src="https://img.shields.io/travis/igoramadas/setmeup.svg?style=flat-square" alt="Build Status"></a>
-				<a href="https://coveralls.io/github/igoramadas/setmeup?branch=master"><img src="https://img.shields.io/travis/igoramadas/setmeup.svg?style=flat-square" alt="Coverage Status"></a></p>
+				<a href="https://coveralls.io/github/igoramadas/setmeup?branch=master"><img src="https://img.shields.io/coveralls/igoramadas/setmeup.svg?style=flat-square" alt="Coverage Status"></a></p>
 				<p>Easy to use app settings module. Settings are mainly defined on JSON files, but can
 				also be loaded from environment variables.</p>
 				<h2 id="loading-from-json-files">Loading from JSON files</h2>
@@ -82,7 +82,14 @@ const settings = setmeup<span class="hljs-selector-class">.settings</span>
 setmeup.load(<span class="hljs-string">"settings.custom.json"</span>)
 
 <span class="hljs-comment">// Server listens to port defined on settings.</span>
-myExpressApp.listen(settings<span class="hljs-selector-class">.app</span><span class="hljs-selector-class">.port</span>)</code></pre><h2 id="watching-updates-to-configuration-files">Watching updates to configuration files</h2>
+myExpressApp.listen(settings<span class="hljs-selector-class">.app</span><span class="hljs-selector-class">.port</span>)
+
+<span class="hljs-comment">// Actual settings are just a simple object.</span>
+settings<span class="hljs-selector-class">.app</span><span class="hljs-selector-class">.title</span> = <span class="hljs-string">"My new App Title"</span>
+settings<span class="hljs-selector-class">.myFTP</span> = {
+    host: <span class="hljs-string">"myhost.com"</span>,
+    folder: <span class="hljs-string">"/something"</span>
+}</code></pre><h2 id="watching-updates-to-configuration-files">Watching updates to configuration files</h2>
 				<pre><code><span class="hljs-keyword">const</span> onLoad = <span class="hljs-function">(<span class="hljs-params">filename, settingsJson</span>) =&gt;</span> {
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Settings reloaded from disk: <span class="hljs-subst">${filename}</span>`</span>)
     <span class="hljs-built_in">console</span>.dir(settingsJson)
@@ -92,8 +99,28 @@ myExpressApp.listen(settings<span class="hljs-selector-class">.app</span><span c
 setmeup.on(<span class="hljs-string">"load"</span>, onLoad)
 
 <span class="hljs-comment">// Pretend updating files.</span>
-myApp.writeConfig(<span class="hljs-string">"title"</span>, <span class="hljs-string">"New title"</span>)</code></pre><h2 id="loading-from-environment-variables">Loading from environment variables</h2>
-				<p>Soon...</p>
+myApp.writeConfig(<span class="hljs-string">"title"</span>, <span class="hljs-string">"New title"</span>)</code></pre><h2 id="encrypting-and-decrypting-files">Encrypting and decrypting files</h2>
+				<pre><code>// Derive encryption <span class="hljs-meta">key</span> <span class="hljs-meta">from</span> machine (default).
+setmeup.encrypt(<span class="hljs-string">"./settings.private.json"</span>)
+
+// <span class="hljs-meta">And</span> decrypt...
+setmeup.decrypt(<span class="hljs-string">"./settings.private.json"</span>)
+
+// <span class="hljs-meta">Or</span> using a custom <span class="hljs-meta">key</span> <span class="hljs-meta">and</span> IV.
+let <span class="hljs-meta">options</span> = {<span class="hljs-meta">key</span>: <span class="hljs-string">"12345678901234561234567890123456"</span>, iv: <span class="hljs-string">"1234567890987654"</span>}
+setmeup.encrypt(<span class="hljs-string">"./settings.private.json"</span>, <span class="hljs-meta">options</span>)
+setmeup.decrypt(<span class="hljs-string">"./settings.private.json"</span>, <span class="hljs-meta">options</span>)
+
+// You can also load encrypted files <span class="hljs-meta">by</span> passing the crypto <span class="hljs-meta">options</span>.
+let cryptoOptions = {crypto: <span class="hljs-meta">options</span>}
+setmeup.encrypt(<span class="hljs-string">"./settings.private.json"</span>, <span class="hljs-meta">options</span>)
+setmeup.load(<span class="hljs-string">"./settings.private.json"</span>, cryptoOptions)</code></pre><h2 id="api-documentation">API documentation</h2>
+				<p>You can browse the full API documentation at <a href="https://setmeup.devv.com">https://setmeup.devv.com</a>.</p>
+				<p>Or check these following modules that are using SetMeUp:</p>
+				<ul>
+					<li><a href="https://travis-ci.org/igoramadas/expresser">Expresser</a></li>
+					<li><a href="https://travis-ci.org/igoramadas/monitorado">Monitorado</a></li>
+				</ul>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

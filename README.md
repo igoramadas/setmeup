@@ -24,6 +24,13 @@ also be loaded from environment variables.
     // Server listens to port defined on settings.
     myExpressApp.listen(settings.app.port)
 
+    // Actual settings are just a simple object.
+    settings.app.title = "My new App Title"
+    settings.myFTP = {
+        host: "myhost.com",
+        folder: "/something"
+    }
+
 ## Watching updates to configuration files
 
     const onLoad = (filename, settingsJson) => {
