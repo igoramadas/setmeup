@@ -8,7 +8,8 @@ also be loaded from environment variables.
 
 ## Loading from JSON files
 
-    setmeup = require("setmeup")
+    const setmeup = require("setmeup")
+    const settings = setmeup.settings
 
     // By default it will load from settings.default.json, settings.json and settings.ENV.json.
     // Here we load settings from a custom file:
@@ -20,10 +21,21 @@ also be loaded from environment variables.
     // }
     setmeup.load("settings.custom.json")
 
-    settings = setmeup.settings
-
     // Server listens to port defined on settings.
     myExpressApp.listen(settings.app.port)
+
+## Watching updates to configuration files
+
+    const onLoad = (filename, settingsJson) => {
+        console.log(`Settings reloaded from disk: ${filename}`)
+        console.dir(settingsJson)
+    }
+
+    // Will get triggered whenever a config file changes.
+    setmeup.on("load", onLoad)
+
+    // Pretend updating files.
+    myApp.writeConfig("title", "New title")
 
 ## Loading from environment variables
 

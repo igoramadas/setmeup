@@ -1,32 +1,39 @@
-/**
- * SetMeUp
- */
+// SetMeUp: index.ts
 
 import * as crypto from "./crypto"
 import * as utils from "./utils"
 import EventEmitter = require("eventemitter3")
 
+/** @hidden */
 const _ = require("lodash")
+/** @hidden */
 const fs = require("fs")
 
+/** @hidden */
 let env = process.env.NODE_ENV || "development"
+/** @hidden */
 let logger = null
 
 /** Represents a loaded file. */
 interface LoadedFile {
+    /** Filename of the loaded settings file. */
     filename: string
+    /** True if file is being watched for updates. */
     watching: boolean
 }
 
 /** Represents loading options. */
 interface LoadOptions {
+    /** Overwrite current settings with loaded ones? */
     overwrite?: boolean
+    /** Root key of settings to be loaded. */
     rootKey?: string
 }
 
-/** Main SetMeUp class. */
+/** This is the main SetMeUp class. */
 class SetMeUp {
     private static _instance: SetMeUp = null
+    /** @hidden */
     static get Instance() {
         return this._instance || (this._instance = new this())
     }
@@ -34,6 +41,7 @@ class SetMeUp {
     /**
      * Returns a new fresh instance of the SetMeUp module.
      * @param doNotLoad Optional, if true will not load settings from file on new instance.
+     * @returns New instance of SetMeUp, with its own settings.
      */
     newInstance(doNotLoad?: boolean): SetMeUp {
         return new SetMeUp(doNotLoad)
@@ -57,25 +65,38 @@ class SetMeUp {
         }
     }
 
-    /** The actual settings object. */
+    // PROPERTIES
+    // --------------------------------------------------------------------------
+
+    /** Internal, the actual settings storage object. */
     private _settings: any = {}
 
-    /** Exposes the settings object to read only. */
+    /** Exposes the settings object as read only. */
     get settings() {
         return this._settings
     }
 
-    /** Event emitter */
+    /** Event emitter. */
     events: EventEmitter = new EventEmitter()
 
-    /** Array of loaded files */
+    /** Array of loaded files. */
     files: LoadedFile[] = []
 
-    on(eventName: string, callback: EventEmitter.ListenerFn) {
+    /**
+     * Bind callback to event.
+     * @param eventName The name of events (load, reset).
+     * @param callback Callback function.
+     */
+    on(eventName: string, callback: EventEmitter.ListenerFn): void {
         this.events.on(eventName, callback)
     }
 
-    off(eventName: string, callback: EventEmitter.ListenerFn) {
+    /**
+     * Unbind callback from event.
+     * @param eventName The name of events (load, reset).
+     * @param callback Callback function.
+     */
+    off(eventName: string, callback: EventEmitter.ListenerFn): void {
         this.events.off(eventName, callback)
     }
 
@@ -147,6 +168,8 @@ class SetMeUp {
         this.unwatch()
         this.files = []
         this._settings = {}
+
+        this.events.emit("reset")
     }
 
     // ENCRYPTION

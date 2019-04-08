@@ -68,7 +68,8 @@
 				<p>Easy to use app settings module. Settings are mainly defined on JSON files, but can
 				also be loaded from environment variables.</p>
 				<h2 id="loading-from-json-files">Loading from JSON files</h2>
-				<pre><code>setmeup = require(<span class="hljs-string">"setmeup"</span>)
+				<pre><code>const setmeup = require(<span class="hljs-string">"setmeup"</span>)
+const settings = setmeup<span class="hljs-selector-class">.settings</span>
 
 <span class="hljs-comment">// By default it will load from settings.default.json, settings.json and settings.ENV.json.</span>
 <span class="hljs-comment">// Here we load settings from a custom file:</span>
@@ -80,10 +81,18 @@
 <span class="hljs-comment">// }</span>
 setmeup.load(<span class="hljs-string">"settings.custom.json"</span>)
 
-settings = setmeup<span class="hljs-selector-class">.settings</span>
-
 <span class="hljs-comment">// Server listens to port defined on settings.</span>
-myExpressApp.listen(settings<span class="hljs-selector-class">.app</span><span class="hljs-selector-class">.port</span>)</code></pre><h2 id="loading-from-environment-variables">Loading from environment variables</h2>
+myExpressApp.listen(settings<span class="hljs-selector-class">.app</span><span class="hljs-selector-class">.port</span>)</code></pre><h2 id="watching-updates-to-configuration-files">Watching updates to configuration files</h2>
+				<pre><code><span class="hljs-keyword">const</span> onLoad = <span class="hljs-function">(<span class="hljs-params">filename, settingsJson</span>) =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Settings reloaded from disk: <span class="hljs-subst">${filename}</span>`</span>)
+    <span class="hljs-built_in">console</span>.dir(settingsJson)
+}
+
+<span class="hljs-comment">// Will get triggered whenever a config file changes.</span>
+setmeup.on(<span class="hljs-string">"load"</span>, onLoad)
+
+<span class="hljs-comment">// Pretend updating files.</span>
+myApp.writeConfig(<span class="hljs-string">"title"</span>, <span class="hljs-string">"New title"</span>)</code></pre><h2 id="loading-from-environment-variables">Loading from environment variables</h2>
 				<p>Soon...</p>
 			</div>
 		</div>

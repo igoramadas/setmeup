@@ -52,14 +52,6 @@ describe("SetMeUp Crypto Tests", function() {
         done()
     })
 
-    it("Fails to encrypt already encrypted file", function(done) {
-        if (setmeup.encrypt(cryptoFilename)) {
-            done("Encrypting an already encrypted file should return false.")
-        } else {
-            done()
-        }
-    })
-
     it("Fails to decrypt settings with wrong key", function(done) {
         try {
             setmeup.decrypt(cryptoFilename, {

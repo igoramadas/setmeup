@@ -1,9 +1,10 @@
-/*/*
- * SetMeUp: Utils
- */
+// SetMeUp: utils.ts
 
+/** @hidden */
 const _ = require("lodash")
+/** @hidden */
 const fs = require("fs")
+/** @hidden */
 const path = require("path")
 
 /**
@@ -53,7 +54,7 @@ export function getFilePath(filename: string, basepath?: string): string {
 
 /**
  * Strip comments out of the JSON and returns it as a JSON object.
- * @param value - The JSON string to be parsed.
+ * @param value The JSON string to be parsed.
  * @returns The parsed JSON object.
  */
 export function parseJson(value: string | any) {
@@ -120,8 +121,8 @@ export function parseJson(value: string | any) {
 }
 
 /**
- * Strip comments out of the JSON and returns it as a JSON object.
- * @param value - The JSON string to be parsed.
+ * Load the specified file and returns JSON object.
+ * @param filename Path to the file that should be loaded.
  * @returns The parsed JSON object.
  */
 export function loadJson(filename: string): any {
@@ -152,7 +153,7 @@ export function loadJson(filename: string): any {
  * @param target The target object.
  * @param overwrite If false it won't set properties that are already defined, default is true.
  */
-export function extend(source: any, target: any, overwrite: boolean) {
+export function extend(source: any, target: any, overwrite: boolean): any[] {
     const result = []
 
     for (let prop in source) {
@@ -168,5 +169,6 @@ export function extend(source: any, target: any, overwrite: boolean) {
             result.push(undefined)
         }
     }
+
     return result
 }

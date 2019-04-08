@@ -1,24 +1,27 @@
-/**
- * SetMeUp: Crypto Helper
- */
+// SetMeUp: crypto.ts
 
 import * as utils from "./utils"
 import {execSync} from "child_process"
 
+/** @hidden */
 const _ = require("lodash")
+/** @hidden */
 const crypto = require("crypto")
+/** @hidden */
 const fs = require("fs")
 
+/** @hidden */
 let logger = null
 
+/** Default IV value in case one is not provided. */
+let defaultIV = "8407198407191984"
+
+// Try loading the anyhow module.
 try {
     logger = require("anyhow")
 } catch (ex) {
     // Anyhow module not found
 }
-
-/** Default IV value in case one is not provided */
-let defaultIV = "8407198407191984"
 
 /** Encryption options. */
 export interface CryptoOptions {
@@ -29,18 +32,17 @@ export interface CryptoOptions {
 
 /**
  * Helper to encrypt or decrypt settings files. The default encryption key
- * defined on the `Settings.coffee` file is a static string (see below) , which
- * you should change to your desired value, along with the IV. You can also
- * set them via the SETMEUP_CRYPTOKEY and SETMEUP_CRYPTOIV environment variables.
- * The default cipher algorithm is AES 256.
+ * is derived from the unique machine ID, so ideally you should change to
+ * your desired secret and strong key. Same applies for the default IV.
+ * You can also  set them via the SETMEUP_CRYPTOKEY and SETMEUP_CRYPTOIV
+ * environment variables. The default cipher algorithm is AES 256.
  * Failure to encrypt or decrypt will throw an exception.
- * @param action Action can be "encrypt" or "decrypt"
+ * @param action Action can be "encrypt" or "decrypt".
  * @param filename The file to be encrypted or decrypted.
  * @param options Encryption options with cipher, key and IV.
- * @returns True if file is encrypted successfully, false (or exception throw) otherwise
  * @protected
  */
-export function CryptoMethod(action: string, filename: string, options?: CryptoOptions): boolean {
+export function CryptoMethod(action: string, filename: string, options?: CryptoOptions): void {
     let env = process.env.NODE_ENV || "development"
 
     if (options == null) {
@@ -77,7 +79,8 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
         if (logger) {
             logger.warn("Setmeup.CryptoMethod", filename, "Already encrypted, abort!")
         }
-        return false
+
+        return
     }
 
     // Helper to parse and encrypt / decrypt settings data.
@@ -158,8 +161,6 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
     // Stringify and save the new settings file.
     const newSettingsJson = JSON.stringify(settingsJson, null, 4)
     fs.writeFileSync(filename, newSettingsJson, {encoding: "utf8"})
-
-    return true
 }
 /**
  * Gets a unique machine ID. This is mainly used to get a valid encryption key
