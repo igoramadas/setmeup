@@ -10,7 +10,7 @@ const _ = require("lodash")
 const fs = require("fs")
 
 /** @hidden */
-let env = process.env.NODE_ENV || "development"
+let env = process.env
 /** @hidden */
 let logger = null
 
@@ -119,7 +119,7 @@ class SetMeUp {
 
         // No filenames passed? Load the default ones.
         if (!filenames) {
-            filenames = ["settings.default.json", "settings.json", `settings.${env}.json`]
+            filenames = ["settings.default.json", "settings.json", `settings.${env.NODE_ENV}.json`]
         }
         // Make sure we're dealing with array of filenames by default.
         else if (_.isString(filenames)) {
@@ -134,7 +134,7 @@ class SetMeUp {
                 this.files.push({filename, watching: false})
             }
 
-            if (env != "test" && logger) {
+            if (env.NODE_ENV != "test" && logger) {
                 logger.debug("SetMeUp.load", filename)
             }
 
@@ -200,8 +200,6 @@ class SetMeUp {
      * Watch loaded settings files for changes by using a file watcher.
      */
     watch(): void {
-        env = process.env.NODE_ENV || "development"
-
         // Iterate loaded files to create the file system watchers.
         for (let f of Array.from(this.files)) {
             ;(f => {
@@ -213,7 +211,7 @@ class SetMeUp {
                     return fs.watchFile(filename, {persistent: true}, () => {
                         this.load(filename)
 
-                        if (env != "test" && logger) {
+                        if (env.NODE_ENV != "test" && logger) {
                             logger.info("Settings.watch", f, "Reloaded")
                         }
                     })
@@ -221,7 +219,7 @@ class SetMeUp {
             })(f)
         }
 
-        if (env != "test" && logger) {
+        if (env.NODE_ENV != "test" && logger) {
             logger.info("Settings.watch")
         }
     }
@@ -230,8 +228,6 @@ class SetMeUp {
      * Unwatch changes on loaded settings files.
      */
     unwatch() {
-        env = process.env.NODE_ENV || "development"
-
         try {
             for (let f of Array.from(this.files)) {
                 const filename = utils.getFilePath(f.filename)
@@ -247,7 +243,7 @@ class SetMeUp {
             }
         }
 
-        if (env != "test" && logger) {
+        if (env.NODE_ENV != "test" && logger) {
             return logger.info("Settings.unwatch")
         }
     }

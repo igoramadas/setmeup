@@ -3,4 +3,4 @@ export interface CryptoOptions {
     key: string;
     iv: string;
 }
-export declare function CryptoMethod(action: string, filename: string, options?: CryptoOptions): boolean;
+export declare function CryptoMethod(action: string, filename: string, options?: CryptoOptions): void;

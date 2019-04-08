@@ -52,6 +52,10 @@ describe("SetMeUp Crypto Tests", function() {
         done()
     })
 
+    it("Encrypt file already encrypted", function() {
+        setmeup.encrypt(cryptoFilename)
+    })
+
     it("Fails to decrypt settings with wrong key", function(done) {
         try {
             setmeup.decrypt(cryptoFilename, {

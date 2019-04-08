@@ -10,18 +10,13 @@ const crypto = require("crypto")
 /** @hidden */
 const fs = require("fs")
 
-/** @hidden */
-let logger = null
-
 /** Default IV value in case one is not provided. */
 let defaultIV = "8407198407191984"
-
-// Try loading the anyhow module.
-try {
-    logger = require("anyhow")
-} catch (ex) {
-    // Anyhow module not found
-}
+/** @hidden */
+let env = process.env
+/** @hidden */
+let logger = null
+let loggerLoaded = false
 
 /** Encryption options. */
 export interface CryptoOptions {
@@ -43,10 +38,19 @@ export interface CryptoOptions {
  * @protected
  */
 export function CryptoMethod(action: string, filename: string, options?: CryptoOptions): void {
-    let env = process.env.NODE_ENV || "development"
-
     if (options == null) {
         options = {} as CryptoOptions
+    }
+
+    // Try loading the anyhow module.
+    if (!loggerLoaded) {
+        loggerLoaded = true
+
+        try {
+            logger = require("anyhow")
+        } catch (ex) {
+            // Anyhow module not found
+        }
     }
 
     action = action.toString().toLowerCase()
@@ -170,6 +174,7 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
 function getMachineID(): string {
     let windowsArc = null
 
+    /* istanbul ignore if  */
     if (process.arch == "ia32" && process.env.hasOwnProperty("PROCESSOR_ARCHITEW6432")) {
         windowsArc = "mixed"
     } else {
@@ -191,33 +196,42 @@ function getMachineID(): string {
     let result = execSync(guid[platform]).toString()
 
     switch (platform) {
-        case "darwin":
-            return result
-                .split("IOPlatformUUID")[1]
-                .split("\n")[0]
-                .replace(/\=|\s+|\"/gi, "")
-                .toLowerCase()
-                .substring(0, 32)
-        case "win32":
-            return result
-                .toString()
-                .split("REG_SZ")[1]
-                .replace(/\r+|\n+|\s+/gi, "")
-                .toLowerCase()
-                .substring(0, 32)
         case "linux":
             return result
                 .toString()
                 .replace(/\r+|\n+|\s+/gi, "")
                 .toLowerCase()
                 .substring(0, 32)
+        /* istanbul ignore next */
+        case "darwin":
+            /* istanbul ignore next */
+            return result
+                .split("IOPlatformUUID")[1]
+                .split("\n")[0]
+                .replace(/\=|\s+|\"/gi, "")
+                .toLowerCase()
+                .substring(0, 32)
+        /* istanbul ignore next */
+        case "win32":
+            /* istanbul ignore next */
+            return result
+                .toString()
+                .split("REG_SZ")[1]
+                .replace(/\r+|\n+|\s+/gi, "")
+                .toLowerCase()
+                .substring(0, 32)
+
+        /* istanbul ignore next */
         case "freebsd":
+            /* istanbul ignore next */
             return result
                 .toString()
                 .replace(/\r+|\n+|\s+/gi, "")
                 .toLowerCase()
                 .substring(0, 32)
+        /* istanbul ignore next */
         default:
+            /* istanbul ignore next */
             return "SetMeUp32SettingsEncryptionKey32"
     }
 }

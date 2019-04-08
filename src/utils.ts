@@ -37,6 +37,7 @@ export function getFilePath(filename: string, basepath?: string): string {
     // Try running directory.
     filename = path.resolve(process.cwd(), originalFilename)
     hasFile = fs.existsSync(filename)
+    /* istanbul ignore if */
     if (hasFile) {
         return filename
     }
@@ -44,6 +45,7 @@ export function getFilePath(filename: string, basepath?: string): string {
     // Try application root path.
     filename = path.resolve(path.dirname(require.main.filename), originalFilename)
     hasFile = fs.existsSync(filename)
+    /* istanbul ignore if */
     if (hasFile) {
         return filename
     }
@@ -139,7 +141,9 @@ export function loadJson(filename: string): any {
             result = fs.readFileSync(filename, encUtf8)
             result = parseJson(result)
         } catch (ex) {
+            /* istanbul ignore next */
             result = fs.readFileSync(filename, encAscii)
+            /* istanbul ignore next */
             result = parseJson(result)
         }
     }
@@ -158,7 +162,7 @@ export function extend(source: any, target: any, overwrite: boolean): any[] {
 
     for (let prop in source) {
         const value = source[prop]
-        if ((value != null ? value.constructor : undefined) === Object) {
+        if (value && value.constructor === Object) {
             if (target[prop] == null) {
                 target[prop] = {}
             }

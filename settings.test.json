@@ -2,7 +2,8 @@
     "something": {
         "number": 1,
         "string": "abc",
-        "boolean": true
+        "boolean": true,
+        "anotherBoolean": false
     },
     "root": {
         "date": "01/01/2000"
