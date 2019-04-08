@@ -49,18 +49,24 @@ describe("SetMeUp Crypto Tests", function() {
 
     it("Parse JSON with comments", function(done) {
         let value = `
-        /* Multiline comment
-
-         * something else
-        */
+        /* This is a multiline
+        comment */
         {
+            "something": true,
+            "somethingElse":   " space ", //comments here
+            // end
+            /* Multiline comment
+
+            * something else
+            */
+
             "something": "abc", // inline comments
             "somethingElse": {/*hello there*/ "test": true},
-            "escaped": "Escaped \/ \\\\  here"
+            "escaped": "This is escaped \\" a"
         }
+        /*
         // More inline
-        // More comments
-
+        /*
         `
 
         let parsed = utils.parseJson(value)

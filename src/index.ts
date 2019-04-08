@@ -28,6 +28,8 @@ interface LoadOptions {
     overwrite?: boolean
     /** Root key of settings to be loaded. */
     rootKey?: string
+    /** Decryption options in case file is encrypted. */
+    crypto?: crypto.CryptoOptions | boolean
 }
 
 /** This is the main SetMeUp class. */
@@ -127,15 +129,19 @@ class SetMeUp {
         }
 
         for (let filename of filenames) {
-            let settingsJson = utils.loadJson(filename)
+            let settingsJson = utils.loadJson(filename, options.crypto)
 
             // Add file to the `files` list, but only if not loaded previously.
-            if (settingsJson != null && _.find(this.files, {filename}) == null) {
-                this.files.push({filename, watching: false})
+            if (settingsJson != null) {
+                if (_.find(this.files, {filename}) == null) {
+                    this.files.push({filename, watching: false})
+                } else {
+                    logger.debug("SetMeUp.load", filename, "Loaded before, so won't add to the files list")
+                }
             }
 
-            if (env.NODE_ENV != "test" && logger) {
-                logger.debug("SetMeUp.load", filename)
+            if (logger) {
+                logger.info("SetMeUp.load", filename, "Loaded")
             }
 
             // Extend loaded settings.
@@ -181,7 +187,8 @@ class SetMeUp {
      * @param options Options cipher, key and IV to be passed to the encryptor.
      */
     encrypt(filename: string, options: crypto.CryptoOptions): void {
-        crypto.CryptoMethod("encrypt", filename, options)
+        const result = JSON.stringify(crypto.CryptoMethod("encrypt", filename, options), null, 4)
+        fs.writeFileSync(filename, result, {encoding: "utf8"})
     }
 
     /**
@@ -190,7 +197,8 @@ class SetMeUp {
      * @param options Options cipher, key and IV to be passed to the decryptor.
      */
     decrypt(filename: string, options: crypto.CryptoOptions): void {
-        crypto.CryptoMethod("decrypt", filename, options)
+        const result = JSON.stringify(crypto.CryptoMethod("decrypt", filename, options), null, 4)
+        fs.writeFileSync(filename, result, {encoding: "utf8"})
     }
 
     // FILE WATCHER
@@ -211,7 +219,7 @@ class SetMeUp {
                     return fs.watchFile(filename, {persistent: true}, () => {
                         this.load(filename)
 
-                        if (env.NODE_ENV != "test" && logger) {
+                        if (logger) {
                             logger.info("Settings.watch", f, "Reloaded")
                         }
                     })
@@ -219,7 +227,7 @@ class SetMeUp {
             })(f)
         }
 
-        if (env.NODE_ENV != "test" && logger) {
+        if (logger) {
             logger.info("Settings.watch")
         }
     }
@@ -243,7 +251,7 @@ class SetMeUp {
             }
         }
 
-        if (env.NODE_ENV != "test" && logger) {
+        if (logger) {
             return logger.info("Settings.unwatch")
         }
     }

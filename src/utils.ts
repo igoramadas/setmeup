@@ -1,11 +1,18 @@
 // SetMeUp: utils.ts
 
+import * as crypto from "./crypto"
+
 /** @hidden */
 const _ = require("lodash")
 /** @hidden */
 const fs = require("fs")
 /** @hidden */
 const path = require("path")
+
+/** @hidden */
+let logger = null
+/** @hidden */
+let loggerLoaded = false
 
 /**
  * Finds the correct path to the file looking first on the (optional) base path
@@ -18,6 +25,17 @@ const path = require("path")
 export function getFilePath(filename: string, basepath?: string): string {
     const originalFilename = filename.toString()
     let hasFile = false
+
+    // Try loading the anyhow module.
+    if (!loggerLoaded) {
+        loggerLoaded = true
+
+        try {
+            logger = require("anyhow")
+        } catch (ex) {
+            // Anyhow module not found
+        }
+    }
 
     // A basepath was passed? Try there first.
     if (basepath) {
@@ -78,8 +96,7 @@ export function parseJson(value: string | any) {
         const nextChar = value[i + 1]
 
         if (!insideComment && currentChar === '"') {
-            const escaped = value[i - 1] === "\\" && value[i - 2] !== "\\"
-            if (!escaped) {
+            if (!(value[i - 1] === "\\" && value[i - 2] !== "\\")) {
                 insideString = !insideString
             }
         }
@@ -93,7 +110,7 @@ export function parseJson(value: string | any) {
             offset = i
             insideComment = singleComment
             i++
-        } else if (insideComment === singleComment && currentChar + nextChar === "\r\n") {
+        } /* istanbul ignore next */ else if (insideComment === singleComment && currentChar + nextChar === "\r\n") {
             i++
             insideComment = false
             ret += strip()
@@ -125,9 +142,10 @@ export function parseJson(value: string | any) {
 /**
  * Load the specified file and returns JSON object.
  * @param filename Path to the file that should be loaded.
+ * @param cryptoOptions In case file is encrypted, pass the crypto key and IV options.
  * @returns The parsed JSON object.
  */
-export function loadJson(filename: string): any {
+export function loadJson(filename: string, cryptoOptions?: crypto.CryptoOptions | boolean): any {
     let result = null
     filename = getFilePath(filename)
 
@@ -145,6 +163,19 @@ export function loadJson(filename: string): any {
             result = fs.readFileSync(filename, encAscii)
             /* istanbul ignore next */
             result = parseJson(result)
+        }
+    }
+
+    // Encrypted file and passed encryption options?
+    if (result && result.encrypted) {
+        if (cryptoOptions) {
+            if (cryptoOptions === true) {
+                cryptoOptions = null
+            }
+            logger.debug("SetMeUp.Utils.loadJson", filename, "Will be decrypted")
+            result = crypto.CryptoMethod("decrypt", filename, cryptoOptions as crypto.CryptoOptions)
+        } else if (logger) {
+            logger.warn("SetMeUp.Utils.loadJson", `${filename} appears to be encrypted! Forgot passing 'cryptoOptions' to decrypt?`)
         }
     }
 

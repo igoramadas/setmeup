@@ -56,6 +56,22 @@ describe("SetMeUp Crypto Tests", function() {
         setmeup.encrypt(cryptoFilename)
     })
 
+    it("Load encrypted file", function(done) {
+        let delayLoad = () => {
+            let decrypted = setmeup.load(cryptoFilename, {
+                crypto: true
+            })
+
+            if (decrypted.encrypted) {
+                return done("Loaded file should not have 'encrypted' set to true.")
+            }
+
+            done()
+        }
+
+        setTimeout(delayLoad, 200)
+    })
+
     it("Fails to decrypt settings with wrong key", function(done) {
         try {
             setmeup.decrypt(cryptoFilename, {
@@ -79,19 +95,23 @@ describe("SetMeUp Crypto Tests", function() {
     })
 
     it("Decrypt the settings file", function(done) {
-        setmeup.decrypt(cryptoFilename)
+        let delayDecrypt = () => {
+            setmeup.decrypt(cryptoFilename)
 
-        var decrypted = JSON.parse(
-            fs.readFileSync(cryptoFilename, {
-                encoding: "utf8"
-            })
-        )
+            var decrypted = JSON.parse(
+                fs.readFileSync(cryptoFilename, {
+                    encoding: "utf8"
+                })
+            )
 
-        if (decrypted.encrypted) {
-            return done("Property 'encrypted' was not unset / deleted.")
+            if (decrypted.encrypted) {
+                return done("Property 'encrypted' was not unset / deleted.")
+            }
+
+            done()
         }
 
-        done()
+        setTimeout(delayDecrypt, 200)
     })
 
     it("Encrypt and decrypt with custom key and IV", function(done) {

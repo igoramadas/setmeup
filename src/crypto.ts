@@ -7,8 +7,6 @@ import {execSync} from "child_process"
 const _ = require("lodash")
 /** @hidden */
 const crypto = require("crypto")
-/** @hidden */
-const fs = require("fs")
 
 /** Default IV value in case one is not provided. */
 let defaultIV = "8407198407191984"
@@ -16,6 +14,7 @@ let defaultIV = "8407198407191984"
 let env = process.env
 /** @hidden */
 let logger = null
+/** @hidden */
 let loggerLoaded = false
 
 /** Encryption options. */
@@ -35,9 +34,10 @@ export interface CryptoOptions {
  * @param action Action can be "encrypt" or "decrypt".
  * @param filename The file to be encrypted or decrypted.
  * @param options Encryption options with cipher, key and IV.
+ * @returns The (de)encrypted JSON object.
  * @protected
  */
-export function CryptoMethod(action: string, filename: string, options?: CryptoOptions): void {
+export function CryptoMethod(action: string, filename: string, options?: CryptoOptions): any {
     if (options == null) {
         options = {} as CryptoOptions
     }
@@ -84,7 +84,7 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
             logger.warn("Setmeup.CryptoMethod", filename, "Already encrypted, abort!")
         }
 
-        return
+        return settingsJson
     }
 
     // Helper to parse and encrypt / decrypt settings data.
@@ -162,9 +162,7 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
         settingsJson.encrypted = true
     }
 
-    // Stringify and save the new settings file.
-    const newSettingsJson = JSON.stringify(settingsJson, null, 4)
-    fs.writeFileSync(filename, newSettingsJson, {encoding: "utf8"})
+    return settingsJson
 }
 /**
  * Gets a unique machine ID. This is mainly used to get a valid encryption key
@@ -174,7 +172,7 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
 function getMachineID(): string {
     let windowsArc = null
 
-    /* istanbul ignore if  */
+    /* istanbul ignore if */
     if (process.arch == "ia32" && process.env.hasOwnProperty("PROCESSOR_ARCHITEW6432")) {
         windowsArc = "mixed"
     } else {
@@ -204,7 +202,6 @@ function getMachineID(): string {
                 .substring(0, 32)
         /* istanbul ignore next */
         case "darwin":
-            /* istanbul ignore next */
             return result
                 .split("IOPlatformUUID")[1]
                 .split("\n")[0]
@@ -213,7 +210,6 @@ function getMachineID(): string {
                 .substring(0, 32)
         /* istanbul ignore next */
         case "win32":
-            /* istanbul ignore next */
             return result
                 .toString()
                 .split("REG_SZ")[1]
@@ -223,7 +219,6 @@ function getMachineID(): string {
 
         /* istanbul ignore next */
         case "freebsd":
-            /* istanbul ignore next */
             return result
                 .toString()
                 .replace(/\r+|\n+|\s+/gi, "")
@@ -231,7 +226,6 @@ function getMachineID(): string {
                 .substring(0, 32)
         /* istanbul ignore next */
         default:
-            /* istanbul ignore next */
             return "SetMeUp32SettingsEncryptionKey32"
     }
 }
