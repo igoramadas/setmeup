@@ -10,8 +10,7 @@ test:
 
 test-cover:
 	echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
-	@NODE_ENV=test $(ISTANBUL) \
-	$(MOCHAEXEC) --exit --report lcovonly -R spec && \
+	@NODE_ENV=test $(ISTANBUL) $(MOCHAEXEC) --exit --report lcovonly -R spec && \
 	cat ./coverage/lcov.info | $(COVERALLS) || true
 
 cover:
@@ -31,6 +30,7 @@ publish:
 	npm publish
 
 update:
+	rm -rf node_modules/anyhow
 	ncu -u
 	npm install
 	npm link anyhow
