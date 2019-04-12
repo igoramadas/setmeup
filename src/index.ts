@@ -14,15 +14,19 @@ let env = process.env
 /** @hidden */
 let logger = null
 
-/** Represents a loaded file. */
+/**
+ * Represents a loaded file, used on [[files]].
+ */
 interface LoadedFile {
     /** Filename of the loaded settings file. */
     filename: string
-    /** True if file is being watched for updates. */
+    /** True if file is being watched for updates (see [[watch]]). */
     watching: boolean
 }
 
-/** Represents loading options. */
+/**
+ * Represents loading options, used on [[load]].
+ */
 interface LoadOptions {
     /** Overwrite current settings with loaded ones? */
     overwrite?: boolean
@@ -32,7 +36,10 @@ interface LoadOptions {
     crypto?: crypto.CryptoOptions | boolean
 }
 
-/** This is the main SetMeUp class. */
+/**
+ * This is the main SetMeUp class.
+ * * @example const setmeup = require("setmeup")
+ */
 class SetMeUp {
     private static _instance: SetMeUp = null
     /** @hidden */
@@ -43,7 +50,7 @@ class SetMeUp {
     /**
      * Returns a new fresh instance of the SetMeUp module.
      * @param doNotLoad Optional, if true will not load settings from file on new instance.
-     * @returns New instance of SetMeUp, with its own settings.
+     * @returns New instance of SetMeUp with its own fresh settings.
      */
     newInstance(doNotLoad?: boolean): SetMeUp {
         return new SetMeUp(doNotLoad)
@@ -51,7 +58,7 @@ class SetMeUp {
 
     /**
      * Default SetMeUp constructor.
-     * @param doNotLoad Optional, if true will not load settings from file on new instance.
+     * @param doNotLoad Optional, if true will not auto load settings from file(s).
      */
     constructor(doNotLoad?: boolean) {
         if (!logger) {
@@ -84,9 +91,12 @@ class SetMeUp {
     /** Array of loaded files. */
     files: LoadedFile[] = []
 
+    // EVENTS
+    // --------------------------------------------------------------------------
+
     /**
      * Bind callback to event.
-     * @param eventName The name of events (load, reset).
+     * @param eventName The name of events ([[load]], [[reset]]).
      * @param callback Callback function.
      */
     on(eventName: string, callback: EventEmitter.ListenerFn): void {
@@ -95,7 +105,7 @@ class SetMeUp {
 
     /**
      * Unbind callback from event.
-     * @param eventName The name of events (load, reset).
+     * @param eventName The name of events ([[load]], [[reset]]).
      * @param callback Callback function.
      */
     off(eventName: string, callback: EventEmitter.ListenerFn): void {
@@ -106,11 +116,12 @@ class SetMeUp {
     // --------------------------------------------------------------------------
 
     /**
-     * Load settings from the specified JSON files. If not files are specified, load
-     * from the default filenames (settings.default.json, settings.json and settings.ENV.json).
+     * Load settings from the specified JSON file(s). If not files are specified, load
+     * from the defaults (settings.default.json, settings.json and settings.NODE_ENV.json).
      * @param filenames The filename or array of filenames, using relative or full path.
      * @param options Load options defining if properties should be overwritten, and root settings key.
-     * @returns Returns the JSON representation object of the loaded files. Will return null if nothing was loaded.
+     * @returns Returns the resulting JSON object of the loaded files, or null if nothing was loaded.
+     * @event load
      */
     load(filenames?: string | string[], options?: LoadOptions): any {
         let result = {}
@@ -120,6 +131,7 @@ class SetMeUp {
         _.defaults(options, {overwrite: true, rootKey: ""})
 
         // No filenames passed? Load the default ones.
+        /* istanbul ignore else */
         if (!filenames) {
             filenames = ["settings.default.json", "settings.json", `settings.${env.NODE_ENV}.json`]
         }
@@ -140,6 +152,7 @@ class SetMeUp {
                 }
             }
 
+            /* istanbul ignore else */
             if (logger) {
                 logger.info("SetMeUp.load", filename, "Loaded")
             }
@@ -168,7 +181,8 @@ class SetMeUp {
     }
 
     /**
-     * Reset to default settings by clearing values and listeners, and re-calling `load`.
+     * Reset to default settings by unwatching and clearing settings, then re-calling [[load]].
+     * @event reset
      */
     reset(): void {
         this.unwatch()
@@ -206,6 +220,7 @@ class SetMeUp {
 
     /**
      * Watch loaded settings files for changes by using a file watcher.
+     * When files change, [[load]] will be called to get the updates.
      */
     watch(): void {
         // Iterate loaded files to create the file system watchers.
@@ -219,6 +234,7 @@ class SetMeUp {
                     return fs.watchFile(filename, {persistent: true}, () => {
                         this.load(filename)
 
+                        /* istanbul ignore else */
                         if (logger) {
                             logger.info("Settings.watch", f, "Reloaded")
                         }
@@ -227,6 +243,7 @@ class SetMeUp {
             })(f)
         }
 
+        /* istanbul ignore else */
         if (logger) {
             logger.info("Settings.watch")
         }
@@ -246,11 +263,13 @@ class SetMeUp {
                 }
             }
         } catch (ex) {
+            /* istanbul ignore next */
             if (logger) {
                 logger.error("Settings.unwatch", ex)
             }
         }
 
+        /* istanbul ignore else */
         if (logger) {
             return logger.info("Settings.unwatch")
         }

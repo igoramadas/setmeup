@@ -17,18 +17,24 @@ let logger = null
 /** @hidden */
 let loggerLoaded = false
 
-/** Encryption options. */
+/**
+ * Encryption options for [[CryptoMethod]].
+ * @protected
+ */
 export interface CryptoOptions {
-    cipher: string
-    key: string
-    iv: string
+    /** Cipher to use, default is "aes256". */
+    cipher?: string
+    /** Encryption key, default is derived from current machine via [[getMachineID]]. */
+    key?: string
+    /** Encryption IV, default is "8407198407191984". */
+    iv?: string
 }
 
 /**
  * Helper to encrypt or decrypt settings files. The default encryption key
  * is derived from the unique machine ID, so ideally you should change to
  * your desired secret and strong key. Same applies for the default IV.
- * You can also  set them via the SETMEUP_CRYPTOKEY and SETMEUP_CRYPTOIV
+ * You can also  set them via the SETMEUP_CRYPTO_KEY and SETMEUP_CRYPTO_IV
  * environment variables. The default cipher algorithm is AES 256.
  * Failure to encrypt or decrypt will throw an exception.
  * @param action Action can be "encrypt" or "decrypt".
@@ -57,8 +63,8 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
 
     options = _.defaults(options, {
         cipher: "aes256",
-        key: env["SETMEUP_CRYPTOKEY"],
-        iv: env["SETMEUP_CRYPTOIV"]
+        key: env["SETMEUP_CRYPTO_KEY"],
+        iv: env["SETMEUP_CRYPTO_IV"]
     })
 
     // No encryption key specified? Use the Machine ID then.
@@ -80,6 +86,7 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
 
     // If trying to encrypt and settings property `encrypted` is true, return false.
     if (settingsJson.encrypted && action == "encrypt") {
+        /* istanbul ignore else */
         if (logger) {
             logger.warn("Setmeup.CryptoMethod", filename, "Already encrypted, abort!")
         }
@@ -137,6 +144,9 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
                         } else if (arrValue[0] === "number") {
                             newValue = parseFloat(newValue)
                         }
+                    } else {
+                        /* istanbul ignore next */
+                        throw new Error(`Invalid action: ${action}`)
                     }
                 } catch (ex) {
                     ex.friendlyMessage = `Can't ${action}: ${currentValue}. Make sure key and IV are correct for encryption.`
@@ -165,8 +175,8 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
     return settingsJson
 }
 /**
- * Gets a unique machine ID. This is mainly used to get a valid encryption key
- * in case none is specified when encrypting / decrypting.
+ * Gets a unique machine ID. This is mainly used by [[CryptoMethod]] to get a
+ * valid encryption key in case none is specified when encrypting / decrypting.
  * @protected
  */
 function getMachineID(): string {

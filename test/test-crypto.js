@@ -56,10 +56,28 @@ describe("SetMeUp Crypto Tests", function() {
         setmeup.encrypt(cryptoFilename)
     })
 
-    it("Load encrypted file", function(done) {
+    it("Load encrypted file with default encryption settings", function(done) {
         let delayLoad = () => {
             let decrypted = setmeup.load(cryptoFilename, {
                 crypto: true
+            })
+
+            if (decrypted.encrypted) {
+                return done("Loaded file should not have 'encrypted' set to true.")
+            }
+
+            done()
+        }
+
+        setTimeout(delayLoad, 200)
+    })
+
+    it("Load encrypted file with custom encryption settings", function(done) {
+        let delayLoad = () => {
+            let decrypted = setmeup.load(cryptoFilename, {
+                crypto: {
+                    iv: "8407198407191984"
+                }
             })
 
             if (decrypted.encrypted) {

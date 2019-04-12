@@ -63,34 +63,40 @@
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
 				<h1 id="setmeup">SetMeUp</h1>
-				<p><a href="https://travis-ci.org/igoramadas/setmeup"><img src="https://img.shields.io/travis/igoramadas/setmeup.svg?style=flat-square" alt="Build Status"></a>
-				<a href="https://coveralls.io/github/igoramadas/setmeup?branch=master"><img src="https://img.shields.io/coveralls/igoramadas/setmeup.svg?style=flat-square" alt="Coverage Status"></a></p>
-				<p>Easy to use app settings module. Settings are mainly defined on JSON files, but can
-				also be loaded from environment variables.</p>
-				<h2 id="loading-from-json-files">Loading from JSON files</h2>
+				<p><a href="https://npmjs.com/package/setmeup"><img src="https://img.shields.io/npm/v/setmeup.svg" alt="Version"></a>
+					<a href="https://travis-ci.org/igoramadas/setmeup"><img src="https://img.shields.io/travis/igoramadas/setmeup.svg" alt="Build Status"></a>
+				<a href="https://coveralls.io/github/igoramadas/setmeup?branch=master"><img src="https://img.shields.io/coveralls/igoramadas/setmeup.svg" alt="Coverage Status"></a></p>
+				<p>Easy to use app settings module. Settings are stored and loaded from JSON files,
+				suppoort inline comments and can be (de)encrypted on-the-fly.</p>
+				<h2 id="configuration-files">Configuration files</h2>
+				<p>By default SetMeUp will load configuration from 3 different JSON files, on the following order:</p>
+				<ol>
+					<li><strong>settings.default.json</strong> are mainly used by libraries to define their default settings.</li>
+					<li><strong>settings.json</strong> should usually contain global settings for the current application.</li>
+					<li><strong>settings.NODE_ENV.json</strong> should have application settings relevant only to the current environment.</li>
+				</ol>
+				<p>A typical application will have at least the <code>settings.json</code> file, but most should have at least one
+					<code>settings.development.json</code> and one <code>settings.production.json</code> file as well. Most applications
+				won&#39;t have a <code>settings.default.json</code> file, as this is mainly used by shared libraries.</p>
+				<p>The configuration files can have inline comments!</p>
+				<h2 id="basic-usage">Basic usage</h2>
 				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> setmeup = <span class="hljs-built_in">require</span>(<span class="hljs-string">"setmeup"</span>)
 <span class="hljs-keyword">const</span> settings = setmeup.settings
 
-<span class="hljs-comment">// By default it will load from settings.default.json, settings.json and settings.ENV.json.</span>
-<span class="hljs-comment">// Here we load settings from a custom file:</span>
-<span class="hljs-comment">// {</span>
-<span class="hljs-comment">//   "app": {</span>
-<span class="hljs-comment">//     "port": 8080,</span>
-<span class="hljs-comment">//     "title": "My App"</span>
-<span class="hljs-comment">//   }</span>
-<span class="hljs-comment">// }</span>
+<span class="hljs-comment">// By default it will load from settings.default.json, settings.json and settings.NODE_ENV.json</span>
+<span class="hljs-comment">// automatically. Here we load settings from a custom file as well.</span>
 setmeup.load(<span class="hljs-string">"settings.custom.json"</span>)
 
-<span class="hljs-comment">// Server listens to port defined on settings.</span>
+<span class="hljs-comment">// Sample server listens to port defined on settings.</span>
 myExpressApp.listen(settings.app.port)
 
-<span class="hljs-comment">// Actual settings are just a simple object.</span>
+<span class="hljs-comment">// Actual settings can be changed on the fly.</span>
 settings.app.title = <span class="hljs-string">"My new App Title"</span>
 settings.myFTP = {
     <span class="hljs-attr">host</span>: <span class="hljs-string">"myhost.com"</span>,
     <span class="hljs-attr">folder</span>: <span class="hljs-string">"/something"</span>
 }</code></pre>
-				<h2 id="watching-updates-to-configuration-files">Watching updates to configuration files</h2>
+				<h3 id="watching-updates-to-configuration-files">Watching updates to configuration files</h3>
 				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> onLoad = <span class="hljs-function">(<span class="hljs-params">filename, settingsJson</span>) =&gt;</span> {
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Settings reloaded from disk: <span class="hljs-subst">${filename}</span>`</span>)
     <span class="hljs-built_in">console</span>.dir(settingsJson)
@@ -101,7 +107,7 @@ setmeup.on(<span class="hljs-string">"load"</span>, onLoad)
 
 <span class="hljs-comment">// Pretend updating files.</span>
 myApp.writeConfig(<span class="hljs-string">"title"</span>, <span class="hljs-string">"New title"</span>)</code></pre>
-				<h2 id="encrypting-and-decrypting-files">Encrypting and decrypting files</h2>
+				<h3 id="encrypting-and-decrypting-files">Encrypting and decrypting files</h3>
 				<pre><code class="language-javascript"><span class="hljs-comment">// Derive encryption key from machine (default).</span>
 setmeup.encrypt(<span class="hljs-string">"./settings.private.json"</span>)
 
@@ -117,6 +123,16 @@ setmeup.decrypt(<span class="hljs-string">"./settings.private.json"</span>, opti
 <span class="hljs-keyword">let</span> cryptoOptions = {<span class="hljs-attr">crypto</span>: options}
 setmeup.encrypt(<span class="hljs-string">"./settings.private.json"</span>, options)
 setmeup.load(<span class="hljs-string">"./settings.private.json"</span>, cryptoOptions)</code></pre>
+				<h2 id="methods">Methods</h2>
+				<h4 id="load-filename-options-object">load(filename, options) -&gt; object</h4>
+				<p>Loads the specified filename(s). The options are not mandatory:</p>
+				<ul>
+					<li><strong>overwrite</strong> overwrite settings in case they were previously set</li>
+					<li><strong>rootKey</strong> root key to be loaded from</li>
+					<li><strong>crypto</strong> in case file is encrypted, set the crypto options</li>
+				</ul>
+				<h4 id="reset">reset</h4>
+				<p>Unwatch files and load initial settings again.</p>
 				<h2 id="api-documentation">API documentation</h2>
 				<p>You can browse the full API documentation at <a href="https://setmeup.devv.com">https://setmeup.devv.com</a>.</p>
 				<p>Or check these following modules that are using SetMeUp:</p>

@@ -68,10 +68,10 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section ">
+						<section class="tsd-index-section tsd-is-private-protected">
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-interface tsd-parent-kind-external-module"><a href="../interfaces/_crypto_.cryptooptions.html" class="tsd-kind-icon">Crypto<wbr>Options</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-external-module tsd-is-protected"><a href="../interfaces/_crypto_.cryptooptions.html" class="tsd-kind-icon">Crypto<wbr>Options</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-not-exported">
@@ -98,7 +98,7 @@
 					<div class="tsd-signature tsd-kind-icon">defaultIV<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;8407198407191984&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/6a156bd/src/crypto.ts#L12">crypto.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/10f412b/src/crypto.ts#L12">crypto.ts:12</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -120,7 +120,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/6a156bd/src/crypto.ts#L40">crypto.ts:40</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/10f412b/src/crypto.ts#L46">crypto.ts:46</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -128,7 +128,7 @@
 									<p>Helper to encrypt or decrypt settings files. The default encryption key
 										is derived from the unique machine ID, so ideally you should change to
 										your desired secret and strong key. Same applies for the default IV.
-										You can also  set them via the SETMEUP_CRYPTOKEY and SETMEUP_CRYPTOIV
+										You can also  set them via the SETMEUP_CRYPTO_KEY and SETMEUP_CRYPTO_IV
 										environment variables. The default cipher algorithm is AES 256.
 									Failure to encrypt or decrypt will throw an exception.</p>
 								</div>
@@ -169,13 +169,13 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/6a156bd/src/crypto.ts#L172">crypto.ts:172</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/10f412b/src/crypto.ts#L182">crypto.ts:182</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Gets a unique machine ID. This is mainly used to get a valid encryption key
-									in case none is specified when encrypting / decrypting.</p>
+									<p>Gets a unique machine ID. This is mainly used by <a href="_crypto_.html#cryptomethod">CryptoMethod</a> to get a
+									valid encryption key in case none is specified when encrypting / decrypting.</p>
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -203,7 +203,7 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-protected">
 						<a href="../interfaces/_crypto_.cryptooptions.html" class="tsd-kind-icon">Crypto<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">

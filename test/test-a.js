@@ -68,4 +68,14 @@ describe("SetMeUp Main Tests", function() {
             done()
         }
     })
+
+    it("Creates new instance and do lot load", function(done) {
+        let newInstance = setmeup.newInstance(true)
+
+        if (Object.keys(newInstance.settings).length > 0) {
+            done("New instance should have an empty settings object.")
+        } else {
+            done()
+        }
+    })
 })

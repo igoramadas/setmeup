@@ -21,6 +21,7 @@ let loggerLoaded = false
  * @param filename The filename to be searched
  * @param basepath Optional, basepath where to look for the file.
  * @returns The full path to the file if one was found, or null if not found.
+ * @protected
  */
 export function getFilePath(filename: string, basepath?: string): string {
     const originalFilename = filename.toString()
@@ -41,6 +42,8 @@ export function getFilePath(filename: string, basepath?: string): string {
     if (basepath) {
         filename = path.resolve(basepath, originalFilename)
         hasFile = fs.existsSync(filename)
+
+        /* istanbul ignore else */
         if (hasFile) {
             return filename
         }
@@ -74,8 +77,9 @@ export function getFilePath(filename: string, basepath?: string): string {
 
 /**
  * Strip comments out of the JSON and returns it as a JSON object.
- * @param value The JSON string to be parsed.
+ * @param value The JSON string or object to be parsed.
  * @returns The parsed JSON object.
+ * @protected
  */
 export function parseJson(value: string | any) {
     const singleComment = 1
@@ -144,6 +148,7 @@ export function parseJson(value: string | any) {
  * @param filename Path to the file that should be loaded.
  * @param cryptoOptions In case file is encrypted, pass the crypto key and IV options.
  * @returns The parsed JSON object.
+ * @protected
  */
 export function loadJson(filename: string, cryptoOptions?: crypto.CryptoOptions | boolean): any {
     let result = null
@@ -168,7 +173,9 @@ export function loadJson(filename: string, cryptoOptions?: crypto.CryptoOptions 
 
     // Encrypted file and passed encryption options?
     if (result && result.encrypted) {
+        /* istanbul ignore else */
         if (cryptoOptions) {
+            // If crypto options are passed as true, clear its value to use the defaults.
             if (cryptoOptions === true) {
                 cryptoOptions = null
             }
@@ -187,6 +194,7 @@ export function loadJson(filename: string, cryptoOptions?: crypto.CryptoOptions 
  * @param source The source object.
  * @param target The target object.
  * @param overwrite If false it won't set properties that are already defined, default is true.
+ * @protected
  */
 export function extend(source: any, target: any, overwrite: boolean): any[] {
     const result = []
