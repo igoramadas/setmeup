@@ -35,6 +35,7 @@ update:
 	ncu -u
 	npm install
 	npm link anyhow
+	tsc
 
 .PHONY: test
 .PHONY: docs

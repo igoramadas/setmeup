@@ -97,5 +97,5 @@ You can browse the full API documentation at https://setmeup.devv.com.
 
 Or check these following modules that are using SetMeUp:
 
-* [Expresser](https://travis-ci.org/igoramadas/expresser)
-* [Monitorado](https://travis-ci.org/igoramadas/monitorado)
+* [Expresser](https://github.com/igoramadas/expresser)
+* [Monitorado](https://github.com/igoramadas/monitorado)
