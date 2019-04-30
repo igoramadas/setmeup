@@ -26,11 +26,11 @@
         "test": "make test-cover"
     },
     "dependencies": {
-        "eventemitter3": "^3.1.0",
+        "eventemitter3": "^3.1.2",
         "lodash": "^4.17.11"
     },
     "devDependencies": {
-        "@types/node": "^11.13.7",
+        "@types/node": "^11.13.8",
         "anyhow": "^1.0.0",
         "chai": "^4.2.0",
         "coveralls": "^3.0.3",
