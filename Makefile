@@ -34,6 +34,7 @@ update:
 	rm -rf node_modules/anyhow
 	ncu -u
 	npm install
+	npm update
 	npm link anyhow
 	tsc
 
