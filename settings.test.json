@@ -8,5 +8,6 @@
     },
     "root": {
         "date": "01/01/2000"
-    }
+    },
+    "testingFileWatcher": true
 }

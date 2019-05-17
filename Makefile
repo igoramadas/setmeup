@@ -3,6 +3,8 @@ MOCHA:= ./node_modules/.bin/mocha
 MOCHAEXEC:= ./node_modules/.bin/_mocha
 ISTANBUL:= ./node_modules/.bin/nyc
 TYPEDOC:= ./node_modules/.bin/typedoc
+export SMU_ENV_VAR:=abc
+export SMU2_ENV2_VAR2:=abc
 
 test:
 	tsc

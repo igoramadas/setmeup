@@ -47,6 +47,26 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
+    it("Load settings from environment variables", function(done) {
+        setmeup.loadFromEnv()
+
+        if (setmeup.settings.env && setmeup.settings.env.var == "abc") {
+            done()
+        } else {
+            done("Did not load from 'SMU_ENV_VAR' to 'settings.env.var = abc'.")
+        }
+    })
+
+    it("Load settings from environment variables, with different prefix", function(done) {
+        setmeup.loadFromEnv("SMU2")
+
+        if (setmeup.settings.env2 && setmeup.settings.env2.var2 == "abc") {
+            done()
+        } else {
+            done("Did not load from 'SMU2_ENV2_VAR2' to 'settings.env2.var2 = test'.")
+        }
+    })
+
     it("Creates new instance that differs from original", function(done) {
         let otherInstance = setmeup.newInstance()
 
