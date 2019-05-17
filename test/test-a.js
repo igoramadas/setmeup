@@ -67,6 +67,18 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
+    it("Load settings from non-existing environment variables", function(done) {
+        let callback = function() {
+            done()
+        }
+
+        setmeup.once("loadFromEnv", callback)
+
+        setmeup.loadFromEnv("INVALID_SMU_", {
+            overwrite: false
+        })
+    })
+
     it("Creates new instance that differs from original", function(done) {
         let otherInstance = setmeup.newInstance()
 
