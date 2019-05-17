@@ -220,11 +220,21 @@ class SetMeUp {
                 let arr = key.substring.split("_")
                 let target = this.settings
 
-                for (let i = 1; i < arr.length; i++) {
+                // Force lowercase.
+                for (let i = 0; i < arr.length; i++) {
+                    arr[i] = arr[i].toLowerCase()
+                }
+
+                // Iterate keys to make the settings tree, making sure each sub-key exists.
+                for (let i = 1; i < arr.length - 1; i++) {
+                    if (typeof target[arr[i]] == "undefined" || target[arr[i]] === null) {
+                        target[arr[i]] = {}
+                    }
+
                     target = target[arr[i]]
                 }
 
-                target = process.env[key]
+                target[arr[arr.length - 1]] = process.env[key]
             }
         }
 
