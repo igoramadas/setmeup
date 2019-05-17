@@ -75,6 +75,14 @@ declare class SetMeUp {
      */
     load(filenames?: string | string[], options?: LoadOptions): any;
     /**
+     * Load settings from environment variables, restricting to the passed prefix.
+     * Enviroment settings as variables will be split by underscore to define its tree.
+     * @param prefix The prefix use to match relevant environment variables. Default is "SMU_".
+     * @param options Load options defining if properties should be overwritten, and root settings key.
+     * @event loadFromEnv
+     */
+    loadFromEnv(prefix?: string, options?: LoadOptions): any;
+    /**
      * Reset to default settings by unwatching and clearing settings, then re-calling [[load]].
      * @event reset
      */
