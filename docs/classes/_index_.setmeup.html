@@ -99,6 +99,7 @@
 							<h3>Events</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-event tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#load" class="tsd-kind-icon">load</a></li>
+								<li class="tsd-kind-event tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#loadfromenv" class="tsd-kind-icon">load<wbr>From<wbr>Env</a></li>
 								<li class="tsd-kind-event tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#reset" class="tsd-kind-icon">reset</a></li>
 							</ul>
 						</section>
@@ -143,7 +144,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/233fd0f/src/index.ts#L57">index.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L57">index.ts:57</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -179,7 +180,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/233fd0f/src/index.ts#L135">index.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L135">index.ts:135</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -209,6 +210,44 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
+					<a name="loadfromenv" class="tsd-anchor"></a>
+					<h3>load<wbr>From<wbr>Env</h3>
+					<ul class="tsd-signatures tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">load<wbr>From<wbr>Env<span class="tsd-signature-symbol">(</span>prefix<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_index_.loadoptions.html" class="tsd-signature-type">LoadOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L199">index.ts:199</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Load settings from environment variables, restricting to the passed prefix.
+									Enviroment settings as variables will be split by underscore to define its tree.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> prefix: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The prefix use to match relevant environment variables. Default is &quot;SMU_&quot;.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/_index_.loadoptions.html" class="tsd-signature-type">LoadOptions</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Load options defining if properties should be overwritten, and root settings key.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
 					<a name="reset" class="tsd-anchor"></a>
 					<h3>reset</h3>
 					<ul class="tsd-signatures tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
@@ -218,7 +257,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/233fd0f/src/index.ts#L196">index.ts:196</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L262">index.ts:262</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -239,7 +278,7 @@
 					<div class="tsd-signature tsd-kind-icon">events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EventEmitter</span><span class="tsd-signature-symbol"> =&nbsp;new EventEmitter()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/233fd0f/src/index.ts#L89">index.ts:89</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L89">index.ts:89</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -254,7 +293,7 @@
 					<div class="tsd-signature tsd-kind-icon">files<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_index_.loadedfile.html" class="tsd-signature-type">LoadedFile</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/233fd0f/src/index.ts#L92">index.ts:92</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L92">index.ts:92</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -276,7 +315,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/233fd0f/src/index.ts#L84">index.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L84">index.ts:84</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -301,7 +340,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/233fd0f/src/index.ts#L222">index.ts:222</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L288">index.ts:288</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -338,7 +377,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/233fd0f/src/index.ts#L212">index.ts:212</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L278">index.ts:278</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -375,7 +414,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/233fd0f/src/index.ts#L55">index.ts:55</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L55">index.ts:55</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -407,7 +446,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/233fd0f/src/index.ts#L120">index.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L120">index.ts:120</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -444,7 +483,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/233fd0f/src/index.ts#L102">index.ts:102</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L102">index.ts:102</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -481,7 +520,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/233fd0f/src/index.ts#L111">index.ts:111</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L111">index.ts:111</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -518,7 +557,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/233fd0f/src/index.ts#L264">index.ts:264</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L330">index.ts:330</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -540,7 +579,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/233fd0f/src/index.ts#L234">index.ts:234</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/c74107c/src/index.ts#L300">index.ts:300</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -584,6 +623,9 @@
 							</li>
 							<li class=" tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_index_.setmeup.html#load" class="tsd-kind-icon">load</a>
+							</li>
+							<li class=" tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
+								<a href="_index_.setmeup.html#loadfromenv" class="tsd-kind-icon">load<wbr>From<wbr>Env</a>
 							</li>
 							<li class=" tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_index_.setmeup.html#reset" class="tsd-kind-icon">reset</a>
