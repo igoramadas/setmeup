@@ -45,7 +45,7 @@ declare class SetMeUp {
     newInstance(doNotLoad?: boolean): SetMeUp;
     /**
      * Default SetMeUp constructor.
-     * @param doNotLoad Optional, if true will not auto load settings from file(s).
+     * @param doNotLoad Optional, if true will not auto load settings from files and environment variables.
      */
     constructor(doNotLoad?: boolean);
     /** Internal, the actual settings storage object. */

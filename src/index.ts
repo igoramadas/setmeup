@@ -68,7 +68,7 @@ class SetMeUp {
 
     /**
      * Default SetMeUp constructor.
-     * @param doNotLoad Optional, if true will not auto load settings from file(s).
+     * @param doNotLoad Optional, if true will not auto load settings from files and environment variables.
      */
     constructor(doNotLoad?: boolean) {
         if (!logger) {
@@ -79,8 +79,15 @@ class SetMeUp {
             }
         }
 
+        /* istanbul ignore else */
+        if (env.NODE_ENV == "test") {
+            doNotLoad = true
+        }
+
+        /* istanbul ignore if */
         if (!doNotLoad) {
             this.load()
+            this.loadFromEnv()
         }
     }
 

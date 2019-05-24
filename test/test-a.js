@@ -26,6 +26,7 @@ describe("SetMeUp Main Tests", function() {
     })
 
     it("Load test settings", function(done) {
+        setmeup.load()
         setmeup.load("./settings.test.json")
 
         if (setmeup.settings.something && setmeup.settings.something.number == 1) {
