@@ -47,7 +47,7 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
-    it("Load settings from environment variables", function(done) {
+    it("Load from environment variables", function(done) {
         setmeup.loadFromEnv()
 
         if (setmeup.settings.env && setmeup.settings.env.var == "abc") {
@@ -57,8 +57,11 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
-    it("Load settings from environment variables, with different prefix", function(done) {
-        setmeup.loadFromEnv("SMU2")
+    it("Load from environment variables, with different prefix and forcing lowercase", function(done) {
+        setmeup.loadFromEnv("SMU2", {
+            lowercase: true,
+            overwrite: false
+        })
 
         if (setmeup.settings.env2 && setmeup.settings.env2.var2 == "abc") {
             done()
@@ -67,7 +70,7 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
-    it("Load settings from non-existing environment variables", function(done) {
+    it("Load from non-existing environment variables", function(done) {
         let callback = function() {
             done()
         }

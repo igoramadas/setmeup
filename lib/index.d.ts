@@ -10,7 +10,7 @@ interface LoadedFile {
     watching: boolean;
 }
 /**
- * Represents loading options, used on [[load]].
+ * Represents loading from JSON options, used on [[load]].
  */
 interface LoadOptions {
     /** Overwrite current settings with loaded ones? */
@@ -19,6 +19,15 @@ interface LoadOptions {
     rootKey?: string;
     /** Decryption options in case file is encrypted. */
     crypto?: crypto.CryptoOptions | boolean;
+}
+/**
+ * Represents loading from environment options, used on [[loadFromEnv]].
+ */
+interface LoadEnvOptions {
+    /** Overwrite current settings with loaded ones? */
+    overwrite?: boolean;
+    /** Force environment variables to settings in lowercase? */
+    lowercase?: boolean;
 }
 /**
  * This is the main SetMeUp class.
@@ -77,11 +86,11 @@ declare class SetMeUp {
     /**
      * Load settings from environment variables, restricting to the passed prefix.
      * Enviroment settings as variables will be split by underscore to define its tree.
-     * @param prefix The prefix use to match relevant environment variables. Default is "SMU_".
-     * @param options Load options defining if properties should be overwritten, and root settings key.
+     * @param prefix The prefix use to match relevant environment variables. Default is "SMU_", should always end with "_" (underscore).
+     * @param options Load options defining if properties should be overwritten and forced to lowercase.
      * @event loadFromEnv
      */
-    loadFromEnv(prefix?: string, options?: LoadOptions): any;
+    loadFromEnv(prefix?: string, options?: LoadEnvOptions): any;
     /**
      * Reset to default settings by unwatching and clearing settings, then re-calling [[load]].
      * @event reset
