@@ -53,7 +53,7 @@ describe("SetMeUp Main Tests", function() {
         if (setmeup.settings.env && setmeup.settings.env.var == "abc") {
             done()
         } else {
-            done("Did not load from 'SMU_ENV_VAR' to 'settings.env.var = abc'.")
+            done("Did not load from 'SMU_env_var' to 'settings.env.var = abc'.")
         }
     })
 

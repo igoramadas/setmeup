@@ -224,10 +224,10 @@ class SetMeUp {
         _.defaults(options, {overwrite: true, lowercase: false})
 
         // Iterate and process relevant variables.
-        // Each underscore defines a level on the settings tree.
+        // Each underscore defines a level on the result tree.
         for (let key of keys) {
             if (key.substring(0, prefix.length) == prefix) {
-                let target = this.settings
+                let target = result
                 let arr = key.substring(prefix.length).split("_")
 
                 // Force lowercase if defined on options.
