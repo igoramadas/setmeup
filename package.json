@@ -1,6 +1,6 @@
 {
     "name": "setmeup",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "SetMeUp, your single and only settings manager.",
     "keywords": [
         "setmeup",
@@ -31,7 +31,7 @@
     },
     "devDependencies": {
         "@types/node": "^12.0.8",
-        "anyhow": "^1.1.0",
+        "anyhow": "^1.1.1",
         "chai": "^4.2.0",
         "coveralls": "^3.0.4",
         "mocha": "^6.1.4",

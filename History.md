@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.1.1
+=====
+* Updated dependencies.
+
 1.1.0
 =====
 * NEW! Load settings from environment variables.
