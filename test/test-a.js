@@ -95,16 +95,6 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
-    it("Resets to original", function(done) {
-        setmeup.reset()
-
-        if (setmeup.settings.updatedValue) {
-            done("Calling reset should clear the updatedValue property.")
-        } else {
-            done()
-        }
-    })
-
     it("Creates new instance and do lot load", function(done) {
         let newInstance = setmeup.newInstance(true)
 

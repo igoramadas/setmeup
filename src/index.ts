@@ -279,13 +279,21 @@ class SetMeUp {
     }
 
     /**
-     * Reset to default settings by unwatching and clearing settings, then re-calling [[load]].
+     * Reset to default settings by unwatching and clearing all settings.
+     * Ideally you should call [[load]] / [[loadFromEnv]] after resetting.
      * @event reset
      */
     reset(): void {
         this.unwatch()
         this.files = []
-        this._settings = {}
+
+        try {
+            Object.keys(this._settings).forEach(function(key) {
+                delete this._settings[key]
+            })
+        } catch (ex) {
+            logger.error("Settings.reset", ex)
+        }
 
         this.events.emit("reset")
     }
