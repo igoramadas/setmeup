@@ -172,6 +172,7 @@ class SetMeUp {
         }
 
         for (let filename of filenames) {
+            filename = utils.getFilePath(filename)
             let settingsJson = utils.loadJson(filename, options.crypto)
 
             // Add file to the `files` list, but only if not loaded previously.
@@ -181,11 +182,6 @@ class SetMeUp {
                 } else {
                     logger.debug("SetMeUp.load", filename, "Loaded before, so won't add to the files list")
                 }
-            }
-
-            /* istanbul ignore else */
-            if (logger) {
-                logger.info("SetMeUp.load", filename, "Loaded")
             }
 
             // Extend loaded settings.

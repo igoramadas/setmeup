@@ -152,7 +152,6 @@ export function parseJson(value: string | any) {
  */
 export function loadJson(filename: string, cryptoOptions?: crypto.CryptoOptions | boolean): any {
     let result = null
-    filename = getFilePath(filename)
 
     // Found file? Load it. Try using UTF8 first, if failed, use ASCII.
     if (filename != null) {
@@ -179,7 +178,9 @@ export function loadJson(filename: string, cryptoOptions?: crypto.CryptoOptions 
             if (cryptoOptions === true) {
                 cryptoOptions = null
             }
+
             logger.debug("SetMeUp.Utils.loadJson", filename, "Will be decrypted")
+
             result = crypto.CryptoMethod("decrypt", filename, cryptoOptions as crypto.CryptoOptions)
         } else if (logger) {
             logger.warn("SetMeUp.Utils.loadJson", `${filename} appears to be encrypted! Forgot passing 'cryptoOptions' to decrypt?`)

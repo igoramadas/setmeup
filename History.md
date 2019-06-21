@@ -1,9 +1,10 @@
 # Changelog for SetMeUp
 
-1.1.2
+1.1.3
 =====
 * Make sure anyhow (logger) is set up on init.
 * Calling reset() will deep clean instead of create new settings object.
+* Loading from same filename in different locations now works properly.
 
 1.1.1
 =====
