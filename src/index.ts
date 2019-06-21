@@ -74,6 +74,11 @@ class SetMeUp {
         if (!logger) {
             try {
                 logger = require("anyhow")
+
+                if (!logger.isReady) {
+                    /* istanbul ignore next */
+                    logger.setup()
+                }
             } catch (ex) {
                 // Anyhow module not found
             }
