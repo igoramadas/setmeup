@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.1.2
+=====
+* Make sure anyhow (logger) is set up on init.
+
 1.1.1
 =====
 * Updated dependencies.
