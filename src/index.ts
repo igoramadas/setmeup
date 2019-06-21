@@ -171,8 +171,8 @@ class SetMeUp {
             filenames = [filenames as string]
         }
 
-        for (let filename of filenames) {
-            filename = utils.getFilePath(filename)
+        for (let f of filenames) {
+            const filename = utils.getFilePath(f)
             let settingsJson = utils.loadJson(filename, options.crypto)
 
             // Add file to the `files` list, but only if not loaded previously.
