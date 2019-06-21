@@ -280,15 +280,19 @@ class SetMeUp {
 
     /**
      * Reset to default settings by unwatching and clearing all settings.
-     * Ideally you should call [[load]] / [[loadFromEnv]] after resetting.
+     * Ideally you should call [[load]] / [[loadFromEnv]] after resetting,
+     * otherwise it will most certainly break your application.
      * @event reset
      */
     reset(): void {
+        const parentKeys = Object.keys(this._settings)
+        logger.warn("Settings.reset", `Will clear ${parentKeys.length} parent keys.`)
+
         this.unwatch()
         this.files = []
 
         try {
-            Object.keys(this._settings).forEach(function(key) {
+            parentKeys.forEach(function(key) {
                 delete this._settings[key]
             })
         } catch (ex) {

@@ -92,7 +92,8 @@ declare class SetMeUp {
      */
     loadFromEnv(prefix?: string, options?: LoadEnvOptions): any;
     /**
-     * Reset to default settings by unwatching and clearing settings, then re-calling [[load]].
+     * Reset to default settings by unwatching and clearing all settings.
+     * Ideally you should call [[load]] / [[loadFromEnv]] after resetting.
      * @event reset
      */
     reset(): void;
