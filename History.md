@@ -1,7 +1,8 @@
 # Changelog for SetMeUp
 
-1.1.4
+1.1.5
 =====
+* Fixed "overwrite" behaviour on settings extend().
 * Changed order of load preference on getFilePath(), local path is now last.
 * Fixed package dependencies.
 

@@ -200,6 +200,12 @@ export function loadJson(filename: string, cryptoOptions?: crypto.CryptoOptions 
 export function extend(source: any, target: any, overwrite: boolean): any[] {
     const result = []
 
+    // Overwrite defaults to true.
+    if (overwrite == null || typeof overwrite == "undefined") {
+        overwrite = true
+    }
+
+    // Iterade object properties (deep).
     for (let prop in source) {
         const value = source[prop]
         if (value && value.constructor === Object) {
@@ -207,7 +213,7 @@ export function extend(source: any, target: any, overwrite: boolean): any[] {
                 target[prop] = {}
             }
             result.push(this.extend(source[prop], target[prop], overwrite))
-        } else if (!overwrite || target[prop] == null) {
+        } else if (overwrite || target[prop] == null) {
             result.push((target[prop] = source[prop]))
         } else {
             result.push(undefined)

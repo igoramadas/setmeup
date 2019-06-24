@@ -36,6 +36,21 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
+    it("Load more test settings, do not overwrite", function(done) {
+        setmeup.load("./settings.test.json")
+        setmeup.load("./settings.test2.json", {
+            overwrite: false
+        })
+
+        let something = setmeup.settings.something
+
+        if (something && something.boolean && something.thisIsNew == "yes") {
+            done()
+        } else {
+            done("New settings should have boolean=true (keep original) and thisIsNew='yes'.")
+        }
+    })
+
     it("Load test settings from a specific root key", function(done) {
         setmeup.load("./settings.test.json", {
             rootKey: "root"
@@ -60,8 +75,7 @@ describe("SetMeUp Main Tests", function() {
 
     it("Load from environment variables, with different prefix and forcing lowercase", function(done) {
         setmeup.loadFromEnv("SMU2", {
-            lowercase: true,
-            overwrite: false
+            lowercase: true
         })
 
         if (setmeup.settings.env2 && setmeup.settings.env2.var2 == "abc") {
