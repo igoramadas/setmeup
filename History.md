@@ -1,5 +1,10 @@
 # Changelog for SetMeUp
 
+1.1.4
+=====
+* Changed order of load preference on getFilePath(), local path is now last.
+* Fixed package dependencies.
+
 1.1.3
 =====
 * Make sure anyhow (logger) is set up on init.
