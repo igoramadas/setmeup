@@ -49,12 +49,6 @@ export function getFilePath(filename: string, basepath?: string): string {
         }
     }
 
-    // Check if correct full path was passed.
-    hasFile = fs.existsSync(filename)
-    if (hasFile) {
-        return filename
-    }
-
     // Try running directory.
     filename = path.resolve(process.cwd(), originalFilename)
     hasFile = fs.existsSync(filename)
@@ -67,6 +61,12 @@ export function getFilePath(filename: string, basepath?: string): string {
     filename = path.resolve(path.dirname(require.main.filename), originalFilename)
     hasFile = fs.existsSync(filename)
     /* istanbul ignore if */
+    if (hasFile) {
+        return filename
+    }
+
+    // Check if correct full path was passed.
+    hasFile = fs.existsSync(filename)
     if (hasFile) {
         return filename
     }
