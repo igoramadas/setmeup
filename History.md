@@ -2,7 +2,7 @@
 
 1.1.5
 =====
-* Fixed "overwrite" behaviour on settings extend().
+* Fixed "overwrite" behaviour on utils.extend().
 * Changed order of load preference on getFilePath(), local path is now last.
 * Fixed package dependencies.
 
