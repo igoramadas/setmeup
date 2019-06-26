@@ -42,7 +42,6 @@ export function getFilePath(filename: string, basepath?: string): string {
     if (basepath) {
         filename = path.resolve(basepath, originalFilename)
         hasFile = fs.existsSync(filename)
-
         /* istanbul ignore else */
         if (hasFile) {
             return filename
