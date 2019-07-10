@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.1.6
+=====
+* Updated dependencies.
+
 1.1.5
 =====
 * Fixed "overwrite" behaviour on utils.extend().
