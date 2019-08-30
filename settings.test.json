@@ -9,5 +9,6 @@
     "root": {
         "date": "01/01/2000"
     },
+    "array": [1, -1, "a", true],
     "testingFileWatcher": true
 }
