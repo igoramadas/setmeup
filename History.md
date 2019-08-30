@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.2.1
+=====
+* Removed wrong warning when loading settings JSON to be decrypted.
+
 1.2.0
 =====
 * Improved encryption to work with arrays, will not consider booleans.

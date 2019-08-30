@@ -171,8 +171,13 @@ export function loadJson(filename: string, cryptoOptions?: crypto.CryptoOptions 
 
     // Encrypted file and passed encryption options?
     if (result && result.encrypted) {
+        // Ignore if crypto options passed as false.
+        if (cryptoOptions === false) {
+            return result
+        }
+
         /* istanbul ignore else */
-        if (cryptoOptions) {
+        if (cryptoOptions != null) {
             // If crypto options are passed as true, clear its value to use the defaults.
             if (cryptoOptions === true) {
                 cryptoOptions = null

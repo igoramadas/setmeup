@@ -1,14 +1,8 @@
 {
     "name": "setmeup",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "SetMeUp, your single and only settings manager.",
-    "keywords": [
-        "setmeup",
-        "app settings",
-        "configuration",
-        "settings",
-        "setup"
-    ],
+    "keywords": ["setmeup", "app settings", "configuration", "settings", "setup"],
     "author": "Igor Ramadas <igor@devv.com>",
     "homepage": "https://setmeup.devv.com",
     "subdomain": "setmeup",

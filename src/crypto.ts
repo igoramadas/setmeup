@@ -77,7 +77,7 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
         options.iv = defaultIV
     }
 
-    const settingsJson = utils.loadJson(filename)
+    const settingsJson = utils.loadJson(filename, false)
 
     // Settings file not found or invalid? Stop here.
     if (settingsJson == null) {
