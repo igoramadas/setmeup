@@ -150,12 +150,17 @@ describe("SetMeUp Crypto Tests", function() {
         }
     })
 
-    it("Fails to encrypt non-existing file", function(done) {
+    it("Fails to (de)encrypt non-existing file", function(done) {
         try {
-            setmeup.encrypt("wrong-file.json")
+            setmeup.encrypt("wrong-file-123.json")
             done("Trying to encrypt wrong-file.json should throw an error.")
         } catch (ex) {
-            done()
+            try {
+                setmeup.decrypt("wrong-file-123.json")
+                done("Trying to decrypt wrong-file-123.json should throw an error.")
+            } catch (ex) {
+                done()
+            }
         }
     })
 })
