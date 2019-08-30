@@ -149,4 +149,13 @@ describe("SetMeUp Crypto Tests", function() {
             done(`Error (de)encrypting using custom parameters: ${ex.toString()}`)
         }
     })
+
+    it("Fails to encrypt non-existing file", function(done) {
+        try {
+            setmeup.encrypt("wrong-file.json")
+            done("Trying to encrypt wrong-file.json should throw an error.")
+        } catch (ex) {
+            done()
+        }
+    })
 })

@@ -132,7 +132,7 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
                         // Split the data as "datatype:encryptedValue".
                         const arrValue = currentValue.split(":")
 
-                        if (arrValue.length > 0 && arrValue[0].length == 1) {
+                        if (arrValue.length > 1 && arrValue[0].toString().length == 1) {
                             newValue = ""
 
                             // Create cipher and decrypt.
@@ -190,8 +190,10 @@ function getMachineID(): string {
 
     /* istanbul ignore if */
     if (process.arch == "ia32" && process.env.hasOwnProperty("PROCESSOR_ARCHITEW6432")) {
+        /* istanbul ignore next */
         windowsArc = "mixed"
     } else {
+        /* istanbul ignore next */
         windowsArc = "native"
     }
 

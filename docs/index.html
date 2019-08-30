@@ -62,13 +62,17 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="setmeup">SetMeUp</h1>
+				<a href="#setmeup" id="setmeup" style="color: inherit; text-decoration: none;">
+					<h1>SetMeUp</h1>
+				</a>
 				<p><a href="https://npmjs.com/package/setmeup"><img src="https://img.shields.io/npm/v/setmeup.svg" alt="Version"></a>
 					<a href="https://travis-ci.org/igoramadas/setmeup"><img src="https://img.shields.io/travis/igoramadas/setmeup.svg" alt="Build Status"></a>
 				<a href="https://coveralls.io/github/igoramadas/setmeup?branch=master"><img src="https://img.shields.io/coveralls/igoramadas/setmeup.svg" alt="Coverage Status"></a></p>
 				<p>Easy to use app settings module. Settings are stored and loaded from JSON files,
 				suppoort inline comments and can be (de)encrypted on-the-fly.</p>
-				<h2 id="configuration-files">Configuration files</h2>
+				<a href="#configuration-files" id="configuration-files" style="color: inherit; text-decoration: none;">
+					<h2>Configuration files</h2>
+				</a>
 				<p>By default SetMeUp will load configuration from 3 different JSON files, on the following order:</p>
 				<ol>
 					<li><strong>settings.default.json</strong> are mainly used by libraries to define their default settings.</li>
@@ -79,7 +83,9 @@
 					<code>settings.development.json</code> and one <code>settings.production.json</code> file as well. Most applications
 				won&#39;t have a <code>settings.default.json</code> file, as this is mainly used by shared libraries.</p>
 				<p>The configuration files can have inline comments!</p>
-				<h2 id="basic-usage">Basic usage</h2>
+				<a href="#basic-usage" id="basic-usage" style="color: inherit; text-decoration: none;">
+					<h2>Basic usage</h2>
+				</a>
 				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> setmeup = <span class="hljs-built_in">require</span>(<span class="hljs-string">"setmeup"</span>)
 <span class="hljs-keyword">const</span> settings = setmeup.settings
 
@@ -96,7 +102,9 @@ settings.myFTP = {
     <span class="hljs-attr">host</span>: <span class="hljs-string">"myhost.com"</span>,
     <span class="hljs-attr">folder</span>: <span class="hljs-string">"/something"</span>
 }</code></pre>
-				<h3 id="watching-updates-to-configuration-files">Watching updates to configuration files</h3>
+				<a href="#watching-updates-to-configuration-files" id="watching-updates-to-configuration-files" style="color: inherit; text-decoration: none;">
+					<h3>Watching updates to configuration files</h3>
+				</a>
 				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> onLoad = <span class="hljs-function">(<span class="hljs-params">filename, settingsJson</span>) =&gt;</span> {
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Settings reloaded from disk: <span class="hljs-subst">${filename}</span>`</span>)
     <span class="hljs-built_in">console</span>.dir(settingsJson)
@@ -107,7 +115,9 @@ setmeup.on(<span class="hljs-string">"load"</span>, onLoad)
 
 <span class="hljs-comment">// Pretend updating files.</span>
 myApp.writeConfig(<span class="hljs-string">"title"</span>, <span class="hljs-string">"New title"</span>)</code></pre>
-				<h3 id="encrypting-and-decrypting-files">Encrypting and decrypting files</h3>
+				<a href="#encrypting-and-decrypting-files" id="encrypting-and-decrypting-files" style="color: inherit; text-decoration: none;">
+					<h3>Encrypting and decrypting files</h3>
+				</a>
 				<pre><code class="language-javascript"><span class="hljs-comment">// Derive encryption key from machine (default).</span>
 setmeup.encrypt(<span class="hljs-string">"./settings.private.json"</span>)
 
@@ -123,17 +133,25 @@ setmeup.decrypt(<span class="hljs-string">"./settings.private.json"</span>, opti
 <span class="hljs-keyword">let</span> cryptoOptions = {<span class="hljs-attr">crypto</span>: options}
 setmeup.encrypt(<span class="hljs-string">"./settings.private.json"</span>, options)
 setmeup.load(<span class="hljs-string">"./settings.private.json"</span>, cryptoOptions)</code></pre>
-				<h2 id="methods">Methods</h2>
-				<h4 id="load-filename-options-object">load(filename, options) -&gt; object</h4>
+				<a href="#methods" id="methods" style="color: inherit; text-decoration: none;">
+					<h2>Methods</h2>
+				</a>
+				<a href="#loadfilename-options--gt-object" id="loadfilename-options--gt-object" style="color: inherit; text-decoration: none;">
+					<h4>load(filename, options) -&gt; object</h4>
+				</a>
 				<p>Loads the specified filename(s). The options are not mandatory:</p>
 				<ul>
 					<li><strong>overwrite</strong> overwrite settings in case they were previously set</li>
 					<li><strong>rootKey</strong> root key to be loaded from</li>
 					<li><strong>crypto</strong> in case file is encrypted, set the crypto options</li>
 				</ul>
-				<h4 id="reset">reset</h4>
+				<a href="#reset" id="reset" style="color: inherit; text-decoration: none;">
+					<h4>reset</h4>
+				</a>
 				<p>Unwatch files and load initial settings again.</p>
-				<h2 id="api-documentation">API documentation</h2>
+				<a href="#api-documentation" id="api-documentation" style="color: inherit; text-decoration: none;">
+					<h2>API documentation</h2>
+				</a>
 				<p>You can browse the full API documentation at <a href="https://setmeup.devv.com">https://setmeup.devv.com</a>.</p>
 				<p>Or check these following modules that are using SetMeUp:</p>
 				<ul>
@@ -178,6 +196,7 @@ setmeup.load(<span class="hljs-string">"./settings.private.json"</span>, cryptoO
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
@@ -226,7 +245,7 @@ setmeup.load(<span class="hljs-string">"./settings.private.json"</span>, cryptoO
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>

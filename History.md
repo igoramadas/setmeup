@@ -3,6 +3,7 @@
 1.2.0
 =====
 * Improved encryption to work with arrays, will not consider booleans.
+* BREAKING! You should decrypt existing encrypted settings prior to upgrading!
 * Updated dependencies.
 
 1.1.6
