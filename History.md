@@ -1,5 +1,10 @@
 # Changelog for SetMeUp
 
+1.2.0
+=====
+* Improved encryption to work with arrays, will not consider booleans.
+* Updated dependencies.
+
 1.1.6
 =====
 * Updated dependencies.
