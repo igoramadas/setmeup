@@ -4,8 +4,7 @@
 [![Build Status](https://img.shields.io/travis/igoramadas/setmeup.svg)](https://travis-ci.org/igoramadas/setmeup)
 [![Coverage Status](https://img.shields.io/coveralls/igoramadas/setmeup.svg)](https://coveralls.io/github/igoramadas/setmeup?branch=master)
 
-Easy to use app settings module. Settings are stored and loaded from JSON files,
-suppoort inline comments and can be (de)encrypted on-the-fly.
+Easy to use app settings module. Settings are stored and loaded from JSON files and / or environment variables, suppoort inline comments and can be (de)encrypted on-the-fly.
 
 ## Configuration files
 
@@ -15,9 +14,7 @@ By default SetMeUp will load configuration from 3 different JSON files, on the f
 2. **settings.json** should usually contain global settings for the current application.
 3. **settings.NODE_ENV.json** should have application settings relevant only to the current environment.
 
-A typical application will have at least the `settings.json` file, but most should have at least one
-`settings.development.json` and one `settings.production.json` file as well. Most applications
-won't have a `settings.default.json` file, as this is mainly used by shared libraries.
+A typical application will have at least the `settings.json` file, but most should have at least one `settings.development.json` and one `settings.production.json` file as well. Most applications won't have a `settings.default.json` file, as this is mainly used by shared libraries.
 
 The configuration files can have inline comments!
 
@@ -77,19 +74,35 @@ setmeup.encrypt("./settings.private.json", options)
 setmeup.load("./settings.private.json", cryptoOptions)
 ```
 
-## Methods
+### Loading from enviroment variables
 
-#### load(filename, options) -> object
+You can also define settings via environment variables, by using the "SMU_" prefix and using underscore for each new level on the settings tree. For example:
 
-Loads the specified filename(s). The options are not mandatory:
+* app.id = $SMU_app_id
+* app.server.hostname = $SMU_app_server_hostname
 
-* **overwrite** overwrite settings in case they were previously set
-* **rootKey** root key to be loaded from
-* **crypto** in case file is encrypted, set the crypto options
+```json
+{
+    "app": {
+        "id": "myapp",
+        "server": {
+            "hostname": "localhost"
+        }
+    }
+}
+```
 
-#### reset
+So you could replicate the settings JSON above by executing:
 
-Unwatch files and load initial settings again.
+    $ SMU_app_id=myapp SMU_app_server_hostname=localhost node index.js
+
+#### Environment variables for encryption
+
+The encryption features of SetMeUp can (and should!) be customized by defininig the following environment variables:
+
+* SMU_CRYPTO_CIPHER - the cipher, default is aes256
+* SMU_CRYPTO_KEY - the encryption key, default is based on the machine ID
+* SMU_CRYPTO_IV - the IV, default is set on code
 
 ## API documentation
 

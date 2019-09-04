@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.2.2
+=====
+* Allow changing the crypto cipher via SMU_CRYPTO_CIPHER env variable.
+
 1.2.1
 =====
 * Removed wrong warning when loading settings JSON to be decrypted.
