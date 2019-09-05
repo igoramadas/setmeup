@@ -76,7 +76,7 @@ setmeup.load("./settings.private.json", cryptoOptions)
 
 ### Loading from enviroment variables
 
-You can also define settings via environment variables, by using the "SMU_" prefix and using underscore for each new level on the settings tree. For example:
+You can also define settings via environment variables, by using the "SMU_" (or your own) prefix and using underscore for each new level on the settings tree. For example:
 
 * app.id = $SMU_app_id
 * app.server.hostname = $SMU_app_server_hostname
@@ -95,6 +95,25 @@ You can also define settings via environment variables, by using the "SMU_" pref
 So you could replicate the settings JSON above by executing:
 
     $ SMU_app_id=myapp SMU_app_server_hostname=localhost node index.js
+
+Some code samples:
+
+```javascript
+// Load settings from environment variables using the default SMU_ prefix.
+setmeup.loadFromEnv()
+
+// Or specify your own prefix, for example if you have a
+// variable MYAPP_general_debug for settings.general.debug.
+setmeup.loadFromEnv("MYAPP")
+
+// Sometimes we define variables all uppercased, so you can force
+// lowercase them when parsing as settings. Here the variable
+// SMU_APP_TITLE gets set to settings.app.title instead of settings.APP.TITLE.
+setmeup.loadFromEnv(null, {lowercase: true})
+
+// You can also disable overwriting settings already defined.
+setmeup.loadFromEnv(null, {overwrite: false})
+```
 
 #### Environment variables for encryption
 
