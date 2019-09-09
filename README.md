@@ -123,6 +123,10 @@ The encryption features of SetMeUp can (and should!) be customized by defininig 
 * SMU_CRYPTO_KEY - the encryption key, default is based on the machine ID
 * SMU_CRYPTO_IV - the IV, default is set on code
 
+#### Security considerations
+
+The main reason why `loadFromEnv()` is not called automatically like the `load()` is to avoid settings hijacking on shared environments. For instance an attacker could change things like URLs and credentials even if they had no permissions to access the settings files, simply by crafting some environment variables to replace the settings.
+
 ## API documentation
 
 You can browse the full API documentation at https://setmeup.devv.com.

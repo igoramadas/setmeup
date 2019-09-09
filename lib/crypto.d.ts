@@ -14,7 +14,7 @@ export interface CryptoOptions {
  * Helper to encrypt or decrypt settings files. The default encryption key
  * is derived from the unique machine ID, so ideally you should change to
  * your desired secret and strong key. Same applies for the default IV.
- * You can also  set them via the SETMEUP_CRYPTO_KEY and SETMEUP_CRYPTO_IV
+ * You can also  set them via the SMU_CRYPTO_KEY and SMU_CRYPTO_IV
  * environment variables. The default cipher algorithm is AES 256.
  * Failure to encrypt or decrypt will throw an exception.
  * @param action Action can be "encrypt" or "decrypt".

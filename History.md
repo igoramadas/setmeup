@@ -1,5 +1,10 @@
 # Changelog for SetMeUp
 
+1.3.0
+=====
+* BREAKING! The loadFromEnv() is not triggered automatically, now must be called manually.
+* Updated dependencies.
+
 1.2.2
 =====
 * Allow changing the crypto cipher via SMU_CRYPTO_CIPHER env variable.
