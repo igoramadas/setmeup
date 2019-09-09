@@ -92,7 +92,6 @@ class SetMeUp {
         /* istanbul ignore if */
         if (!doNotLoad) {
             this.load()
-            this.loadFromEnv()
         }
     }
 
