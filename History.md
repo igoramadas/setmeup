@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.3.1
+=====
+* Updated dependencies.
+
 1.3.0
 =====
 * BREAKING! The loadFromEnv() is not triggered automatically, now must be called manually.
