@@ -36,7 +36,7 @@ interface LoadEnvOptions {
 declare class SetMeUp {
     private static _instance;
     /** @hidden */
-    static readonly Instance: SetMeUp;
+    static get Instance(): SetMeUp;
     /**
      * Returns a new fresh instance of the SetMeUp module.
      * @param doNotLoad Optional, if true will not load settings from file on new instance.
@@ -51,7 +51,7 @@ declare class SetMeUp {
     /** Internal, the actual settings storage object. */
     private _settings;
     /** Exposes the settings object as read only. */
-    readonly settings: any;
+    get settings(): any;
     /** Event emitter. */
     events: EventEmitter;
     /** Array of loaded files. */
