@@ -37,7 +37,7 @@ publish:
 
 update:
 	rm -f package-lock.json
-	ncu -u
+	-ncu -u
 	npm install
 	tsc
 
