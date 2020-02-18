@@ -14,7 +14,7 @@ describe("SetMeUp Main Tests", function() {
     before(function() {
         require("anyhow").setup("none")
 
-        setmeup = require("../index")
+        setmeup = require("../lib/index")
     })
 
     it("Try loading settings from invalid file", function(done) {

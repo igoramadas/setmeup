@@ -18,7 +18,7 @@ describe("SetMeUp Crypto Tests", function() {
     before(function() {
         require("anyhow").setup("none")
 
-        setmeup = require("../index")
+        setmeup = require("../lib/index")
         utils = require("../lib/utils")
 
         const originalFilename = utils.getFilePath("./settings.test.json")

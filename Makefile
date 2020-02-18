@@ -9,17 +9,17 @@ export SMU_env_anotherVar:=another
 export SMU2_ENV2_VAR2:=abc
 
 test:
-	tsc
+	$(TSC)
 	@NODE_ENV=test $(MOCHA) --trace-warnings --exit -u tdd -R spec
 
 test-cover:
-	tsc
+	$(TSC)
 	echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
 	@NODE_ENV=test $(ISTANBUL) $(MOCHAEXEC) --exit --report lcovonly -R spec && \
 	cat ./coverage/lcov.info | $(COVERALLS) || true
 
 cover:
-	tsc
+	$(TSC)
 	@NODE_ENV=test $(ISTANBUL) $(MOCHAEXEC) --exit -R spec ./test/*.js
 
 docs:

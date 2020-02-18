@@ -19,7 +19,7 @@ describe("SetMeUp Watch Tests", function() {
     before(function() {
         require("anyhow").setup("none")
 
-        setmeup = require("../index")
+        setmeup = require("../lib/index")
         setmeup.load("settings.test.json")
 
         utils = require("../lib/utils")
