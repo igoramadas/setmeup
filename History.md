@@ -1,6 +1,6 @@
 # Changelog for SetMeUp
 
-1.4.0
+1.4.1
 =====
 * TypeScript types are now exported with the library.
 * Renamed internal Crypto to CryptoHelper to avoid confusion with Node's crypto.
