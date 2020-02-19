@@ -3,6 +3,7 @@
 1.4.0
 =====
 * TypeScript types are now exported with the library.
+* Renamed internal Crypto to CryptoHelper to avoid confusion with Node's crypto.
 
 1.3.2
 =====

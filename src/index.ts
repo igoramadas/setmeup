@@ -1,13 +1,10 @@
 // SetMeUp: index.ts
 
-import * as crypto from "./crypto"
+import * as cryptoHelper from "./cryptohelper"
 import * as utils from "./utils"
+import _ = require("lodash")
 import EventEmitter = require("eventemitter3")
-
-/** @hidden */
-const _ = require("lodash")
-/** @hidden */
-const fs = require("fs")
+import fs = require("fs")
 
 /** @hidden */
 let env = process.env
@@ -33,7 +30,7 @@ interface LoadOptions {
     /** Root key of settings to be loaded. */
     rootKey?: string
     /** Decryption options in case file is encrypted. */
-    crypto?: crypto.CryptoOptions | boolean
+    crypto?: cryptoHelper.CryptoOptions | boolean
 }
 
 /**
@@ -120,7 +117,7 @@ class SetMeUp {
      * @param eventName The name of the event ([[load]], [[reset]]).
      * @param callback Callback function.
      */
-    on(eventName: string, callback: EventEmitter.ListenerFn): void {
+    on = (eventName: string, callback: EventEmitter.ListenerFn): void => {
         this.events.on(eventName, callback)
     }
 
@@ -129,7 +126,7 @@ class SetMeUp {
      * @param eventName The name of the event.
      * @param callback Callback function.
      */
-    once(eventName: string, callback: EventEmitter.ListenerFn): void {
+    once = (eventName: string, callback: EventEmitter.ListenerFn): void => {
         this.events.on(eventName, callback)
     }
 
@@ -138,7 +135,7 @@ class SetMeUp {
      * @param eventName The name of the event ([[load]], [[reset]]).
      * @param callback Callback function.
      */
-    off(eventName: string, callback: EventEmitter.ListenerFn): void {
+    off = (eventName: string, callback: EventEmitter.ListenerFn): void => {
         this.events.off(eventName, callback)
     }
 
@@ -153,7 +150,7 @@ class SetMeUp {
      * @returns Returns the resulting JSON object of the loaded files, or null if nothing was loaded.
      * @event load
      */
-    load(filenames?: string | string[], options?: LoadOptions): any {
+    load = (filenames?: string | string[], options?: LoadOptions): any => {
         let result = {}
 
         // Set default options.
@@ -213,7 +210,7 @@ class SetMeUp {
      * @param options Load options defining if properties should be overwritten and forced to lowercase.
      * @event loadFromEnv
      */
-    loadFromEnv(prefix?: string, options?: LoadEnvOptions): any {
+    loadFromEnv = (prefix?: string, options?: LoadEnvOptions): any => {
         let result = {}
         let keys = _.keys(process.env)
 
@@ -279,7 +276,7 @@ class SetMeUp {
      * otherwise it will most certainly break your application.
      * @event reset
      */
-    reset(): void {
+    reset = (): void => {
         const parentKeys = Object.keys(this._settings)
         logger.warn("Settings.reset", `Will clear ${parentKeys.length} parent keys.`)
 
@@ -305,8 +302,8 @@ class SetMeUp {
      * @param filename The file to be encrypted.
      * @param options Options cipher, key and IV to be passed to the encryptor.
      */
-    encrypt(filename: string, options: crypto.CryptoOptions): void {
-        const result = JSON.stringify(crypto.CryptoMethod("encrypt", filename, options), null, 4)
+    encrypt = (filename: string, options: cryptoHelper.CryptoOptions): void => {
+        const result = JSON.stringify(cryptoHelper.CryptoMethod("encrypt", filename, options), null, 4)
         fs.writeFileSync(filename, result, {encoding: "utf8"})
     }
 
@@ -315,8 +312,8 @@ class SetMeUp {
      * @param filename The file to be decrypted.
      * @param options Options cipher, key and IV to be passed to the decryptor.
      */
-    decrypt(filename: string, options: crypto.CryptoOptions): void {
-        const result = JSON.stringify(crypto.CryptoMethod("decrypt", filename, options), null, 4)
+    decrypt = (filename: string, options: cryptoHelper.CryptoOptions): void => {
+        const result = JSON.stringify(cryptoHelper.CryptoMethod("decrypt", filename, options), null, 4)
         fs.writeFileSync(filename, result, {encoding: "utf8"})
     }
 
@@ -327,10 +324,10 @@ class SetMeUp {
      * Watch loaded settings files for changes by using a file watcher.
      * When files change, [[load]] will be called to get the updates.
      */
-    watch(): void {
+    watch = (): void => {
         // Iterate loaded files to create the file system watchers.
         for (let f of Array.from(this.files)) {
-            ;(f => {
+            ;((f) => {
                 const filename = utils.getFilePath(f.filename)
 
                 if (filename != null && !f.watching) {
@@ -357,7 +354,7 @@ class SetMeUp {
     /**
      * Unwatch changes on loaded settings files.
      */
-    unwatch() {
+    unwatch = (): void => {
         try {
             for (let f of Array.from(this.files)) {
                 const filename = utils.getFilePath(f.filename)
@@ -376,7 +373,7 @@ class SetMeUp {
 
         /* istanbul ignore else */
         if (logger) {
-            return logger.info("Settings.unwatch")
+            logger.info("Settings.unwatch")
         }
     }
 }

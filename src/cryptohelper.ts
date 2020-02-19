@@ -1,12 +1,9 @@
 // SetMeUp: crypto.ts
 
-import * as utils from "./utils"
 import {execSync} from "child_process"
-
-/** @hidden */
-const _ = require("lodash")
-/** @hidden */
-const crypto = require("crypto")
+import * as utils from "./utils"
+import _ = require("lodash")
+import crypto = require("crypto")
 
 /** Default IV value in case one is not provided. */
 let defaultIV = "8407198407191984"
@@ -85,7 +82,7 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
     }
 
     // Helper to parse and encrypt / decrypt settings data.
-    let parser = obj => {
+    let parser = (obj) => {
         const prefixes = ["a:", "n:", "s:"]
         let currentValue = null
 

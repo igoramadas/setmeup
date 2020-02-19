@@ -96,14 +96,6 @@
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-not-exported">
-							<h3>Events</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-event tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#load" class="tsd-kind-icon">load</a></li>
-								<li class="tsd-kind-event tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#loadfromenv" class="tsd-kind-icon">load<wbr>From<wbr>Env</a></li>
-								<li class="tsd-kind-event tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#reset" class="tsd-kind-icon">reset</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#events" class="tsd-kind-icon">events</a></li>
@@ -121,10 +113,13 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#decrypt" class="tsd-kind-icon">decrypt</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#encrypt" class="tsd-kind-icon">encrypt</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#load" class="tsd-kind-icon">load</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#loadfromenv" class="tsd-kind-icon">load<wbr>From<wbr>Env</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#newinstance" class="tsd-kind-icon">new<wbr>Instance</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#off" class="tsd-kind-icon">off</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#on" class="tsd-kind-icon">on</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#once" class="tsd-kind-icon">once</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#reset" class="tsd-kind-icon">reset</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#unwatch" class="tsd-kind-icon">unwatch</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_index_.setmeup.html#watch" class="tsd-kind-icon">watch</a></li>
 							</ul>
@@ -144,7 +139,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L67">index.ts:67</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L64">index.ts:64</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -169,110 +164,6 @@
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
-				<h2>Events</h2>
-				<section class="tsd-panel tsd-member tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
-					<a name="load" class="tsd-anchor"></a>
-					<h3>load</h3>
-					<ul class="tsd-signatures tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">(</span>filenames<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_index_.loadoptions.html" class="tsd-signature-type">LoadOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L156">index.ts:156</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Load settings from the specified JSON file(s). If not files are specified, load
-									from the defaults (settings.default.json, settings.json and settings.NODE_ENV.json).</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> filenames: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The filename or array of filenames, using relative or full path.</p>
-									</div>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/_index_.loadoptions.html" class="tsd-signature-type">LoadOptions</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Load options defining if properties should be overwritten, and root settings key.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-							<p>Returns the resulting JSON object of the loaded files, or null if nothing was loaded.</p>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
-					<a name="loadfromenv" class="tsd-anchor"></a>
-					<h3>load<wbr>From<wbr>Env</h3>
-					<ul class="tsd-signatures tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">load<wbr>From<wbr>Env<span class="tsd-signature-symbol">(</span>prefix<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_index_.loadenvoptions.html" class="tsd-signature-type">LoadEnvOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L216">index.ts:216</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Load settings from environment variables, restricting to the passed prefix.
-									Enviroment settings as variables will be split by underscore to define its tree.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> prefix: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The prefix use to match relevant environment variables. Default is &quot;SMU_&quot;, should always end with &quot;_&quot; (underscore).</p>
-									</div>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/_index_.loadenvoptions.html" class="tsd-signature-type">LoadEnvOptions</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Load options defining if properties should be overwritten and forced to lowercase.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
-					<a name="reset" class="tsd-anchor"></a>
-					<h3>reset</h3>
-					<ul class="tsd-signatures tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">reset<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L282">index.ts:282</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Reset to default settings by unwatching and clearing all settings.
-										Ideally you should call <a href="_index_.setmeup.html#load">load</a> / <a href="_index_.setmeup.html#loadfromenv">loadFromEnv</a> after resetting,
-									otherwise it will most certainly break your application.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
 					<a name="events" class="tsd-anchor"></a>
@@ -280,7 +171,7 @@
 					<div class="tsd-signature tsd-kind-icon">events<span class="tsd-signature-symbol">:</span> <a href="../modules/_index_.html#eventemitter" class="tsd-signature-type">EventEmitter</a><span class="tsd-signature-symbol"> = new EventEmitter()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L110">index.ts:110</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L107">index.ts:107</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -295,7 +186,7 @@
 					<div class="tsd-signature tsd-kind-icon">files<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_index_.loadedfile.html" class="tsd-signature-type">LoadedFile</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L113">index.ts:113</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L110">index.ts:110</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -317,7 +208,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L105">index.ts:105</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L102">index.ts:102</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -336,13 +227,13 @@
 					<a name="decrypt" class="tsd-anchor"></a>
 					<h3>decrypt</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">decrypt<span class="tsd-signature-symbol">(</span>filename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/_crypto_.cryptooptions.html" class="tsd-signature-type">CryptoOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">decrypt<span class="tsd-signature-symbol">(</span>filename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/_cryptohelper_.cryptooptions.html" class="tsd-signature-type">CryptoOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L318">index.ts:318</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L315">index.ts:315</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -355,13 +246,17 @@
 								<li>
 									<h5>filename: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>The file to be decrypted.</p>
+										<div class="lead">
+											<p>The file to be decrypted.</p>
+										</div>
 									</div>
 								</li>
 								<li>
-									<h5>options: <a href="../interfaces/_crypto_.cryptooptions.html" class="tsd-signature-type">CryptoOptions</a></h5>
+									<h5>options: <a href="../interfaces/_cryptohelper_.cryptooptions.html" class="tsd-signature-type">CryptoOptions</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Options cipher, key and IV to be passed to the decryptor.</p>
+										<div class="lead">
+											<p>Options cipher, key and IV to be passed to the decryptor.</p>
+										</div>
 									</div>
 								</li>
 							</ul>
@@ -373,13 +268,13 @@
 					<a name="encrypt" class="tsd-anchor"></a>
 					<h3>encrypt</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">encrypt<span class="tsd-signature-symbol">(</span>filename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/_crypto_.cryptooptions.html" class="tsd-signature-type">CryptoOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">encrypt<span class="tsd-signature-symbol">(</span>filename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/_cryptohelper_.cryptooptions.html" class="tsd-signature-type">CryptoOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L308">index.ts:308</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L305">index.ts:305</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -392,17 +287,106 @@
 								<li>
 									<h5>filename: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>The file to be encrypted.</p>
+										<div class="lead">
+											<p>The file to be encrypted.</p>
+										</div>
 									</div>
 								</li>
 								<li>
-									<h5>options: <a href="../interfaces/_crypto_.cryptooptions.html" class="tsd-signature-type">CryptoOptions</a></h5>
+									<h5>options: <a href="../interfaces/_cryptohelper_.cryptooptions.html" class="tsd-signature-type">CryptoOptions</a></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Options cipher, key and IV to be passed to the encryptor.</p>
+										<div class="lead">
+											<p>Options cipher, key and IV to be passed to the encryptor.</p>
+										</div>
 									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+					<a name="load" class="tsd-anchor"></a>
+					<h3>load</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">(</span>filenames<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_index_.loadoptions.html" class="tsd-signature-type">LoadOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L153">index.ts:153</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Load settings from the specified JSON file(s). If not files are specified, load
+									from the defaults (settings.default.json, settings.json and settings.NODE_ENV.json).</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> filenames: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The filename or array of filenames, using relative or full path.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/_index_.loadoptions.html" class="tsd-signature-type">LoadOptions</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Load options defining if properties should be overwritten, and root settings key.</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+							<p>Returns the resulting JSON object of the loaded files, or null if nothing was loaded.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+					<a name="loadfromenv" class="tsd-anchor"></a>
+					<h3>load<wbr>From<wbr>Env</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">load<wbr>From<wbr>Env<span class="tsd-signature-symbol">(</span>prefix<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_index_.loadenvoptions.html" class="tsd-signature-type">LoadEnvOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L213">index.ts:213</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Load settings from environment variables, restricting to the passed prefix.
+									Enviroment settings as variables will be split by underscore to define its tree.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> prefix: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>The prefix use to match relevant environment variables. Default is &quot;SMU_&quot;, should always end with &quot;_&quot; (underscore).</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/_index_.loadenvoptions.html" class="tsd-signature-type">LoadEnvOptions</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Load options defining if properties should be overwritten and forced to lowercase.</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -416,7 +400,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L65">index.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L62">index.ts:62</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -448,7 +432,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L141">index.ts:141</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L138">index.ts:138</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -461,13 +445,17 @@
 								<li>
 									<h5>eventName: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>The name of the event (<a href="_index_.setmeup.html#load">load</a>, <a href="_index_.setmeup.html#reset">reset</a>).</p>
+										<div class="lead">
+											<p>The name of the event (<a href="_index_.setmeup.html#load">load</a>, <a href="_index_.setmeup.html#reset">reset</a>).</p>
+										</div>
 									</div>
 								</li>
 								<li>
 									<h5>callback: <span class="tsd-signature-type">ListenerFn</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Callback function.</p>
+										<div class="lead">
+											<p>Callback function.</p>
+										</div>
 									</div>
 								</li>
 							</ul>
@@ -485,7 +473,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L123">index.ts:123</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L120">index.ts:120</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -498,13 +486,17 @@
 								<li>
 									<h5>eventName: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>The name of the event (<a href="_index_.setmeup.html#load">load</a>, <a href="_index_.setmeup.html#reset">reset</a>).</p>
+										<div class="lead">
+											<p>The name of the event (<a href="_index_.setmeup.html#load">load</a>, <a href="_index_.setmeup.html#reset">reset</a>).</p>
+										</div>
 									</div>
 								</li>
 								<li>
 									<h5>callback: <span class="tsd-signature-type">ListenerFn</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Callback function.</p>
+										<div class="lead">
+											<p>Callback function.</p>
+										</div>
 									</div>
 								</li>
 							</ul>
@@ -522,7 +514,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L132">index.ts:132</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L129">index.ts:129</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -535,13 +527,17 @@
 								<li>
 									<h5>eventName: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>The name of the event.</p>
+										<div class="lead">
+											<p>The name of the event.</p>
+										</div>
 									</div>
 								</li>
 								<li>
 									<h5>callback: <span class="tsd-signature-type">ListenerFn</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>Callback function.</p>
+										<div class="lead">
+											<p>Callback function.</p>
+										</div>
 									</div>
 								</li>
 							</ul>
@@ -550,16 +546,40 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
-					<a name="unwatch" class="tsd-anchor"></a>
-					<h3>unwatch</h3>
+					<a name="reset" class="tsd-anchor"></a>
+					<h3>reset</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">unwatch<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+						<li class="tsd-signature tsd-kind-icon">reset<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L360">index.ts:360</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L279">index.ts:279</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Reset to default settings by unwatching and clearing all settings.
+										Ideally you should call <a href="_index_.setmeup.html#load">load</a> / <a href="_index_.setmeup.html#loadfromenv">loadFromEnv</a> after resetting,
+									otherwise it will most certainly break your application.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+					<a name="unwatch" class="tsd-anchor"></a>
+					<h3>unwatch</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">unwatch<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L357">index.ts:357</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -567,7 +587,7 @@
 									<p>Unwatch changes on loaded settings files.</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -581,7 +601,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/index.ts#L330">index.ts:330</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/f954f8d/src/index.ts#L327">index.ts:327</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -603,7 +623,7 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="../modules/_crypto_.html">&quot;crypto&quot;</a>
+						<a href="../modules/_cryptohelper_.html">&quot;cryptohelper&quot;</a>
 					</li>
 					<li class="current tsd-kind-external-module">
 						<a href="../modules/_index_.html">&quot;index&quot;</a>
@@ -623,15 +643,6 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_index_.setmeup.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
-								<a href="_index_.setmeup.html#load" class="tsd-kind-icon">load</a>
-							</li>
-							<li class=" tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
-								<a href="_index_.setmeup.html#loadfromenv" class="tsd-kind-icon">load<wbr>From<wbr>Env</a>
-							</li>
-							<li class=" tsd-kind-event tsd-parent-kind-class tsd-is-not-exported">
-								<a href="_index_.setmeup.html#reset" class="tsd-kind-icon">reset</a>
-							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_index_.setmeup.html#events" class="tsd-kind-icon">events</a>
 							</li>
@@ -648,6 +659,12 @@
 								<a href="_index_.setmeup.html#encrypt" class="tsd-kind-icon">encrypt</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+								<a href="_index_.setmeup.html#load" class="tsd-kind-icon">load</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+								<a href="_index_.setmeup.html#loadfromenv" class="tsd-kind-icon">load<wbr>From<wbr>Env</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_index_.setmeup.html#newinstance" class="tsd-kind-icon">new<wbr>Instance</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
@@ -658,6 +675,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_index_.setmeup.html#once" class="tsd-kind-icon">once</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+								<a href="_index_.setmeup.html#reset" class="tsd-kind-icon">reset</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_index_.setmeup.html#unwatch" class="tsd-kind-icon">unwatch</a>
@@ -680,6 +700,12 @@
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/_index_.html#eventemitter" class="tsd-kind-icon">Event<wbr>Emitter</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/_index_.html#_" class="tsd-kind-icon">_</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/_index_.html#fs" class="tsd-kind-icon">fs</a>
 					</li>
 				</ul>
 			</nav>

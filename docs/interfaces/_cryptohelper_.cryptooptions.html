@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;crypto&quot; | SetMeUp</title>
+	<title>CryptoOptions | SetMeUp</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -54,133 +54,95 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_crypto_.html">&quot;crypto&quot;</a>
+					<a href="../modules/_cryptohelper_.html">&quot;cryptohelper&quot;</a>
+				</li>
+				<li>
+					<a href="_cryptohelper_.cryptooptions.html">CryptoOptions</a>
 				</li>
 			</ul>
-			<h1>External module &quot;crypto&quot;</h1>
+			<h1>Interface CryptoOptions</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Encryption options for <a href="../modules/_cryptohelper_.html#cryptomethod">CryptoMethod</a>.</p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">CryptoOptions</span>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-private-protected">
-							<h3>Interfaces</h3>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-interface tsd-parent-kind-external-module tsd-is-protected"><a href="../interfaces/_crypto_.cryptooptions.html" class="tsd-kind-icon">Crypto<wbr>Options</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section tsd-is-not-exported">
-							<h3>Variables</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported"><a href="_crypto_.html#defaultiv" class="tsd-kind-icon">defaultIV</a></li>
-							</ul>
-						</section>
-						<section class="tsd-index-section tsd-is-private-protected">
-							<h3>Functions</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-protected"><a href="_crypto_.html#cryptomethod" class="tsd-kind-icon">Crypto<wbr>Method</a></li>
-								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-protected tsd-is-not-exported"><a href="_crypto_.html#getmachineid" class="tsd-kind-icon">get<wbr>MachineID</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_cryptohelper_.cryptooptions.html#cipher" class="tsd-kind-icon">cipher</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_cryptohelper_.cryptooptions.html#iv" class="tsd-kind-icon">iv</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_cryptohelper_.cryptooptions.html#key" class="tsd-kind-icon">key</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
-				<h2>Variables</h2>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-					<a name="defaultiv" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagLet">Let</span> defaultIV</h3>
-					<div class="tsd-signature tsd-kind-icon">defaultIV<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> = &quot;8407198407191984&quot;</span></div>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="cipher" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> cipher</h3>
+					<div class="tsd-signature tsd-kind-icon">cipher<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/crypto.ts#L12">crypto.ts:12</a></li>
+							<li>Defined in cryptohelper.ts:23</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Default IV value in case one is not provided.</p>
+							<p>Cipher to use, default is &quot;aes256&quot;.</p>
 						</div>
 					</div>
 				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected">
-				<h2>Functions</h2>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-protected">
-					<a name="cryptomethod" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> Crypto<wbr>Method</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-protected">
-						<li class="tsd-signature tsd-kind-icon">Crypto<wbr>Method<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, filename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_crypto_.cryptooptions.html" class="tsd-signature-type">CryptoOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/crypto.ts#L46">crypto.ts:46</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Helper to encrypt or decrypt settings files. The default encryption key
-										is derived from the unique machine ID, so ideally you should change to
-										your desired secret and strong key. Same applies for the default IV.
-										You can also  set them via the SMU_CRYPTO_KEY and SMU_CRYPTO_IV
-										environment variables. The default cipher algorithm is AES 256.
-									Failure to encrypt or decrypt will throw an exception.</p>
-								</div>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>action: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Action can be &quot;encrypt&quot; or &quot;decrypt&quot;.</p>
-									</div>
-								</li>
-								<li>
-									<h5>filename: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>The file to be encrypted or decrypted.</p>
-									</div>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/_crypto_.cryptooptions.html" class="tsd-signature-type">CryptoOptions</a></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>Encryption options with cipher, key and IV.</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
-							<p>The (de)encrypted JSON object.</p>
-						</li>
-					</ul>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="iv" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> iv</h3>
+					<div class="tsd-signature tsd-kind-icon">iv<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in cryptohelper.ts:27</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Encryption IV, default is &quot;8407198407191984&quot;.</p>
+						</div>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-protected tsd-is-not-exported">
-					<a name="getmachineid" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagProtected">Protected</span> get<wbr>MachineID</h3>
-					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-protected tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>MachineID<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/fc575c1/src/crypto.ts#L194">crypto.ts:194</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Gets a unique machine ID. This is mainly used by <a href="_crypto_.html#cryptomethod">CryptoMethod</a> to get a
-									valid encryption key in case none is specified when encrypting / decrypting.</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
-						</li>
-					</ul>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="key" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> key</h3>
+					<div class="tsd-signature tsd-kind-icon">key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in cryptohelper.ts:25</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Encryption key, default is derived from current machine via <a href="../modules/_cryptohelper_.html#getmachineid">getMachineID</a>.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 		</div>
@@ -191,29 +153,50 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_crypto_.html">&quot;crypto&quot;</a>
+						<a href="../modules/_cryptohelper_.html">&quot;cryptohelper&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_index_.html">&quot;index&quot;</a>
+						<a href="../modules/_index_.html">&quot;index&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="_utils_.html">&quot;utils&quot;</a>
+						<a href="../modules/_utils_.html">&quot;utils&quot;</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-external-module tsd-is-protected">
-						<a href="../interfaces/_crypto_.cryptooptions.html" class="tsd-kind-icon">Crypto<wbr>Options</a>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-external-module tsd-is-protected">
+						<a href="_cryptohelper_.cryptooptions.html" class="tsd-kind-icon">Crypto<wbr>Options</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_cryptohelper_.cryptooptions.html#cipher" class="tsd-kind-icon">cipher</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_cryptohelper_.cryptooptions.html#iv" class="tsd-kind-icon">iv</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_cryptohelper_.cryptooptions.html#key" class="tsd-kind-icon">key</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/_cryptohelper_.html#_" class="tsd-kind-icon">_</a>
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="_crypto_.html#defaultiv" class="tsd-kind-icon">defaultIV</a>
+						<a href="../modules/_cryptohelper_.html#crypto" class="tsd-kind-icon">crypto</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/_cryptohelper_.html#defaultiv" class="tsd-kind-icon">defaultIV</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-protected">
-						<a href="_crypto_.html#cryptomethod" class="tsd-kind-icon">Crypto<wbr>Method</a>
+						<a href="../modules/_cryptohelper_.html#cryptomethod" class="tsd-kind-icon">Crypto<wbr>Method</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-protected tsd-is-not-exported">
-						<a href="_crypto_.html#getmachineid" class="tsd-kind-icon">get<wbr>MachineID</a>
+						<a href="../modules/_cryptohelper_.html#getmachineid" class="tsd-kind-icon">get<wbr>MachineID</a>
 					</li>
 				</ul>
 			</nav>

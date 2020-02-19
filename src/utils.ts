@@ -1,13 +1,9 @@
 // SetMeUp: utils.ts
 
-import * as crypto from "./crypto"
-
-/** @hidden */
-const _ = require("lodash")
-/** @hidden */
-const fs = require("fs")
-/** @hidden */
-const path = require("path")
+import * as crypto from "./cryptohelper"
+import _ = require("lodash")
+import fs = require("fs")
+import path = require("path")
 
 /** @hidden */
 let logger = null
