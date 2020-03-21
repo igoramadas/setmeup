@@ -2,9 +2,9 @@
 
 import * as cryptoHelper from "./cryptohelper"
 import * as utils from "./utils"
-import _ = require("lodash")
-import EventEmitter = require("eventemitter3")
-import fs = require("fs")
+import _ from "lodash"
+import EventEmitter from "eventemitter3"
+import fs from "fs"
 
 /** @hidden */
 let env = process.env
@@ -98,7 +98,7 @@ class SetMeUp {
     /** Internal, the actual settings storage object. */
     private _settings: any = {}
 
-    /** Exposes the settings object as read only. */
+    /** Exposes the settings object. */
     get settings() {
         return this._settings
     }

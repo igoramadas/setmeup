@@ -2,8 +2,8 @@
 
 import {execSync} from "child_process"
 import * as utils from "./utils"
-import _ = require("lodash")
-import crypto = require("crypto")
+import _ from "lodash"
+import crypto from "crypto"
 
 /** Default IV value in case one is not provided. */
 let defaultIV = "8407198407191984"
