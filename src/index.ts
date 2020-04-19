@@ -302,7 +302,7 @@ class SetMeUp {
      * @param filename The file to be encrypted.
      * @param options Options cipher, key and IV to be passed to the encryptor.
      */
-    encrypt = (filename: string, options: cryptoHelper.CryptoOptions): void => {
+    encrypt = (filename: string, options?: cryptoHelper.CryptoOptions): void => {
         const result = JSON.stringify(cryptoHelper.CryptoMethod("encrypt", filename, options), null, 4)
         fs.writeFileSync(filename, result, {encoding: "utf8"})
     }
@@ -312,7 +312,7 @@ class SetMeUp {
      * @param filename The file to be decrypted.
      * @param options Options cipher, key and IV to be passed to the decryptor.
      */
-    decrypt = (filename: string, options: cryptoHelper.CryptoOptions): void => {
+    decrypt = (filename: string, options?: cryptoHelper.CryptoOptions): void => {
         const result = JSON.stringify(cryptoHelper.CryptoMethod("decrypt", filename, options), null, 4)
         fs.writeFileSync(filename, result, {encoding: "utf8"})
     }

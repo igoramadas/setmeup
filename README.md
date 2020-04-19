@@ -14,9 +14,9 @@ By default SetMeUp will load configuration from 3 different JSON files, on the f
 2. **settings.json** should usually contain global settings for the current application.
 3. **settings.NODE_ENV.json** should have application settings relevant only to the current environment.
 
-A typical application will have at least the `settings.json` file, but most should have at least one `settings.development.json` and one `settings.production.json` file as well. Most applications won't have a `settings.default.json` file, as this is mainly used by shared libraries.
+A typical application will have at least the `settings.json` file, but most should also have a `settings.development.json` and one `settings.production.json` file as well. The `settings.default.json` is meant to be used mostly by libraries and sharead modules.
 
-The configuration files can have inline comments!
+The configuration files can have inline comments (they're treated as JSON5).
 
 ## Basic usage
 
@@ -52,26 +52,6 @@ setmeup.on("load", onLoad)
 
 // Pretend updating files.
 myApp.writeConfig("title", "New title")
-```
-
-### Encrypting and decrypting files
-
-```javascript
-// Derive encryption key from machine (default).
-setmeup.encrypt("./settings.private.json")
-
-// And decrypt...
-setmeup.decrypt("./settings.private.json")
-
-// Or using a custom key and IV.
-let options = {key: "12345678901234561234567890123456", iv: "1234567890987654"}
-setmeup.encrypt("./settings.private.json", options)
-setmeup.decrypt("./settings.private.json", options)
-
-// You can also load encrypted files by passing the crypto options.
-let cryptoOptions = {crypto: options}
-setmeup.encrypt("./settings.private.json", options)
-setmeup.load("./settings.private.json", cryptoOptions)
 ```
 
 ### Loading from enviroment variables
@@ -115,13 +95,55 @@ setmeup.loadFromEnv(null, {lowercase: true})
 setmeup.loadFromEnv(null, {overwrite: false})
 ```
 
-#### Environment variables for encryption
+## Encrypting settings
 
 The encryption features of SetMeUp can (and should!) be customized by defininig the following environment variables:
 
 * SMU_CRYPTO_CIPHER - the cipher, default is aes256
 * SMU_CRYPTO_KEY - the encryption key, default is based on the machine ID
 * SMU_CRYPTO_IV - the IV, default is set on code
+
+Please note that you MUST define the key and IV environment variables if you are running on the cloud (GCP, AWS etc...), as the machine ID will change whenever you reboot your instances. The defaults are there mostly to be used for local development.
+
+### Encrypting and decrypting files on code
+
+```javascript
+// Derive encryption key from machine (default).
+setmeup.encrypt("./settings.secret.json")
+
+// And decrypt...
+setmeup.decrypt("./settings.secret.json")
+
+// Or using a custom key and IV.
+let options = {key: "12345678901234561234567890123456", iv: "1234567890987654"}
+setmeup.encrypt("./settings.secret.json", options)
+setmeup.decrypt("./settings.secret.json", options)
+
+// You can also load encrypted files by passing the crypto options.
+let cryptoOptions = {crypto: options}
+setmeup.encrypt("./settings.secret.json", options)
+setmeup.load("./settings.secret.json", cryptoOptions)
+```
+
+### Using the command line tool
+
+From inside your application root, on shell:
+
+    $ ./node_modules/.bin/setmeup encrypt settings.secret.json
+    $ ./node_modules/.bin/setmeup decrypt settings.secret.json
+
+Or directly on NPM scripts (package.json):
+
+```json
+{
+    "name": "mypackage",
+    "version": "1.5.0",
+    "scripts": {
+        "build": "setmeup encrypt settings.secret.json"
+    }
+}
+
+```
 
 #### Security considerations
 

@@ -1,5 +1,11 @@
 # Changelog for SetMeUp
 
+1.4.0
+=====
+* NEW! Command line helper to encrypt / decrypt / validate settings files.
+* BREAKING! Encrypted setting values are now prefixed with "enc-".
+* Updated dependencies.
+
 1.4.1
 =====
 * TypeScript types are now exported with the library.

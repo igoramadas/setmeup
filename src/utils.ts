@@ -1,6 +1,6 @@
 // SetMeUp: utils.ts
 
-import * as crypto from "./cryptohelper"
+import {CryptoMethod, CryptoOptions} from "./cryptohelper"
 import _ from "lodash"
 import fs from "fs"
 import path from "path"
@@ -145,7 +145,7 @@ export function parseJson(value: string | any) {
  * @returns The parsed JSON object.
  * @protected
  */
-export function loadJson(filename: string, cryptoOptions?: crypto.CryptoOptions | boolean): any {
+export function loadJson(filename: string, cryptoOptions?: CryptoOptions | boolean): any {
     let result = null
 
     // Found file? Load it. Try using UTF8 first, if failed, use ASCII.
@@ -181,7 +181,7 @@ export function loadJson(filename: string, cryptoOptions?: crypto.CryptoOptions 
 
             logger.debug("SetMeUp.Utils.loadJson", filename, "Will be decrypted")
 
-            result = crypto.CryptoMethod("decrypt", filename, cryptoOptions as crypto.CryptoOptions)
+            result = CryptoMethod("decrypt", filename, cryptoOptions as CryptoOptions)
         } else if (logger) {
             logger.warn("SetMeUp.Utils.loadJson", `${filename} appears to be encrypted! Forgot passing 'cryptoOptions' to decrypt?`)
         }

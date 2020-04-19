@@ -83,7 +83,6 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
 
     // Helper to parse and encrypt / decrypt settings data.
     let parser = (obj) => {
-        const prefixes = ["a:", "n:", "s:"]
         let currentValue = null
 
         for (let prop in obj) {
@@ -104,21 +103,21 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
                         newValue = currentValue
                     } else if (action == "encrypt") {
                         // Value already encrypted? Skip!
-                        if (settingsJson.encrypted && _.isString(currentValue) && prefixes.indexOf(currentValue.substring(0, 2)) == 0) {
+                        if (_.isString(currentValue) && currentValue.substring(0, 4) == "enc-") {
                             newValue = currentValue
                         } else {
                             // Is an array?
                             if (_.isArray(currentValue)) {
-                                newValue = "a:"
+                                newValue = "enc-a:"
                                 currentValue = JSON.stringify(currentValue, null, 0)
                             }
                             // Is a number?
                             else if (_.isNumber(currentValue)) {
-                                newValue = "n:"
+                                newValue = "enc-n:"
                             }
                             // Strings, dates and everything else?
                             else {
-                                newValue = "s:"
+                                newValue = "enc-s:"
                             }
 
                             // Create cipher amd encrypt data.
@@ -130,7 +129,7 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
                         // Split the data as "datatype:encryptedValue".
                         const arrValue = currentValue.split(":")
 
-                        if (arrValue.length > 1 && arrValue[0].toString().length == 1) {
+                        if (arrValue.length > 1 && arrValue[0].toString().length == 5) {
                             newValue = ""
 
                             // Create cipher and decrypt.
@@ -139,9 +138,9 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
                             newValue += c.final("utf8")
 
                             // Cast data type (array, number or string).
-                            if (arrValue[0] === "a") {
+                            if (arrValue[0] === "enc-a") {
                                 newValue = JSON.parse(newValue)
-                            } else if (arrValue[0] === "n") {
+                            } else if (arrValue[0] === "enc-n") {
                                 newValue = parseFloat(newValue)
                             }
                         } else {
@@ -178,9 +177,8 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
 
     // Add `encrypted` property after file is encrypted.
     if (action == "encrypt") {
-        settingsJson.encrypted = true
+        settingsJson["encrypted"] = true
     }
-
     return settingsJson
 }
 /**
