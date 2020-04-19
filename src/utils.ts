@@ -1,6 +1,6 @@
 // SetMeUp: utils.ts
 
-import {CryptoMethod, CryptoOptions} from "./cryptohelper"
+import {cryptoMethod, CryptoOptions} from "./cryptohelper"
 import _ from "lodash"
 import fs from "fs"
 import path from "path"
@@ -181,7 +181,7 @@ export function loadJson(filename: string, cryptoOptions?: CryptoOptions | boole
 
             logger.debug("SetMeUp.Utils.loadJson", filename, "Will be decrypted")
 
-            result = CryptoMethod("decrypt", filename, cryptoOptions as CryptoOptions)
+            result = cryptoMethod("decrypt", filename, cryptoOptions as CryptoOptions)
         } else if (logger) {
             logger.warn("SetMeUp.Utils.loadJson", `${filename} appears to be encrypted! Forgot passing 'cryptoOptions' to decrypt?`)
         }

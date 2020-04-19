@@ -1,10 +1,11 @@
 // SetMeUp: index.ts
 
-import * as cryptoHelper from "./cryptohelper"
-import * as utils from "./utils"
+import {cryptoMethod, CryptoOptions} from "./cryptohelper"
+import {extend, getFilePath, loadJson} from "./utils"
 import _ from "lodash"
 import EventEmitter from "eventemitter3"
 import fs from "fs"
+import path from "path"
 
 /** @hidden */
 let env = process.env
@@ -30,7 +31,7 @@ interface LoadOptions {
     /** Root key of settings to be loaded. */
     rootKey?: string
     /** Decryption options in case file is encrypted. */
-    crypto?: cryptoHelper.CryptoOptions | boolean
+    crypto?: CryptoOptions | boolean
     /** Delete file after load, useful when running on shared / unsecure environments. */
     destroy?: boolean
 }
@@ -162,7 +163,7 @@ class SetMeUp {
         // No filenames passed? Load the default ones.
         /* istanbul ignore else */
         if (!filenames) {
-            filenames = ["settings.default.json", "settings.json", `settings.${env.NODE_ENV}.json`]
+            filenames = ["settings.default.json", "settings.json", `settings.${env.NODE_ENV}.json`, `settings.secret.json`]
         }
         // Make sure we're dealing with array of filenames by default.
         else if (_.isString(filenames)) {
@@ -170,12 +171,18 @@ class SetMeUp {
         }
 
         for (let f of filenames) {
-            const filename = utils.getFilePath(f)
-            let settingsJson = utils.loadJson(filename, options.crypto)
+            const filename = getFilePath(f)
+            let settingsJson = loadJson(filename, options.crypto)
+
+            // File not found?
+            if (settingsJson == null) {
+                logger.debug("SetMeUp.load", `File not found, won't load ${filename}`)
+                continue
+            }
 
             // Add file to the `files` list, but only if not loaded previously an
             // if the "delete" option is not set.
-            if (settingsJson != null && !options.destroy) {
+            if (!options.destroy) {
                 if (_.find(this.files, {filename}) == null) {
                     this.files.push({filename, watching: false})
                 } else {
@@ -185,9 +192,9 @@ class SetMeUp {
 
             // Extend loaded settings.
             if (options.rootKey) {
-                utils.extend(settingsJson[options.rootKey], result, options.overwrite)
+                extend(settingsJson[options.rootKey], result, options.overwrite)
             } else {
-                utils.extend(settingsJson, result, options.overwrite)
+                extend(settingsJson, result, options.overwrite)
             }
 
             // Emit load passing filenames and loaded settings result.
@@ -198,7 +205,18 @@ class SetMeUp {
                 try {
                     fs.unlinkSync(filename)
                 } catch (ex) {
+                    /* istanbul ignore next */
                     logger.error("SetMeUp.load", `Could not destroy ${filename}`, ex)
+                }
+            }
+            // File settings.secret.json is always encrypted.
+            else if (path.basename(filename).toLowerCase() == "settings.secret.json") {
+                try {
+                    const cryptoOptions = options.crypto === true ? {} : (options.crypto as CryptoOptions)
+                    this.encrypt(filename, cryptoOptions)
+                } catch (ex) {
+                    /* istanbul ignore next */
+                    logger.error("SetMeUp.load", `Could not automatically encrypt the settings.secret.json file`, ex)
                 }
             }
         }
@@ -209,7 +227,7 @@ class SetMeUp {
         }
 
         // Extend loaded settings.
-        utils.extend(result, this.settings, options.overwrite)
+        extend(result, this.settings, options.overwrite)
 
         // Return the JSON representation of the loaded settings.
         return result
@@ -276,7 +294,7 @@ class SetMeUp {
         }
 
         // Extend loaded settings.
-        utils.extend(result, this.settings, options.overwrite)
+        extend(result, this.settings, options.overwrite)
 
         // Return the JSON representation of the loaded settings.
         return result
@@ -296,10 +314,11 @@ class SetMeUp {
         this.files = []
 
         try {
-            parentKeys.forEach(function (key) {
+            for (let key of parentKeys) {
                 delete this._settings[key]
-            })
+            }
         } catch (ex) {
+            /* istanbul ignore next */
             logger.error("Settings.reset", ex)
         }
 
@@ -314,8 +333,8 @@ class SetMeUp {
      * @param filename The file to be encrypted.
      * @param options Options cipher, key and IV to be passed to the encryptor.
      */
-    encrypt = (filename: string, options?: cryptoHelper.CryptoOptions): void => {
-        const result = JSON.stringify(cryptoHelper.CryptoMethod("encrypt", filename, options), null, 4)
+    encrypt = (filename: string, options?: CryptoOptions): void => {
+        const result = JSON.stringify(cryptoMethod("encrypt", filename, options), null, 4)
         fs.writeFileSync(filename, result, {encoding: "utf8"})
     }
 
@@ -324,8 +343,8 @@ class SetMeUp {
      * @param filename The file to be decrypted.
      * @param options Options cipher, key and IV to be passed to the decryptor.
      */
-    decrypt = (filename: string, options?: cryptoHelper.CryptoOptions): void => {
-        const result = JSON.stringify(cryptoHelper.CryptoMethod("decrypt", filename, options), null, 4)
+    decrypt = (filename: string, options?: CryptoOptions): void => {
+        const result = JSON.stringify(cryptoMethod("decrypt", filename, options), null, 4)
         fs.writeFileSync(filename, result, {encoding: "utf8"})
     }
 
@@ -340,7 +359,7 @@ class SetMeUp {
         // Iterate loaded files to create the file system watchers.
         for (let f of Array.from(this.files)) {
             ;((f) => {
-                const filename = utils.getFilePath(f.filename)
+                const filename = getFilePath(f.filename)
 
                 if (filename != null && !f.watching) {
                     f.watching = true
@@ -369,7 +388,7 @@ class SetMeUp {
     unwatch = (): void => {
         try {
             for (let f of Array.from(this.files)) {
-                const filename = utils.getFilePath(f.filename)
+                const filename = getFilePath(f.filename)
                 f.watching = false
 
                 if (filename != null) {

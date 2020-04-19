@@ -1,7 +1,7 @@
 // SetMeUp: crypto.ts
 
 import {execSync} from "child_process"
-import * as utils from "./utils"
+import {loadJson} from "./utils"
 import _ from "lodash"
 import crypto from "crypto"
 
@@ -40,7 +40,7 @@ export interface CryptoOptions {
  * @returns The (de)encrypted JSON object.
  * @protected
  */
-export function CryptoMethod(action: string, filename: string, options?: CryptoOptions): any {
+export function cryptoMethod(action: string, filename: string, options?: CryptoOptions): any {
     if (options == null) {
         options = {} as CryptoOptions
     }
@@ -74,7 +74,7 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
         options.iv = defaultIV
     }
 
-    const settingsJson = utils.loadJson(filename, false)
+    const settingsJson = loadJson(filename, false)
 
     // Settings file not found or invalid? Stop here.
     if (settingsJson == null) {
@@ -129,7 +129,7 @@ export function CryptoMethod(action: string, filename: string, options?: CryptoO
                         // Split the data as "datatype:encryptedValue".
                         const arrValue = currentValue.split(":")
 
-                        if (arrValue.length > 1 && arrValue[0].toString().length == 5) {
+                        if (arrValue.length > 1 && arrValue[0].toString().substring(0, 4) == "enc-") {
                             newValue = ""
 
                             // Create cipher and decrypt.
