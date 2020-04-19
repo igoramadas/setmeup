@@ -2,7 +2,7 @@
 
 1.5.0
 =====
-* NEW! Command line helper to encrypt / decrypt / validate settings files.
+* NEW! Command line helper to encrypt / decrypt / print settings.
 * NEW! Option "destroy" to delete settings file right after loading.
 * NEW! File settings.secret.json added to default load(), and is always encrypted.
 * BREAKING! Encrypted setting values are now prefixed with "enc-".
