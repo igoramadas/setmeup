@@ -1,8 +1,9 @@
 # Changelog for SetMeUp
 
-1.4.0
+1.5.0
 =====
 * NEW! Command line helper to encrypt / decrypt / validate settings files.
+* NEW! Option "destroy" to delete settings file right after loading.
 * BREAKING! Encrypted setting values are now prefixed with "enc-".
 * Fixed bug that allowed re-encrypting settings multiple times.
 * Updated dependencies.

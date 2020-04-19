@@ -31,6 +31,8 @@ interface LoadOptions {
     rootKey?: string
     /** Decryption options in case file is encrypted. */
     crypto?: cryptoHelper.CryptoOptions | boolean
+    /** Delete file after load, useful when running on shared / unsecure environments. */
+    destroy?: boolean
 }
 
 /**
@@ -171,8 +173,9 @@ class SetMeUp {
             const filename = utils.getFilePath(f)
             let settingsJson = utils.loadJson(filename, options.crypto)
 
-            // Add file to the `files` list, but only if not loaded previously.
-            if (settingsJson != null) {
+            // Add file to the `files` list, but only if not loaded previously an
+            // if the "delete" option is not set.
+            if (settingsJson != null && !options.destroy) {
                 if (_.find(this.files, {filename}) == null) {
                     this.files.push({filename, watching: false})
                 } else {
@@ -189,6 +192,15 @@ class SetMeUp {
 
             // Emit load passing filenames and loaded settings result.
             this.events.emit("load", filename, result)
+
+            // Delete file after loading?
+            if (options.destroy) {
+                try {
+                    fs.unlinkSync(filename)
+                } catch (ex) {
+                    logger.error("SetMeUp.load", `Could not destroy ${filename}`, ex)
+                }
+            }
         }
 
         // Nothing loaded? Return null.
@@ -284,7 +296,7 @@ class SetMeUp {
         this.files = []
 
         try {
-            parentKeys.forEach(function(key) {
+            parentKeys.forEach(function (key) {
                 delete this._settings[key]
             })
         } catch (ex) {
