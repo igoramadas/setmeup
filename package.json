@@ -1,6 +1,6 @@
 {
     "name": "setmeup",
-    "version": "1.5.0",
+    "version": "1.5.1",
     "description": "SetMeUp, your single and only settings manager.",
     "keywords": [
         "setmeup",
@@ -44,6 +44,9 @@
         "nyc": "^15.0.1",
         "typedoc": "^0.17.4",
         "typescript": "^3.8.3"
+    },
+    "peerDependencies": {
+        "anyhow": "^1.5.2"
     },
     "nyc": {
         "reporter": "lcov",

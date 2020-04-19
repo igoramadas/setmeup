@@ -1,5 +1,10 @@
 # Changelog for SetMeUp
 
+1.5.1
+=====
+* Improved handling of the special settings.secret.json file.
+* Check if anyhow is present for logging, othewise does not log anything
+
 1.5.0
 =====
 * NEW! Command line helper to encrypt / decrypt / print settings.
