@@ -80,7 +80,10 @@ class SetMeUp {
                     logger.setup()
                 }
             } catch (ex) {
-                // Anyhow module not found
+                /* istanbul ignore next */
+                if (env.NODE_ENV != "production") {
+                    console.warn("Module 'anyhow' is not installed, so SetMeUp won't log anything. Conside installing the 'anyhow' if you want to enable custom logging.")
+                }
             }
         }
 
@@ -172,11 +175,14 @@ class SetMeUp {
 
         for (let f of filenames) {
             const filename = getFilePath(f)
-            let settingsJson = loadJson(filename, options.crypto)
+            const isSecret = (filename && path.basename(filename).toLowerCase() == "settings.secret.json") || null
+
+            // When loading, force crypto if file is settings.secret.json.
+            let settingsJson = loadJson(filename, options.crypto || isSecret)
 
             // File not found?
             if (settingsJson == null) {
-                logger.debug("SetMeUp.load", `File not found, won't load ${filename}`)
+                if (logger) logger.debug("SetMeUp.load", `File not found, won't load ${filename}`)
                 continue
             }
 
@@ -186,7 +192,7 @@ class SetMeUp {
                 if (_.find(this.files, {filename}) == null) {
                     this.files.push({filename, watching: false})
                 } else {
-                    logger.debug("SetMeUp.load", filename, "Loaded before, so won't add to the files list")
+                    if (logger) logger.debug("SetMeUp.load", filename, "Loaded before, so won't add to the files list")
                 }
             }
 
@@ -206,17 +212,17 @@ class SetMeUp {
                     fs.unlinkSync(filename)
                 } catch (ex) {
                     /* istanbul ignore next */
-                    logger.error("SetMeUp.load", `Could not destroy ${filename}`, ex)
+                    if (logger) logger.error("SetMeUp.load", `Could not destroy ${filename}`, ex)
                 }
             }
             // File settings.secret.json is always encrypted.
-            else if (path.basename(filename).toLowerCase() == "settings.secret.json") {
+            else if (isSecret) {
                 try {
                     const cryptoOptions = options.crypto === true ? {} : (options.crypto as CryptoOptions)
                     this.encrypt(filename, cryptoOptions)
                 } catch (ex) {
                     /* istanbul ignore next */
-                    logger.error("SetMeUp.load", `Could not automatically encrypt the settings.secret.json file`, ex)
+                    if (logger) logger.error("SetMeUp.load", `Could not automatically encrypt the settings.secret.json file`, ex)
                 }
             }
         }
@@ -308,7 +314,8 @@ class SetMeUp {
      */
     reset = (): void => {
         const parentKeys = Object.keys(this._settings)
-        logger.warn("Settings.reset", `Will clear ${parentKeys.length} parent keys.`)
+
+        if (logger) logger.warn("Settings.reset", `Will clear ${parentKeys.length} parent keys.`)
 
         this.unwatch()
         this.files = []
@@ -319,7 +326,7 @@ class SetMeUp {
             }
         } catch (ex) {
             /* istanbul ignore next */
-            logger.error("Settings.reset", ex)
+            if (logger) logger.error("Settings.reset", ex)
         }
 
         this.events.emit("reset")
@@ -368,18 +375,14 @@ class SetMeUp {
                         this.load(filename)
 
                         /* istanbul ignore else */
-                        if (logger) {
-                            logger.info("Settings.watch", f, "Reloaded")
-                        }
+                        if (logger) logger.info("Settings.watch", f, "Reloaded")
                     })
                 }
             })(f)
         }
 
         /* istanbul ignore else */
-        if (logger) {
-            logger.info("Settings.watch")
-        }
+        if (logger) logger.info("Settings.watch", `Watching ${this.files.length} settings files`)
     }
 
     /**
@@ -397,15 +400,11 @@ class SetMeUp {
             }
         } catch (ex) {
             /* istanbul ignore next */
-            if (logger) {
-                logger.error("Settings.unwatch", ex)
-            }
+            if (logger) logger.error("Settings.unwatch", ex)
         }
 
         /* istanbul ignore else */
-        if (logger) {
-            logger.info("Settings.unwatch")
-        }
+        if (logger) logger.info("Settings.unwatch")
     }
 }
 

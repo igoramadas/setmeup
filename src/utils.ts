@@ -179,11 +179,9 @@ export function loadJson(filename: string, cryptoOptions?: CryptoOptions | boole
                 cryptoOptions = null
             }
 
-            logger.debug("SetMeUp.Utils.loadJson", filename, "Will be decrypted")
+            if (logger) logger.debug("SetMeUp.Utils.loadJson", filename, "Will be decrypted")
 
             result = cryptoMethod("decrypt", filename, cryptoOptions as CryptoOptions)
-        } else if (logger) {
-            logger.warn("SetMeUp.Utils.loadJson", `${filename} appears to be encrypted! Forgot passing 'cryptoOptions' to decrypt?`)
         }
     }
 

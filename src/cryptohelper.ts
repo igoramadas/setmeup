@@ -154,9 +154,7 @@ export function cryptoMethod(action: string, filename: string, options?: CryptoO
                 } catch (ex) {
                     ex.friendlyMessage = `Can't ${action}: ${currentValue}. Make sure key and IV are correct for encryption.`
 
-                    if (logger) {
-                        logger.error(`SetMeUp`, action, ex)
-                    }
+                    if (logger) logger.error(`SetMeUp`, action, ex)
 
                     throw ex
                 }
