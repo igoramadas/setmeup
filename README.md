@@ -8,15 +8,16 @@ Easy to use app settings module. Settings are stored and loaded from JSON files 
 
 ## Configuration files
 
-By default SetMeUp will load configuration from 3 different JSON files, on the following order:
+By default SetMeUp will load configuration from 4 different JSON files, on the following order:
 
 1. **settings.default.json** are mainly used by libraries to define their default settings.
 2. **settings.json** should usually contain global settings for the current application.
 3. **settings.NODE_ENV.json** should have application settings relevant only to the current environment.
+4. **settings.secret.json** secrets and credentials, this file is automatically encrypted on load.
 
 A typical application will have at least the `settings.json` file, but most should also have a `settings.development.json` and one `settings.production.json` file as well. The `settings.default.json` is meant to be used mostly by libraries and sharead modules.
 
-The configuration files can have inline comments (they're treated as JSON5).
+**Please note:** the configuration files can have inline comments (they're treated as JSON5).
 
 ## Basic usage
 
@@ -105,10 +106,12 @@ The encryption features of SetMeUp can (and should!) be customized by defininig 
 
 Please note that you MUST define the key and IV environment variables if you are running on the cloud (GCP, AWS etc...), as the machine ID will change whenever you reboot your instances. The defaults are there mostly to be used for local development.
 
-### Encrypting and decrypting files on code
+The file `settings.secret.json` (if there's one) will be encrypted automatically by SetMeUp after `load()`. So if you want to manually change some of its values, you can simply edit the desired keys as plain text, and on the next application start it will get encrypted again.
+
+### Encrypting and decrypting files programmatically
 
 ```javascript
-// Derive encryption key from machine (default).
+// Derive encryption key from env variables or local machine (default).
 setmeup.encrypt("./settings.secret.json")
 
 // And decrypt...
@@ -144,6 +147,8 @@ Or directly on NPM scripts (package.json):
 }
 
 ```
+
+The samples above are for the `settings.secret.json` but you could actually use any other filename, like `my-private-settings.json`.
 
 #### Security considerations
 

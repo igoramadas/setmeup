@@ -4,6 +4,7 @@
 =====
 * NEW! Command line helper to encrypt / decrypt / validate settings files.
 * NEW! Option "destroy" to delete settings file right after loading.
+* NEW! File settings.secret.json added to default load(), and is always encrypted.
 * BREAKING! Encrypted setting values are now prefixed with "enc-".
 * Fixed bug that allowed re-encrypting settings multiple times.
 * Updated dependencies.
