@@ -8,16 +8,16 @@ let it = mocha.it
 
 chai.should()
 
-describe("SetMeUp Crypto Tests", function() {
+describe("SetMeUp Crypto Tests", function () {
     let utils = null
 
-    before(function() {
+    before(function () {
         require("anyhow").setup("none")
 
         utils = require("../lib/utils")
     })
 
-    it("Gets file from app root folder using getFilePath", function(done) {
+    it("Gets file from app root folder using getFilePath", function (done) {
         let currentFile = utils.getFilePath("package.json")
 
         if (currentFile) {
@@ -27,17 +27,17 @@ describe("SetMeUp Crypto Tests", function() {
         }
     })
 
-    it("Gets file from current folder using getFilePath", function(done) {
+    it("Gets file from current folder using getFilePath", function (done) {
         let currentFile = utils.getFilePath("test-utils.js", __dirname)
 
         if (currentFile) {
             done()
         } else {
-            done("Could not find test-utils.json file.")
+            done("Could not find test-utils.js file.")
         }
     })
 
-    it("Fails to get non existing file using getFilePath", function(done) {
+    it("Fails to get non existing file using getFilePath", function (done) {
         let currentFile = utils.getFilePath("this-does-not.exist")
 
         if (currentFile) {
@@ -47,7 +47,7 @@ describe("SetMeUp Crypto Tests", function() {
         }
     })
 
-    it("Parse JSON with comments", function(done) {
+    it("Parse JSON with comments", function (done) {
         let value = `
         /* This is a multiline
         comment */
@@ -78,7 +78,7 @@ describe("SetMeUp Crypto Tests", function() {
         }
     })
 
-    it("Parse JSON from object that returns JSON itself", function(done) {
+    it("Parse JSON from object that returns JSON itself", function (done) {
         let obj = {}
         obj.toString = () => {
             return '{"something": "abc"}'

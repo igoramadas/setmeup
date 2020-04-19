@@ -1,6 +1,7 @@
 // TEST: MAIN
 
 let chai = require("chai")
+let fs = require("fs")
 let mocha = require("mocha")
 let before = mocha.before
 let describe = mocha.describe
@@ -8,16 +9,38 @@ let it = mocha.it
 
 chai.should()
 
-describe("SetMeUp Main Tests", function() {
+describe("SetMeUp Main Tests", function () {
     let setmeup = null
 
-    before(function() {
+    const settingsTemplate = {
+        something: {
+            number: 1,
+            negativeNumber: -1,
+            string: "abc",
+            boolean: true,
+            anotherBoolean: false
+        },
+        root: {
+            date: "01/01/2000"
+        },
+        array: [1, -1, "a", true],
+        testingFileWatcher: true
+    }
+
+    before(function () {
         require("anyhow").setup("none")
+
+        fs.writeFileSync("./test/settings.test.json", JSON.stringify(settingsTemplate, null, 4), {encoding: "utf8"})
+        fs.writeFileSync("./test/settings.secret.json", JSON.stringify(settingsTemplate, null, 4), {encoding: "utf8"})
 
         setmeup = require("../lib/index")
     })
 
-    it("Try loading settings from invalid file", function(done) {
+    after(function () {
+        fs.writeFileSync("./test/settings.test.json", JSON.stringify(settingsTemplate, null, 4), {encoding: "utf8"})
+    })
+
+    it("Try loading settings from invalid file", function (done) {
         if (setmeup.load("invalid-settings") == null) {
             done()
         } else {
@@ -25,9 +48,9 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
-    it("Load test settings", function(done) {
+    it("Load test settings", function (done) {
         setmeup.load()
-        setmeup.load("./settings.test.json")
+        setmeup.load("./test/settings.test.json")
 
         if (setmeup.settings.something && setmeup.settings.something.number == 1) {
             done()
@@ -36,9 +59,9 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
-    it("Load more test settings, do not overwrite", function(done) {
-        setmeup.load("./settings.test.json")
-        setmeup.load("./settings.test2.json", {
+    it("Load more test settings, do not overwrite", function (done) {
+        setmeup.load("./test/settings.test.json")
+        setmeup.load("./test/settings.test2.json", {
             overwrite: false
         })
 
@@ -51,8 +74,8 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
-    it("Load test settings from a specific root key", function(done) {
-        setmeup.load("./settings.test.json", {
+    it("Load test settings from a specific root key", function (done) {
+        setmeup.load("./test/settings.test.json", {
             rootKey: "root"
         })
 
@@ -63,7 +86,19 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
-    it("Load from environment variables", function(done) {
+    it("Destroy file after loading", function (done) {
+        setmeup.load("./test/settings.test.json", {
+            destroy: true
+        })
+
+        if (!fs.existsSync("./test/settings.test.json")) {
+            done()
+        } else {
+            done("File settings.test.json should be deleted after loading.")
+        }
+    })
+
+    it("Load from environment variables", function (done) {
         setmeup.loadFromEnv()
 
         if (setmeup.settings.env && setmeup.settings.env.var == "abc") {
@@ -73,7 +108,7 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
-    it("Load from environment variables, with different prefix and forcing lowercase", function(done) {
+    it("Load from environment variables, with different prefix and forcing lowercase", function (done) {
         setmeup.loadFromEnv("SMU2", {
             lowercase: true
         })
@@ -85,8 +120,8 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
-    it("Load from non-existing environment variables", function(done) {
-        let callback = function() {
+    it("Load from non-existing environment variables", function (done) {
+        let callback = function () {
             done()
         }
 
@@ -97,7 +132,7 @@ describe("SetMeUp Main Tests", function() {
         })
     })
 
-    it("Creates new instance that differs from original", function(done) {
+    it("Creates new instance that differs from original", function (done) {
         let otherInstance = setmeup.newInstance()
 
         setmeup.settings.updatedValue = true
@@ -109,7 +144,7 @@ describe("SetMeUp Main Tests", function() {
         }
     })
 
-    it("Creates new instance and do lot load", function(done) {
+    it("Creates new instance and do lot load", function (done) {
         let newInstance = setmeup.newInstance(true)
 
         if (Object.keys(newInstance.settings).length > 0) {

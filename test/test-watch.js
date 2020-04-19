@@ -10,13 +10,13 @@ let it = mocha.it
 
 chai.should()
 
-describe("SetMeUp Watch Tests", function() {
+describe("SetMeUp Watch Tests", function () {
     let setmeup = null
     let utils = null
 
-    var filename = "./settings.test.json"
+    var filename = "./test/settings.test.json"
 
-    before(function() {
+    before(function () {
         require("anyhow").setup("none")
 
         setmeup = require("../lib/index")
@@ -25,11 +25,11 @@ describe("SetMeUp Watch Tests", function() {
         utils = require("../lib/utils")
     })
 
-    after(function() {
+    after(function () {
         setmeup.unwatch()
     })
 
-    it("Settings file watchers properly working", function(done) {
+    it("Settings file watchers properly working", function (done) {
         this.timeout(7000)
 
         var doneCalled = false
@@ -42,7 +42,7 @@ describe("SetMeUp Watch Tests", function() {
 
         var newJson = utils.parseJson(originalJson)
 
-        var callback = function(watchedFile, contents) {
+        var callback = function (watchedFile, contents) {
             if (doneCalled) return
             doneCalled = true
 
@@ -57,7 +57,7 @@ describe("SetMeUp Watch Tests", function() {
             done()
         }
 
-        var unwatch = function() {
+        var unwatch = function () {
             setmeup.unwatch()
         }
 
@@ -65,7 +65,7 @@ describe("SetMeUp Watch Tests", function() {
         setmeup.watch()
         newJson.testingFileWatcher = true
 
-        var writer = function() {
+        var writer = function () {
             try {
                 fs.writeFileSync(filename, JSON.stringify(newJson, null, 4))
             } catch (ex) {
@@ -77,5 +77,15 @@ describe("SetMeUp Watch Tests", function() {
         }
 
         setTimeout(writer, 500)
+    })
+
+    it("Reset all settings", function (done) {
+        setmeup.reset()
+
+        if (!setmeup.settings.something) {
+            done()
+        } else {
+            done("Settings were not reset, can still find the 'something' property")
+        }
     })
 })

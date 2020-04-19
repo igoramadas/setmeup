@@ -10,7 +10,4 @@ test/
 CNAME
 History.md
 Makefile
-settings.test.json
-settings.test2.json
-settings.secret.json
 tsconfig.json

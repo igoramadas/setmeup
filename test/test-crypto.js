@@ -10,33 +10,34 @@ let it = mocha.it
 
 chai.should()
 
-describe("SetMeUp Crypto Tests", function() {
+describe("SetMeUp Crypto Tests", function () {
     let setmeup = null
     let utils = null
     let cryptoFilename = null
 
-    before(function() {
+    before(function () {
         require("anyhow").setup("none")
 
         setmeup = require("../lib/index")
         utils = require("../lib/utils")
 
-        const originalFilename = utils.getFilePath("./settings.test.json")
+        const originalFilename = utils.getFilePath("./test/settings.test.json")
         const fileBuffer = fs.readFileSync(originalFilename)
         fs.writeFileSync(originalFilename.replace(".json", ".crypto.json"), fileBuffer)
-        cryptoFilename = utils.getFilePath("./settings.test.crypto.json")
+        fs.writeFileSync("./test/settings.secret.json", fileBuffer)
+        cryptoFilename = utils.getFilePath("./test/settings.test.crypto.json")
     })
 
-    after(function() {
+    after(function () {
         if (fs.existsSync(cryptoFilename)) {
             fs.unlinkSync(cryptoFilename)
         }
     })
 
-    it("Encrypt the settings file", function(done) {
+    it("Encrypt the settings file", function (done) {
         setmeup.encrypt(cryptoFilename)
 
-        var encrypted = JSON.parse(
+        const encrypted = JSON.parse(
             fs.readFileSync(cryptoFilename, {
                 encoding: "utf8"
             })
@@ -52,11 +53,11 @@ describe("SetMeUp Crypto Tests", function() {
         done()
     })
 
-    it("Encrypt file already encrypted", function() {
+    it("Encrypt file already encrypted", function () {
         setmeup.encrypt(cryptoFilename)
     })
 
-    it("Load encrypted file with default encryption settings", function(done) {
+    it("Load encrypted file with default encryption settings", function (done) {
         let delayLoad = () => {
             let decrypted = setmeup.load(cryptoFilename, {
                 crypto: true
@@ -72,7 +73,7 @@ describe("SetMeUp Crypto Tests", function() {
         setTimeout(delayLoad, 200)
     })
 
-    it("Load encrypted file with custom encryption settings", function(done) {
+    it("Load encrypted file with custom encryption settings", function (done) {
         let delayLoad = () => {
             let decrypted = setmeup.load(cryptoFilename, {
                 crypto: {
@@ -90,7 +91,17 @@ describe("SetMeUp Crypto Tests", function() {
         setTimeout(delayLoad, 200)
     })
 
-    it("Fails to decrypt settings with wrong key", function(done) {
+    it("Fails to encrypt null file", function (done) {
+        try {
+            setmeup.encrypt("./test/settings.null.json")
+
+            done("Encrypting empty or null should thrown an exception.")
+        } catch (ex) {
+            done()
+        }
+    })
+
+    it("Fails to decrypt settings with wrong key", function (done) {
         try {
             setmeup.decrypt(cryptoFilename, {
                 key: "12345678901234561234567890123456"
@@ -102,7 +113,7 @@ describe("SetMeUp Crypto Tests", function() {
         }
     })
 
-    it("Fails to decrypt non existing file", function(done) {
+    it("Fails to decrypt non existing file", function (done) {
         try {
             setmeup.decrypt("wrongfile.json")
 
@@ -112,11 +123,20 @@ describe("SetMeUp Crypto Tests", function() {
         }
     })
 
-    it("Decrypt the settings file", function(done) {
+    it("Decrypt the settings file, with mixed plain text values inside", function (done) {
         let delayDecrypt = () => {
+            const encrypted = JSON.parse(
+                fs.readFileSync(cryptoFilename, {
+                    encoding: "utf8"
+                })
+            )
+
+            encrypted.plainText = "this is plain text"
+            fs.writeFileSync(cryptoFilename, JSON.stringify(encrypted, null, 0), {encoding: "utf8"})
+
             setmeup.decrypt(cryptoFilename)
 
-            var decrypted = JSON.parse(
+            const decrypted = JSON.parse(
                 fs.readFileSync(cryptoFilename, {
                     encoding: "utf8"
                 })
@@ -132,7 +152,7 @@ describe("SetMeUp Crypto Tests", function() {
         setTimeout(delayDecrypt, 200)
     })
 
-    it("Encrypt and decrypt with custom key and IV", function(done) {
+    it("Encrypt and decrypt with custom key and IV", function (done) {
         let iv = "1234567890987654"
 
         try {
@@ -150,7 +170,19 @@ describe("SetMeUp Crypto Tests", function() {
         }
     })
 
-    it("Fails to (de)encrypt non-existing file", function(done) {
+    it("File settings.secret.json should be auto encrypted", function (done) {
+        setmeup.load("./test/settings.secret.json")
+
+        const encryptedFile = JSON.parse(fs.readFileSync("./test/settings.secret.json", "utf8"))
+
+        if (encryptedFile.encrypted) {
+            done()
+        } else {
+            done("File settings.secret.json was not auto encrypted on load.")
+        }
+    })
+
+    it("Fails to (de)encrypt non-existing file", function (done) {
         try {
             setmeup.encrypt("wrong-file-123.json")
             done("Trying to encrypt wrong-file.json should throw an error.")
