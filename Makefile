@@ -8,6 +8,9 @@ export SMU_env_var:=abc
 export SMU_env_anotherVar:=another
 export SMU2_ENV2_VAR2:=abc
 
+build:
+	$(TSC)
+
 test:
 	$(TSC)
 	@NODE_ENV=test $(MOCHA) --trace-warnings --exit -u tdd -R spec
