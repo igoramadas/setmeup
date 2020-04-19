@@ -4,6 +4,7 @@
 =====
 * NEW! Command line helper to encrypt / decrypt / validate settings files.
 * BREAKING! Encrypted setting values are now prefixed with "enc-".
+* Fixed bug that allowed re-encrypting settings multiple times.
 * Updated dependencies.
 
 1.4.1
