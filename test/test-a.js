@@ -3,6 +3,7 @@
 let chai = require("chai")
 let fs = require("fs")
 let mocha = require("mocha")
+let after = mocha.after
 let before = mocha.before
 let describe = mocha.describe
 let it = mocha.it
