@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.5.2
+=====
+* Fixed exception when having unecnrypted array mixed inside an encrypted settings file.
+
 1.5.1
 =====
 * Improved handling of the special settings.secret.json file.
