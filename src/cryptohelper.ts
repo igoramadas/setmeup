@@ -126,26 +126,31 @@ export function cryptoMethod(action: string, filename: string, options?: CryptoO
                             newValue += c.final("hex")
                         }
                     } else if (action == "decrypt") {
-                        // Split the data as "datatype:encryptedValue".
-                        const arrValue = currentValue.split(":")
-
-                        if (arrValue.length > 1 && arrValue[0].toString().substring(0, 4) == "enc-") {
-                            newValue = ""
-
-                            // Create cipher and decrypt.
-                            c = crypto.createDecipheriv(options.cipher, options.key, options.iv)
-                            newValue += c.update(arrValue[1], "hex", "utf8")
-                            newValue += c.final("utf8")
-
-                            // Cast data type (array, number or string).
-                            if (arrValue[0] === "enc-a") {
-                                newValue = JSON.parse(newValue)
-                            } else if (arrValue[0] === "enc-n") {
-                                newValue = parseFloat(newValue)
-                            }
-                        } else {
-                            // Value not encrypted, so keep the current.
+                        // Value is an array? Return it as it is.
+                        if (_.isArray(currentValue)) {
                             newValue = currentValue
+                        } else {
+                            // Split the data as "datatype:encryptedValue".
+                            const arrValue = currentValue.split(":")
+
+                            if (arrValue.length > 1 && arrValue[0].toString().substring(0, 4) == "enc-") {
+                                newValue = ""
+
+                                // Create cipher and decrypt.
+                                c = crypto.createDecipheriv(options.cipher, options.key, options.iv)
+                                newValue += c.update(arrValue[1], "hex", "utf8")
+                                newValue += c.final("utf8")
+
+                                // Cast data type (array, number or string).
+                                if (arrValue[0] === "enc-a") {
+                                    newValue = JSON.parse(newValue)
+                                } else if (arrValue[0] === "enc-n") {
+                                    newValue = parseFloat(newValue)
+                                }
+                            } else {
+                                // Value not encrypted, so keep the current.
+                                newValue = currentValue
+                            }
                         }
                     } else {
                         /* istanbul ignore next */

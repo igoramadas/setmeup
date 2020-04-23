@@ -132,6 +132,7 @@ describe("SetMeUp Crypto Tests", function () {
             )
 
             encrypted.plainText = "this is plain text"
+            encrypted.array = [1, 2, 3]
             fs.writeFileSync(cryptoFilename, JSON.stringify(encrypted, null, 0), {encoding: "utf8"})
 
             setmeup.decrypt(cryptoFilename)
