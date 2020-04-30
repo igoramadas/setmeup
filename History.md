@@ -1,5 +1,10 @@
 # Changelog for SetMeUp
 
+1.5.4
+=====
+* NEW! readOnly flag to switch the module to read-only mode (will never write to disk).
+- Improved logging.
+
 1.5.2
 =====
 * Fixed exception when having unecnrypted array mixed inside an encrypted settings file.
@@ -7,7 +12,7 @@
 1.5.1
 =====
 * Improved handling of the special settings.secret.json file.
-* Check if anyhow is present for logging, othewise does not log anything
+* Check if anyhow is present for logging, othewise does not log anything.
 
 1.5.0
 =====

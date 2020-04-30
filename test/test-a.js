@@ -29,7 +29,7 @@ describe("SetMeUp Main Tests", function () {
     }
 
     before(function () {
-        require("anyhow").setup("none")
+        require("anyhow").setup("console")
 
         fs.writeFileSync("./test/settings.test.json", JSON.stringify(settingsTemplate, null, 4), {encoding: "utf8"})
         fs.writeFileSync("./test/settings.secret.json", JSON.stringify(settingsTemplate, null, 4), {encoding: "utf8"})
@@ -87,10 +87,21 @@ describe("SetMeUp Main Tests", function () {
         }
     })
 
+    it("Load in readOnly mode, should not destroy", function (done) {
+        setmeup.readOnly = true
+        setmeup.load()
+        setmeup.load("./test/settings.test.json", {destroy: true})
+        setmeup.readOnly = false
+
+        if (fs.existsSync("./test/settings.test.json")) {
+            done()
+        } else {
+            done("File settings.test.json should NOT be deleted when in readOnly mode.")
+        }
+    })
+
     it("Destroy file after loading", function (done) {
-        setmeup.load("./test/settings.test.json", {
-            destroy: true
-        })
+        setmeup.load("./test/settings.test.json", {destroy: true})
 
         if (!fs.existsSync("./test/settings.test.json")) {
             done()

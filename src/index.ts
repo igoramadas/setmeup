@@ -115,6 +115,9 @@ class SetMeUp {
     /** Array of loaded files. */
     files: LoadedFile[] = []
 
+    /** Flag to avoid writing settings to disk. */
+    readOnly: boolean = false
+
     // EVENTS
     // --------------------------------------------------------------------------
 
@@ -173,6 +176,13 @@ class SetMeUp {
             filenames = [filenames as string]
         }
 
+        // Option destroy can't be used in readOnly.
+        if (this.readOnly && options.destroy) {
+            /* istanbul ignore next */
+            if (logger) logger.warn("SetMeUp.load", "Option 'destroy' can't be used while in readOnly mode", `${filenames.length} file(s) will not be destroyed after loading`)
+        }
+
+        // Iterate and parse files.
         for (let f of filenames) {
             const filename = getFilePath(f)
             const isSecret = (filename && path.basename(filename).toLowerCase() == "settings.secret.json") || null
@@ -209,20 +219,22 @@ class SetMeUp {
             // Delete file after loading?
             if (options.destroy) {
                 try {
-                    fs.unlinkSync(filename)
+                    if (!this.readOnly) {
+                        fs.unlinkSync(filename)
+                    }
                 } catch (ex) {
                     /* istanbul ignore next */
                     if (logger) logger.error("SetMeUp.load", `Could not destroy ${filename}`, ex)
                 }
             }
-            // File settings.secret.json is always encrypted.
-            else if (isSecret) {
+            // File settings.secret.json is auto encrypted if readOnly is not set.
+            else if (isSecret && !this.readOnly) {
                 try {
                     const cryptoOptions = options.crypto === true ? {} : (options.crypto as CryptoOptions)
                     this.encrypt(filename, cryptoOptions)
                 } catch (ex) {
                     /* istanbul ignore next */
-                    if (logger) logger.error("SetMeUp.load", `Could not automatically encrypt the settings.secret.json file`, ex)
+                    if (logger) logger.warn("SetMeUp.load", `Could not automatically encrypt the settings.secret.json file`, ex)
                 }
             }
         }
@@ -232,8 +244,9 @@ class SetMeUp {
             return null
         }
 
-        // Extend loaded settings.
+        // Extend loaded settings and log results.
         extend(result, this.settings, options.overwrite)
+        if (logger) logger.info("SetMeUp.load", "Loaded", (filenames as string[]).join(", "))
 
         // Return the JSON representation of the loaded settings.
         return result
@@ -315,7 +328,7 @@ class SetMeUp {
     reset = (): void => {
         const parentKeys = Object.keys(this._settings)
 
-        if (logger) logger.warn("Settings.reset", `Will clear ${parentKeys.length} parent keys.`)
+        if (logger) logger.warn("SetMeUp.reset", `Will clear ${parentKeys.length} parent keys.`)
 
         this.unwatch()
         this.files = []
@@ -326,7 +339,7 @@ class SetMeUp {
             }
         } catch (ex) {
             /* istanbul ignore next */
-            if (logger) logger.error("Settings.reset", ex)
+            if (logger) logger.error("SetMeUp.reset", ex)
         }
 
         this.events.emit("reset")
@@ -336,21 +349,31 @@ class SetMeUp {
     // --------------------------------------------------------------------------
 
     /**
-     * Encrypts the specified settings file.
+     * Encrypts the specified settings file. Does not work if in readOnly mode.
      * @param filename The file to be encrypted.
      * @param options Options cipher, key and IV to be passed to the encryptor.
      */
     encrypt = (filename: string, options?: CryptoOptions): void => {
+        if (this.readOnly) {
+            if (logger) logger.warn("SetMeUp.encrypt", "Can't encrypt while in readOnly mode", filename)
+            return
+        }
+
         const result = JSON.stringify(cryptoMethod("encrypt", filename, options), null, 4)
         fs.writeFileSync(filename, result, {encoding: "utf8"})
     }
 
     /**
-     * Decrypts the specified settings file.
+     * Decrypts the specified settings file. Does not work if in readOnly mode.
      * @param filename The file to be decrypted.
      * @param options Options cipher, key and IV to be passed to the decryptor.
      */
     decrypt = (filename: string, options?: CryptoOptions): void => {
+        if (this.readOnly) {
+            if (logger) logger.warn("SetMeUp.decrypt", "Can't decrypt while in readOnly mode", filename)
+            return
+        }
+
         const result = JSON.stringify(cryptoMethod("decrypt", filename, options), null, 4)
         fs.writeFileSync(filename, result, {encoding: "utf8"})
     }
@@ -375,14 +398,14 @@ class SetMeUp {
                         this.load(filename)
 
                         /* istanbul ignore else */
-                        if (logger) logger.info("Settings.watch", f, "Reloaded")
+                        if (logger) logger.info("SetMeUp.watch", f, "Reloaded")
                     })
                 }
             })(f)
         }
 
         /* istanbul ignore else */
-        if (logger) logger.info("Settings.watch", `Watching ${this.files.length} settings files`)
+        if (logger) logger.info("SetMeUp.watch", `Watching ${this.files.length} settings files`)
     }
 
     /**
@@ -400,11 +423,11 @@ class SetMeUp {
             }
         } catch (ex) {
             /* istanbul ignore next */
-            if (logger) logger.error("Settings.unwatch", ex)
+            if (logger) logger.error("SetMeUp.unwatch", ex)
         }
 
         /* istanbul ignore else */
-        if (logger) logger.info("Settings.unwatch")
+        if (logger) logger.info("SetMeUp.unwatch")
     }
 }
 
