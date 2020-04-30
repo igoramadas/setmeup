@@ -40,6 +40,21 @@ settings.myFTP = {
 }
 ```
 
+## Read only mode
+
+```javascript
+const setmeup = require("setmeup")
+
+// Enabling readOnly mode will prevent SetMeUp from ever writing to disk.
+setmeup.readOnly = true
+
+// File settings.secret.json (if present) will not be auto encrypted.
+setmeup.load()
+
+// Calling encrypt in readOnly mode won't work now.
+setmeup.encrypt("settings.custom.json")
+```
+
 ### Watching updates to configuration files
 
 ```javascript
