@@ -93,7 +93,7 @@ describe("SetMeUp Crypto Tests", function () {
 
     it("Fails to encrypt null file", function (done) {
         try {
-            setmeup.encrypt("./test/settings.null.json")
+            setmeup.encrypt("./test/settings.null.json", {key: null})
 
             done("Encrypting empty or null should thrown an exception.")
         } catch (ex) {

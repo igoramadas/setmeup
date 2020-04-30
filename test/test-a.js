@@ -29,7 +29,7 @@ describe("SetMeUp Main Tests", function () {
     }
 
     before(function () {
-        require("anyhow").setup("console")
+        require("anyhow").setup("none")
 
         fs.writeFileSync("./test/settings.test.json", JSON.stringify(settingsTemplate, null, 4), {encoding: "utf8"})
         fs.writeFileSync("./test/settings.secret.json", JSON.stringify(settingsTemplate, null, 4), {encoding: "utf8"})
