@@ -3,7 +3,7 @@
 1.5.4
 =====
 * NEW! readOnly flag to switch the module to read-only mode (will never write to disk).
-- Improved logging.
+- Improved logging (if anyhow is also installed).
 
 1.5.2
 =====

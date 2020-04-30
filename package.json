@@ -4,10 +4,10 @@
     "description": "SetMeUp, your single and only settings manager.",
     "keywords": [
         "setmeup",
-        "app settings",
         "configuration",
         "settings",
-        "setup"
+        "setup",
+        "env"
     ],
     "author": "Igor Ramadas <igor@devv.com>",
     "homepage": "https://setmeup.devv.com",
