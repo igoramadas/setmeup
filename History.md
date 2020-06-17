@@ -1,9 +1,16 @@
 # Changelog for SetMeUp
 
+1.6.0
+=====
+* BREAKING! Settings will NOT be loaded by default now (doNotLoad option removed, please call load() manually).
+* Make sure Anyhow's logging is set up.
+* Further logging tweaks.
+
 1.5.4
 =====
 * NEW! readOnly flag to switch the module to read-only mode (will never write to disk).
-- Improved logging (if anyhow is also installed).
+* Auto set readOnly to true if file system is read only.
+* Improved logging (if anyhow is also installed).
 
 1.5.2
 =====

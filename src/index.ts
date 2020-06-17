@@ -8,6 +8,8 @@ import fs from "fs"
 import path from "path"
 
 /** @hidden */
+let rootFolder = process.cwd()
+/** @hidden */
 let env = process.env
 /** @hidden */
 let logger = null
@@ -59,7 +61,7 @@ class SetMeUp {
 
     /**
      * Returns a new fresh instance of the SetMeUp module.
-     * @param doNotLoad Optional, if true will not load settings from file on new instance.
+     * @param doNotLoad Deprecated, if true will not load settings from file on new instance.
      * @returns New instance of SetMeUp with its own fresh settings.
      */
     newInstance(doNotLoad?: boolean): SetMeUp {
@@ -68,9 +70,19 @@ class SetMeUp {
 
     /**
      * Default SetMeUp constructor.
-     * @param doNotLoad Optional, if true will not auto load settings from files and environment variables.
+     * @param doNotLoad Deprecated, if true will not auto load settings from files and environment variables.
      */
     constructor(doNotLoad?: boolean) {
+        if (doNotLoad === true || doNotLoad === false) {
+            const msg = "Option doNotLoad is deprecated! In the future you will always have to call load() manually, making doNotLoad is redundant."
+            if (logger) logger.warn(msg)
+            else console.warn(msg)
+        }
+
+        if (typeof doNotLoad == "undefined" || doNotLoad === null) {
+            doNotLoad = true
+        }
+
         if (!logger) {
             try {
                 logger = require("anyhow")
@@ -87,9 +99,12 @@ class SetMeUp {
             }
         }
 
-        /* istanbul ignore else */
-        if (env.NODE_ENV == "test") {
-            doNotLoad = true
+        // Read only file system? Set readOnly to true.
+        try {
+            fs.accessSync(__dirname, fs.constants.W_OK)
+        } catch (err) {
+            this.readOnly = true
+            if (logger) logger.info("SetMeUp", "File system seems to be read only", "Setting readOnly = true")
         }
 
         /* istanbul ignore if */
@@ -160,6 +175,7 @@ class SetMeUp {
      * @event load
      */
     load = (filenames?: string | string[], options?: LoadOptions): any => {
+        let loadedFilenames = []
         let result = {}
 
         // Set default options.
@@ -237,6 +253,8 @@ class SetMeUp {
                     if (logger) logger.warn("SetMeUp.load", `Could not automatically encrypt the settings.secret.json file`, ex)
                 }
             }
+
+            loadedFilenames.push(filename.replace(rootFolder, ""))
         }
 
         // Nothing loaded? Return null.
@@ -246,7 +264,7 @@ class SetMeUp {
 
         // Extend loaded settings and log results.
         extend(result, this.settings, options.overwrite)
-        if (logger) logger.info("SetMeUp.load", "Loaded", (filenames as string[]).join(", "))
+        if (logger) logger.info("SetMeUp.load", "Loaded", loadedFilenames.join(", "))
 
         // Return the JSON representation of the loaded settings.
         return result
@@ -260,8 +278,9 @@ class SetMeUp {
      * @event loadFromEnv
      */
     loadFromEnv = (prefix?: string, options?: LoadEnvOptions): any => {
-        let result = {}
         let keys = _.keys(process.env)
+        let loadedKeys = []
+        let result = {}
 
         // Use "SMU_" as default prefix.
         if (!prefix || prefix == "") {
@@ -280,8 +299,11 @@ class SetMeUp {
         // Each underscore defines a level on the result tree.
         for (let key of keys) {
             if (key.substring(0, prefix.length) == prefix) {
+                const keyNoprefix = key.substring(prefix.length)
+                loadedKeys.push(keyNoprefix)
+
                 let target = result
-                let arr = key.substring(prefix.length).split("_")
+                let arr = keyNoprefix.split("_")
 
                 // Force lowercase if defined on options.
                 if (options.lowercase)
@@ -312,8 +334,9 @@ class SetMeUp {
             return null
         }
 
-        // Extend loaded settings.
+        // Extend loaded settings and log results.
         extend(result, this.settings, options.overwrite)
+        if (logger) logger.info("SetMeUp.loadFromEnv", "Loaded", loadedKeys.join(", "))
 
         // Return the JSON representation of the loaded settings.
         return result

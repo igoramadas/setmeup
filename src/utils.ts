@@ -150,8 +150,8 @@ export function loadJson(filename: string, cryptoOptions?: CryptoOptions | boole
 
     // Found file? Load it. Try using UTF8 first, if failed, use ASCII.
     if (filename != null) {
-        const encUtf8 = {encoding: "utf8"}
-        const encAscii = {encoding: "ascii"}
+        const encUtf8 = {encoding: "utf8"} as any
+        const encAscii = {encoding: "ascii"} as any
 
         // Try parsing the file with UTF8 first, if fails, try ASCII.
         try {
