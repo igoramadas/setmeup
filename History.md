@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.6.1
+=====
+* Updated dependencies.
+
 1.6.0
 =====
 * BREAKING! Settings will NOT be loaded by default now (doNotLoad option removed, please call load() manually).
