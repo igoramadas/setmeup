@@ -143,7 +143,8 @@ myApp.writeConfig(<span class="hljs-string">&quot;title&quot;</span>, <span clas
     }
 }</code></pre>
 				<p>So you could replicate the settings JSON above by executing:</p>
-				<pre><code>$ <span class="hljs-attr">SMU_app_id=</span>myapp <span class="hljs-attr">SMU_app_server_hostname=</span>localhost <span class="hljs-keyword">node</span> <span class="hljs-title">index</span>.js</code></pre><p>Some code samples:</p>
+				<pre><code>$ <span class="hljs-attr">SMU_app_id=</span>myapp <span class="hljs-attr">SMU_app_server_hostname=</span>localhost <span class="hljs-keyword">node</span> <span class="hljs-title">index</span>.js</code></pre>
+				<p>Some code samples:</p>
 				<pre><code class="language-javascript"><span class="hljs-comment">// Load settings from environment variables using the default SMU_ prefix.</span>
 setmeup.loadFromEnv()
 
@@ -192,7 +193,8 @@ setmeup.load(<span class="hljs-string">&quot;./settings.secret.json&quot;</span>
 				</a>
 				<p>From inside your application root, on shell:</p>
 				<pre><code>$ .<span class="hljs-regexp">/node_modules/</span>.bin/setmeup encrypt settings.secret.json
-$ .<span class="hljs-regexp">/node_modules/</span>.bin/setmeup decrypt settings.secret.json</code></pre><p>Or directly on NPM scripts (package.json):</p>
+$ .<span class="hljs-regexp">/node_modules/</span>.bin/setmeup decrypt settings.secret.json</code></pre>
+				<p>Or directly on NPM scripts (package.json):</p>
 				<pre><code class="language-json">{
     <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;mypackage&quot;</span>,
     <span class="hljs-attr">&quot;version&quot;</span>: <span class="hljs-string">&quot;1.5.0&quot;</span>,
