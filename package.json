@@ -35,7 +35,7 @@
         "lodash": "^4.17.20"
     },
     "devDependencies": {
-        "@types/node": "^14.14.6",
+        "@types/node": "^14.14.7",
         "anyhow": "^2.0.5",
         "chai": "^4.2.0",
         "coveralls": "^3.1.0",
@@ -47,6 +47,15 @@
     },
     "peerDependencies": {
         "anyhow": "^2.0.5"
+    },
+    "prettier": {
+        "trailingComma": "none",
+        "tabWidth": 4,
+        "semi": false,
+        "singleQuote": false,
+        "arrowParens": "always",
+        "bracketSpacing": false,
+        "printWidth": 250
     },
     "nyc": {
         "reporter": "lcov",
