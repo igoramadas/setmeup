@@ -3,10 +3,11 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>LoadedFile | SetMeUp</title>
+	<title>CryptoOptions | SetMeUp</title>
 	<meta name="description" content="Documentation for SetMeUp">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <header>
@@ -38,8 +39,6 @@
 							</div>
 							<input type="checkbox" id="tsd-filter-inherited" checked />
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -51,16 +50,16 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="../globals.html">Globals</a>
+					<a href="../modules.html">SetMeUp</a>
 				</li>
 				<li>
-					<a href="../modules/_src_index_.html">&quot;src/index&quot;</a>
+					<a href="../modules/cryptohelper.html">cryptohelper</a>
 				</li>
 				<li>
-					<a href="_src_index_.loadedfile.html">LoadedFile</a>
+					<a href="cryptohelper.cryptooptions.html">CryptoOptions</a>
 				</li>
 			</ul>
-			<h1>Interface LoadedFile</h1>
+			<h1>Interface CryptoOptions</h1>
 		</div>
 	</div>
 </header>
@@ -70,7 +69,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represents a loaded file, used on <a href="../classes/_src_index_.setmeup.html#files">files</a>.</p>
+						<p>Encryption options for [[CryptoMethod]].</p>
 					</div>
 				</div>
 			</section>
@@ -78,7 +77,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">LoadedFile</span>
+						<span class="target">CryptoOptions</span>
 					</li>
 				</ul>
 			</section>
@@ -86,45 +85,61 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-not-exported">
+						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_src_index_.loadedfile.html#filename" class="tsd-kind-icon">filename</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported"><a href="_src_index_.loadedfile.html#watching" class="tsd-kind-icon">watching</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="cryptohelper.cryptooptions.html#cipher" class="tsd-kind-icon">cipher</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="cryptohelper.cryptooptions.html#iv" class="tsd-kind-icon">iv</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="cryptohelper.cryptooptions.html#key" class="tsd-kind-icon">key</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-					<a name="filename" class="tsd-anchor"></a>
-					<h3>filename</h3>
-					<div class="tsd-signature tsd-kind-icon">filename<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="cipher" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> cipher</h3>
+					<div class="tsd-signature tsd-kind-icon">cipher<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/d42f2b9/src/index.ts#L22">src/index.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/3ca4dac/src/cryptohelper.ts#L23">cryptohelper.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Filename of the loaded settings file.</p>
+							<p>Cipher to use, default is &quot;aes256&quot;.</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-					<a name="watching" class="tsd-anchor"></a>
-					<h3>watching</h3>
-					<div class="tsd-signature tsd-kind-icon">watching<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="iv" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> iv</h3>
+					<div class="tsd-signature tsd-kind-icon">iv<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/d42f2b9/src/index.ts#L24">src/index.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/3ca4dac/src/cryptohelper.ts#L27">cryptohelper.ts:27</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>True if file is being watched for updates (see <a href="../classes/_src_index_.setmeup.html#watch">watch</a>).</p>
+							<p>Encryption IV, default is &quot;8407198407191984&quot;.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="key" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> key</h3>
+					<div class="tsd-signature tsd-kind-icon">key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/igoramadas/setmeup/blob/3ca4dac/src/cryptohelper.ts#L25">cryptohelper.ts:25</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Encryption key, default is derived from current machine via [[getMachineID]].</p>
 						</div>
 					</div>
 				</section>
@@ -133,49 +148,40 @@
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="../globals.html"><em>Globals</em></a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/_src_cli_.html">&quot;src/cli&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="../modules/_src_cryptohelper_.html">&quot;src/cryptohelper&quot;</a>
+					<li class=" ">
+						<a href="../modules.html">Exports</a>
 					</li>
 					<li class="current tsd-kind-module">
-						<a href="../modules/_src_index_.html">&quot;src/index&quot;</a>
+						<a href="../modules/cryptohelper.html">cryptohelper</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="../modules/_src_utils_.html">&quot;src/utils&quot;</a>
+						<a href="../modules/utils.html">utils</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-not-exported">
-						<a href="../classes/_src_index_.setmeup.html" class="tsd-kind-icon">Set<wbr>MeUp</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="_src_index_.loadenvoptions.html" class="tsd-kind-icon">Load<wbr>Env<wbr>Options</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="_src_index_.loadoptions.html" class="tsd-kind-icon">Load<wbr>Options</a>
-					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-is-not-exported">
-						<a href="_src_index_.loadedfile.html" class="tsd-kind-icon">Loaded<wbr>File</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module tsd-is-protected">
+						<a href="cryptohelper.cryptooptions.html" class="tsd-kind-icon">Crypto<wbr>Options</a>
 						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-								<a href="_src_index_.loadedfile.html#filename" class="tsd-kind-icon">filename</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="cryptohelper.cryptooptions.html#cipher" class="tsd-kind-icon">cipher</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-not-exported">
-								<a href="_src_index_.loadedfile.html#watching" class="tsd-kind-icon">watching</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="cryptohelper.cryptooptions.html#iv" class="tsd-kind-icon">iv</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="cryptohelper.cryptooptions.html#key" class="tsd-kind-icon">key</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-is-protected">
+						<a href="../modules/cryptohelper.html#cryptomethod" class="tsd-kind-icon">crypto<wbr>Method</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -186,15 +192,7 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 			</ul>
 		</div>
 	</div>

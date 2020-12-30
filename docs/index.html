@@ -7,6 +7,7 @@
 	<meta name="description" content="Documentation for SetMeUp">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <header>
@@ -38,8 +39,6 @@
 							</div>
 							<input type="checkbox" id="tsd-filter-inherited" checked />
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -49,11 +48,6 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<ul class="tsd-breadcrumb">
-				<li>
-					<a href="globals.html">Globals</a>
-				</li>
-			</ul>
 			<h1>SetMeUp</h1>
 		</div>
 	</div>
@@ -84,48 +78,51 @@
 				<a href="#basic-usage" id="basic-usage" style="color: inherit; text-decoration: none;">
 					<h2>Basic usage</h2>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> setmeup = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;setmeup&quot;</span>)
-<span class="hljs-keyword">const</span> settings = setmeup.settings
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">setmeup</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;setmeup&quot;</span><span style="color: #000000">)</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">settings</span><span style="color: #000000"> = </span><span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #001080">settings</span>
 
-<span class="hljs-comment">// By default it will load from settings.default.json, settings.json and settings.NODE_ENV.json</span>
-<span class="hljs-comment">// automatically. Here we load settings from a custom file as well.</span>
-setmeup.load(<span class="hljs-string">&quot;settings.custom.json&quot;</span>)
+<span style="color: #008000">// By default it will load from settings.default.json, settings.json and settings.NODE_ENV.json</span>
+<span style="color: #008000">// automatically. Here we load settings from a custom file as well.</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #795E26">load</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;settings.custom.json&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Sample server listens to port defined on settings.</span>
-myExpressApp.listen(settings.app.port)
+<span style="color: #008000">// Sample server listens to port defined on settings.</span>
+<span style="color: #001080">myExpressApp</span><span style="color: #000000">.</span><span style="color: #795E26">listen</span><span style="color: #000000">(</span><span style="color: #001080">settings</span><span style="color: #000000">.</span><span style="color: #001080">app</span><span style="color: #000000">.</span><span style="color: #001080">port</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Actual settings can be changed on the fly.</span>
-settings.app.title = <span class="hljs-string">&quot;My new App Title&quot;</span>
-settings.myFTP = {
-    <span class="hljs-attr">host</span>: <span class="hljs-string">&quot;myhost.com&quot;</span>,
-    <span class="hljs-attr">folder</span>: <span class="hljs-string">&quot;/something&quot;</span>
-}</code></pre>
+<span style="color: #008000">// Actual settings can be changed on the fly.</span>
+<span style="color: #001080">settings</span><span style="color: #000000">.</span><span style="color: #001080">app</span><span style="color: #000000">.</span><span style="color: #001080">title</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;My new App Title&quot;</span>
+<span style="color: #001080">settings</span><span style="color: #000000">.</span><span style="color: #001080">myFTP</span><span style="color: #000000"> = {</span>
+<span style="color: #000000">    </span><span style="color: #001080">host:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;myhost.com&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">folder:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;/something&quot;</span>
+<span style="color: #000000">}</span>
+</code></pre>
 				<a href="#read-only-mode" id="read-only-mode" style="color: inherit; text-decoration: none;">
 					<h2>Read only mode</h2>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> setmeup = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;setmeup&quot;</span>)
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">setmeup</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;setmeup&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Enabling readOnly mode will prevent SetMeUp from ever writing to disk.</span>
-setmeup.readOnly = <span class="hljs-literal">true</span>
+<span style="color: #008000">// Enabling readOnly mode will prevent SetMeUp from ever writing to disk.</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #001080">readOnly</span><span style="color: #000000"> = </span><span style="color: #0000FF">true</span>
 
-<span class="hljs-comment">// File settings.secret.json (if present) will not be auto encrypted.</span>
-setmeup.load()
+<span style="color: #008000">// File settings.secret.json (if present) will not be auto encrypted.</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #795E26">load</span><span style="color: #000000">()</span>
 
-<span class="hljs-comment">// Calling encrypt in readOnly mode won&#x27;t work now.</span>
-setmeup.encrypt(<span class="hljs-string">&quot;settings.custom.json&quot;</span>)</code></pre>
+<span style="color: #008000">// Calling encrypt in readOnly mode won&#039;t work now.</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #795E26">encrypt</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;settings.custom.json&quot;</span><span style="color: #000000">)</span>
+</code></pre>
 				<a href="#watching-updates-to-configuration-files" id="watching-updates-to-configuration-files" style="color: inherit; text-decoration: none;">
 					<h3>Watching updates to configuration files</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> onLoad = <span class="hljs-function">(<span class="hljs-params">filename, settingsJson</span>) =&gt;</span> {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Settings reloaded from disk: <span class="hljs-subst">${filename}</span>`</span>)
-    <span class="hljs-built_in">console</span>.dir(settingsJson)
-}
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">onLoad</span><span style="color: #000000"> = (</span><span style="color: #001080">filename</span><span style="color: #000000">, </span><span style="color: #001080">settingsJson</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">`Settings reloaded from disk: </span><span style="color: #0000FF">${</span><span style="color: #001080">filename</span><span style="color: #0000FF">}</span><span style="color: #A31515">`</span><span style="color: #000000">)</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">dir</span><span style="color: #000000">(</span><span style="color: #001080">settingsJson</span><span style="color: #000000">)</span>
+<span style="color: #000000">}</span>
 
-<span class="hljs-comment">// Will get triggered whenever a config file changes.</span>
-setmeup.on(<span class="hljs-string">&quot;load&quot;</span>, onLoad)
+<span style="color: #008000">// Will get triggered whenever a config file changes.</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #795E26">on</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;load&quot;</span><span style="color: #000000">, </span><span style="color: #001080">onLoad</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Pretend updating files.</span>
-myApp.writeConfig(<span class="hljs-string">&quot;title&quot;</span>, <span class="hljs-string">&quot;New title&quot;</span>)</code></pre>
+<span style="color: #008000">// Pretend updating files.</span>
+<span style="color: #001080">myApp</span><span style="color: #000000">.</span><span style="color: #795E26">writeConfig</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;title&quot;</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;New title&quot;</span><span style="color: #000000">)</span>
+</code></pre>
 				<a href="#loading-from-enviroment-variables" id="loading-from-enviroment-variables" style="color: inherit; text-decoration: none;">
 					<h3>Loading from enviroment variables</h3>
 				</a>
@@ -134,31 +131,34 @@ myApp.writeConfig(<span class="hljs-string">&quot;title&quot;</span>, <span clas
 					<li>app.id = $SMU_app_id</li>
 					<li>app.server.hostname = $SMU_app_server_hostname</li>
 				</ul>
-				<pre><code class="language-json">{
-    <span class="hljs-attr">&quot;app&quot;</span>: {
-        <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;myapp&quot;</span>,
-        <span class="hljs-attr">&quot;server&quot;</span>: {
-            <span class="hljs-attr">&quot;hostname&quot;</span>: <span class="hljs-string">&quot;localhost&quot;</span>
-        }
-    }
-}</code></pre>
+				<pre><code class="language-json"><span style="color: #000000">{</span>
+<span style="color: #000000">    </span><span style="color: #0451A5">&quot;app&quot;</span><span style="color: #000000">: {</span>
+<span style="color: #000000">        </span><span style="color: #0451A5">&quot;id&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;myapp&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #0451A5">&quot;server&quot;</span><span style="color: #000000">: {</span>
+<span style="color: #000000">            </span><span style="color: #0451A5">&quot;hostname&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;localhost&quot;</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">}</span>
+</code></pre>
 				<p>So you could replicate the settings JSON above by executing:</p>
-				<pre><code>$ <span class="hljs-attr">SMU_app_id=</span>myapp <span class="hljs-attr">SMU_app_server_hostname=</span>localhost <span class="hljs-keyword">node</span> <span class="hljs-title">index</span>.js</code></pre>
+				<pre><code><span style="color: #001080">$</span><span style="color: #000000"> </span><span style="color: #001080">SMU_app_id</span><span style="color: #000000">=</span><span style="color: #001080">myapp</span><span style="color: #000000"> </span><span style="color: #001080">SMU_app_server_hostname</span><span style="color: #000000">=</span><span style="color: #001080">localhost</span><span style="color: #000000"> </span><span style="color: #001080">node</span><span style="color: #000000"> </span><span style="color: #001080">index</span><span style="color: #000000">.</span><span style="color: #001080">js</span>
+</code></pre>
 				<p>Some code samples:</p>
-				<pre><code class="language-javascript"><span class="hljs-comment">// Load settings from environment variables using the default SMU_ prefix.</span>
-setmeup.loadFromEnv()
+				<pre><code class="language-javascript"><span style="color: #008000">// Load settings from environment variables using the default SMU_ prefix.</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #795E26">loadFromEnv</span><span style="color: #000000">()</span>
 
-<span class="hljs-comment">// Or specify your own prefix, for example if you have a</span>
-<span class="hljs-comment">// variable MYAPP_general_debug for settings.general.debug.</span>
-setmeup.loadFromEnv(<span class="hljs-string">&quot;MYAPP&quot;</span>)
+<span style="color: #008000">// Or specify your own prefix, for example if you have a</span>
+<span style="color: #008000">// variable MYAPP_general_debug for settings.general.debug.</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #795E26">loadFromEnv</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;MYAPP&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Sometimes we define variables all uppercased, so you can force</span>
-<span class="hljs-comment">// lowercase them when parsing as settings. Here the variable</span>
-<span class="hljs-comment">// SMU_APP_TITLE gets set to settings.app.title instead of settings.APP.TITLE.</span>
-setmeup.loadFromEnv(<span class="hljs-literal">null</span>, {<span class="hljs-attr">lowercase</span>: <span class="hljs-literal">true</span>})
+<span style="color: #008000">// Sometimes we define variables all uppercased, so you can force</span>
+<span style="color: #008000">// lowercase them when parsing as settings. Here the variable</span>
+<span style="color: #008000">// SMU_APP_TITLE gets set to settings.app.title instead of settings.APP.TITLE.</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #795E26">loadFromEnv</span><span style="color: #000000">(</span><span style="color: #0000FF">null</span><span style="color: #000000">, {</span><span style="color: #001080">lowercase:</span><span style="color: #000000"> </span><span style="color: #0000FF">true</span><span style="color: #000000">})</span>
 
-<span class="hljs-comment">// You can also disable overwriting settings already defined.</span>
-setmeup.loadFromEnv(<span class="hljs-literal">null</span>, {<span class="hljs-attr">overwrite</span>: <span class="hljs-literal">false</span>})</code></pre>
+<span style="color: #008000">// You can also disable overwriting settings already defined.</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #795E26">loadFromEnv</span><span style="color: #000000">(</span><span style="color: #0000FF">null</span><span style="color: #000000">, {</span><span style="color: #001080">overwrite:</span><span style="color: #000000"> </span><span style="color: #0000FF">false</span><span style="color: #000000">})</span>
+</code></pre>
 				<a href="#encrypting-settings" id="encrypting-settings" style="color: inherit; text-decoration: none;">
 					<h2>Encrypting settings</h2>
 				</a>
@@ -173,35 +173,38 @@ setmeup.loadFromEnv(<span class="hljs-literal">null</span>, {<span class="hljs-a
 				<a href="#encrypting-and-decrypting-files-programmatically" id="encrypting-and-decrypting-files-programmatically" style="color: inherit; text-decoration: none;">
 					<h3>Encrypting and decrypting files programmatically</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-comment">// Derive encryption key from env variables or local machine (default).</span>
-setmeup.encrypt(<span class="hljs-string">&quot;./settings.secret.json&quot;</span>)
+				<pre><code class="language-javascript"><span style="color: #008000">// Derive encryption key from env variables or local machine (default).</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #795E26">encrypt</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;./settings.secret.json&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// And decrypt...</span>
-setmeup.decrypt(<span class="hljs-string">&quot;./settings.secret.json&quot;</span>)
+<span style="color: #008000">// And decrypt...</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #795E26">decrypt</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;./settings.secret.json&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Or using a custom key and IV.</span>
-<span class="hljs-keyword">let</span> options = {<span class="hljs-attr">key</span>: <span class="hljs-string">&quot;12345678901234561234567890123456&quot;</span>, <span class="hljs-attr">iv</span>: <span class="hljs-string">&quot;1234567890987654&quot;</span>}
-setmeup.encrypt(<span class="hljs-string">&quot;./settings.secret.json&quot;</span>, options)
-setmeup.decrypt(<span class="hljs-string">&quot;./settings.secret.json&quot;</span>, options)
+<span style="color: #008000">// Or using a custom key and IV.</span>
+<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">options</span><span style="color: #000000"> = {</span><span style="color: #001080">key:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;12345678901234561234567890123456&quot;</span><span style="color: #000000">, </span><span style="color: #001080">iv:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;1234567890987654&quot;</span><span style="color: #000000">}</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #795E26">encrypt</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;./settings.secret.json&quot;</span><span style="color: #000000">, </span><span style="color: #001080">options</span><span style="color: #000000">)</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #795E26">decrypt</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;./settings.secret.json&quot;</span><span style="color: #000000">, </span><span style="color: #001080">options</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// You can also load encrypted files by passing the crypto options.</span>
-<span class="hljs-keyword">let</span> cryptoOptions = {<span class="hljs-attr">crypto</span>: options}
-setmeup.encrypt(<span class="hljs-string">&quot;./settings.secret.json&quot;</span>, options)
-setmeup.load(<span class="hljs-string">&quot;./settings.secret.json&quot;</span>, cryptoOptions)</code></pre>
+<span style="color: #008000">// You can also load encrypted files by passing the crypto options.</span>
+<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">cryptoOptions</span><span style="color: #000000"> = {</span><span style="color: #001080">crypto:</span><span style="color: #000000"> </span><span style="color: #001080">options</span><span style="color: #000000">}</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #795E26">encrypt</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;./settings.secret.json&quot;</span><span style="color: #000000">, </span><span style="color: #001080">options</span><span style="color: #000000">)</span>
+<span style="color: #001080">setmeup</span><span style="color: #000000">.</span><span style="color: #795E26">load</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;./settings.secret.json&quot;</span><span style="color: #000000">, </span><span style="color: #001080">cryptoOptions</span><span style="color: #000000">)</span>
+</code></pre>
 				<a href="#using-the-command-line-tool" id="using-the-command-line-tool" style="color: inherit; text-decoration: none;">
 					<h3>Using the command line tool</h3>
 				</a>
 				<p>From inside your application root, on shell:</p>
-				<pre><code>$ .<span class="hljs-regexp">/node_modules/</span>.bin/setmeup encrypt settings.secret.json
-$ .<span class="hljs-regexp">/node_modules/</span>.bin/setmeup decrypt settings.secret.json</code></pre>
+				<pre><code><span style="color: #001080">$</span><span style="color: #000000"> .</span><span style="color: #811F3F">/node_modules/</span><span style="color: #000000">.</span><span style="color: #001080">bin</span><span style="color: #000000">/</span><span style="color: #001080">setmeup</span><span style="color: #000000"> </span><span style="color: #001080">encrypt</span><span style="color: #000000"> </span><span style="color: #001080">settings</span><span style="color: #000000">.</span><span style="color: #001080">secret</span><span style="color: #000000">.</span><span style="color: #001080">json</span>
+<span style="color: #001080">$</span><span style="color: #000000"> .</span><span style="color: #811F3F">/node_modules/</span><span style="color: #000000">.</span><span style="color: #001080">bin</span><span style="color: #000000">/</span><span style="color: #001080">setmeup</span><span style="color: #000000"> </span><span style="color: #001080">decrypt</span><span style="color: #000000"> </span><span style="color: #001080">settings</span><span style="color: #000000">.</span><span style="color: #001080">secret</span><span style="color: #000000">.</span><span style="color: #001080">json</span>
+</code></pre>
 				<p>Or directly on NPM scripts (package.json):</p>
-				<pre><code class="language-json">{
-    <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;mypackage&quot;</span>,
-    <span class="hljs-attr">&quot;version&quot;</span>: <span class="hljs-string">&quot;1.5.0&quot;</span>,
-    <span class="hljs-attr">&quot;scripts&quot;</span>: {
-        <span class="hljs-attr">&quot;build&quot;</span>: <span class="hljs-string">&quot;setmeup encrypt settings.secret.json&quot;</span>
-    }
-}
+				<pre><code class="language-json"><span style="color: #000000">{</span>
+<span style="color: #000000">    </span><span style="color: #0451A5">&quot;name&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;mypackage&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #0451A5">&quot;version&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;1.5.0&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #0451A5">&quot;scripts&quot;</span><span style="color: #000000">: {</span>
+<span style="color: #000000">        </span><span style="color: #0451A5">&quot;build&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;setmeup encrypt settings.secret.json&quot;</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">}</span>
+
 </code></pre>
 				<p>The samples above are for the <code>settings.secret.json</code> but you could actually use any other filename, like <code>my-private-settings.json</code>.</p>
 				<a href="#security-considerations" id="security-considerations" style="color: inherit; text-decoration: none;">
@@ -222,20 +225,14 @@ $ .<span class="hljs-regexp">/node_modules/</span>.bin/setmeup decrypt settings.
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="globals.html"><em>Globals</em></a>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/_src_cli_.html">&quot;src/cli&quot;</a>
+						<a href="modules/cryptohelper.html">cryptohelper</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/_src_cryptohelper_.html">&quot;src/cryptohelper&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/_src_index_.html">&quot;src/index&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/_src_utils_.html">&quot;src/utils&quot;</a>
+						<a href="modules/utils.html">utils</a>
 					</li>
 				</ul>
 			</nav>
@@ -250,16 +247,6 @@ $ .<span class="hljs-regexp">/node_modules/</span>.bin/setmeup decrypt settings.
 	<div class="container">
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-			</ul>
 		</div>
 	</div>
 </footer>
