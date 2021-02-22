@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.6.4
+=====
+* Updated dependencies.
+
 1.6.3
 =====
 * Updated dependencies.
