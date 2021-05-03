@@ -244,27 +244,6 @@ export const isObject = (value): boolean => {
 }
 
 /**
- * Check if the passed value is a plain object.
- * @param value Object or value.
- */
-export const isPlainObject = (value): boolean => {
-    if (!isObject(value) || getTag(value) != "[object Object]") {
-        return false
-    }
-
-    if (Object.getPrototypeOf(value) === null) {
-        return true
-    }
-
-    let proto = value
-    while (Object.getPrototypeOf(proto) !== null) {
-        proto = Object.getPrototypeOf(proto)
-    }
-
-    return Object.getPrototypeOf(value) === proto
-}
-
-/**
  * Check if the passed value is an array.
  * @param value Object or value.
  */
@@ -273,32 +252,11 @@ export const isArray = (value): boolean => {
 }
 
 /**
- * Check if the passed value is an error.
- * @param value Object or value.
- */
-export const isError = (value): boolean => {
-    if (!isObject(value)) {
-        return false
-    }
-
-    const tag = getTag(value)
-    return tag == "[object Error]" || tag == "[object DOMException]" || (typeof value.message === "string" && typeof value.name === "string" && !isPlainObject(value))
-}
-
-/**
  * Check if the passed value is a string.
  * @param value Object or value.
  */
 export const isFunction = (value): boolean => {
     return typeof value === "function"
-}
-
-/**
- * Check if the passed value is null or undefined.
- * @param value Object or value.
- */
-export const isNil = (value): boolean => {
-    return value === null || typeof value == "undefined"
 }
 
 /**
