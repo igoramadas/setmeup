@@ -30,7 +30,7 @@ describe("SetMeUp Watch Tests", function () {
     })
 
     it("Settings file watchers properly working", function (done) {
-        this.timeout(7000)
+        this.timeout(6000)
 
         var doneCalled = false
 
@@ -76,7 +76,7 @@ describe("SetMeUp Watch Tests", function () {
             }
         }
 
-        setTimeout(writer, 500)
+        setTimeout(writer, 800)
     })
 
     it("Reset all settings", function (done) {

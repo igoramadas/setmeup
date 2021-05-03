@@ -1,5 +1,11 @@
 # Changelog for SetMeUp
 
+1.7.0
+=====
+* Removed "lodash" dependency.
+* Some bits of refactoring here and there.
+* Updated dependencies.
+
 1.6.4
 =====
 * Updated dependencies.

@@ -1,8 +1,7 @@
 // SetMeUp: index.ts
 
 import {cryptoMethod, CryptoOptions} from "./cryptohelper"
-import {extend, getFilePath, loadJson} from "./utils"
-import _ from "lodash"
+import {extend, getFilePath, isString, loadJson} from "./utils"
 import EventEmitter from "eventemitter3"
 import fs from "fs"
 import path from "path"
@@ -180,7 +179,7 @@ class SetMeUp {
 
         // Set default options.
         if (!options) options = {}
-        _.defaults(options, {overwrite: true, rootKey: ""})
+        options = Object.assign({overwrite: true, rootKey: ""}, options)
 
         // No filenames passed? Load the default ones.
         /* istanbul ignore else */
@@ -188,7 +187,7 @@ class SetMeUp {
             filenames = ["settings.default.json", "settings.json", `settings.${env.NODE_ENV}.json`, `settings.secret.json`]
         }
         // Make sure we're dealing with array of filenames by default.
-        else if (_.isString(filenames)) {
+        else if (isString(filenames)) {
             filenames = [filenames as string]
         }
 
@@ -212,11 +211,10 @@ class SetMeUp {
                 continue
             }
 
-            // Add file to the `files` list, but only if not loaded previously an
-            // if the "delete" option is not set.
+            // Add file to the `files` list, but only if not loaded previously.
             if (!options.destroy) {
-                if (_.find(this.files, {filename}) == null) {
-                    this.files.push({filename, watching: false})
+                if (!this.files.find((existing) => existing.filename == f)) {
+                    this.files.push({filename: filename, watching: false})
                 } else {
                     if (logger) logger.debug("SetMeUp.load", filename, "Loaded before, so won't add to the files list")
                 }
@@ -258,7 +256,7 @@ class SetMeUp {
         }
 
         // Nothing loaded? Return null.
-        if (_.keys(result).length < 1) {
+        if (Object.keys(result).length < 1) {
             return null
         }
 
@@ -278,7 +276,7 @@ class SetMeUp {
      * @event loadFromEnv
      */
     loadFromEnv = (prefix?: string, options?: LoadEnvOptions): any => {
-        let keys = _.keys(process.env)
+        let keys = Object.keys(process.env)
         let loadedKeys = []
         let result = {}
 
@@ -293,7 +291,7 @@ class SetMeUp {
 
         // Set default options.
         if (!options) options = {}
-        _.defaults(options, {overwrite: true, lowercase: false})
+        options = Object.assign({overwrite: true, lowercase: false}, options)
 
         // Iterate and process relevant variables.
         // Each underscore defines a level on the result tree.
@@ -330,7 +328,7 @@ class SetMeUp {
         this.events.emit("loadFromEnv", prefix, result)
 
         // Nothing loaded? Return null.
-        if (_.keys(result).length < 1) {
+        if (Object.keys(result).length < 1) {
             return null
         }
 
@@ -410,21 +408,19 @@ class SetMeUp {
      */
     watch = (): void => {
         // Iterate loaded files to create the file system watchers.
-        for (let f of Array.from(this.files)) {
-            ;((f) => {
-                const filename = getFilePath(f.filename)
+        for (let f of this.files) {
+            const filename = getFilePath(f.filename)
 
-                if (filename != null && !f.watching) {
-                    f.watching = true
+            if (filename != null && !f.watching) {
+                f.watching = true
 
-                    return fs.watchFile(filename, {persistent: true}, () => {
-                        this.load(filename)
+                fs.watchFile(filename, {persistent: true}, () => {
+                    this.load(filename)
 
-                        /* istanbul ignore else */
-                        if (logger) logger.info("SetMeUp.watch", f, "Reloaded")
-                    })
-                }
-            })(f)
+                    /* istanbul ignore else */
+                    if (logger) logger.info("SetMeUp.watch", f, "Reloaded")
+                })
+            }
         }
 
         /* istanbul ignore else */
@@ -436,7 +432,7 @@ class SetMeUp {
      */
     unwatch = (): void => {
         try {
-            for (let f of Array.from(this.files)) {
+            for (let f of this.files) {
                 const filename = getFilePath(f.filename)
                 f.watching = false
 

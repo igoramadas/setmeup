@@ -1,8 +1,7 @@
 // SetMeUp: crypto.ts
 
 import {execSync} from "child_process"
-import {loadJson} from "./utils"
-import _ from "lodash"
+import {isArray, isBoolean, isNumber, isString, loadJson} from "./utils"
 import crypto from "crypto"
 
 /** Default IV value in case one is not provided. */
@@ -58,11 +57,13 @@ export function cryptoMethod(action: string, filename: string, options?: CryptoO
 
     action = action.toString().toLowerCase()
 
-    options = _.defaults(options, {
+    // Set default options.
+    const defaults = {
         cipher: env["SMU_CRYPTO_CIPHER"] || "aes256",
         key: env["SMU_CRYPTO_KEY"],
         iv: env["SMU_CRYPTO_IV"]
-    })
+    }
+    options = Object.assign(defaults, options)
 
     // No encryption key specified? Use the Machine ID then.
     if (!options.key) {
@@ -99,20 +100,20 @@ export function cryptoMethod(action: string, filename: string, options?: CryptoO
 
                     // Do not consider booleans, as it would be easy to guess
                     // the key based on true / false.
-                    if (_.isBoolean(currentValue)) {
+                    if (isBoolean(currentValue)) {
                         newValue = currentValue
                     } else if (action == "encrypt") {
                         // Value already encrypted? Skip!
-                        if (_.isString(currentValue) && currentValue.substring(0, 4) == "enc-") {
+                        if (isString(currentValue) && currentValue.substring(0, 4) == "enc-") {
                             newValue = currentValue
                         } else {
                             // Is an array?
-                            if (_.isArray(currentValue)) {
+                            if (isArray(currentValue)) {
                                 newValue = "enc-a:"
                                 currentValue = JSON.stringify(currentValue, null, 0)
                             }
                             // Is a number?
-                            else if (_.isNumber(currentValue)) {
+                            else if (isNumber(currentValue)) {
                                 newValue = "enc-n:"
                             }
                             // Strings, dates and everything else?
@@ -127,7 +128,7 @@ export function cryptoMethod(action: string, filename: string, options?: CryptoO
                         }
                     } else if (action == "decrypt") {
                         // Value is an array? Return it as it is.
-                        if (_.isArray(currentValue)) {
+                        if (isArray(currentValue)) {
                             newValue = currentValue
                         } else {
                             // Split the data as "datatype:encryptedValue".
