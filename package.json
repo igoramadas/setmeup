@@ -1,6 +1,6 @@
 {
     "name": "setmeup",
-    "version": "1.7.0",
+    "version": "1.7.1",
     "description": "SetMeUp, your single and only settings manager.",
     "keywords": [
         "setmeup",
@@ -34,8 +34,8 @@
         "eventemitter3": "^4.0.7"
     },
     "devDependencies": {
-        "@types/node": "^15.0.1",
-        "anyhow": "^2.2.1",
+        "@types/node": "^15.0.2",
+        "anyhow": "^2.2.2",
         "chai": "^4.3.4",
         "coveralls": "^3.1.0",
         "mocha": "^8.3.2",
@@ -45,7 +45,7 @@
         "typescript": "^4.2.4"
     },
     "peerDependencies": {
-        "anyhow": "^2.2.1"
+        "anyhow": "^2.2.2"
     },
     "prettier": {
         "trailingComma": "none",

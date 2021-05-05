@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.7.1
+=====
+* Fixed remaining deprecated lodash references.
+
 1.7.0
 =====
 * Removed "lodash" dependency.

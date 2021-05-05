@@ -1,7 +1,6 @@
 // SetMeUp: utils.ts
 
 import {cryptoMethod, CryptoOptions} from "./cryptohelper"
-import _ from "lodash"
 import fs from "fs"
 import path from "path"
 
@@ -86,7 +85,7 @@ export function parseJson(value: string | any) {
     let strip = () => ""
 
     // Make sure value is a string!
-    if (!_.isString(value)) {
+    if (!isString(value)) {
         value = value.toString()
     }
 
