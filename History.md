@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.7.5
+=====
+* Fixed regression bug with the utils.extend().
+
 1.7.4
 =====
 * Updated dependencies.

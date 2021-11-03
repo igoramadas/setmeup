@@ -194,10 +194,7 @@ export function loadJson(filename: string, cryptoOptions?: CryptoOptions | boole
  * @param overwrite If false it won't set properties that are already defined, default is true.
  * @protected
  */
-export function extend(source: any, target: any, overwrite: boolean): any[] {
-    const result = []
-
-    // Overwrite defaults to true.
+export function extend(source: any, target: any, overwrite: boolean): void {
     if (overwrite == null || typeof overwrite == "undefined") {
         overwrite = true
     }
@@ -209,15 +206,11 @@ export function extend(source: any, target: any, overwrite: boolean): any[] {
             if (target[prop] == null) {
                 target[prop] = {}
             }
-            result.push(this.extend(source[prop], target[prop], overwrite))
+            extend(source[prop], target[prop], overwrite)
         } else if (overwrite || target[prop] == null) {
-            result.push((target[prop] = source[prop]))
-        } else {
-            result.push(undefined)
+            target[prop] = source[prop]
         }
     }
-
-    return result
 }
 
 /**
