@@ -1,6 +1,6 @@
 # Changelog for SetMeUp
 
-1.7.6
+1.7.7
 =====
 * Updated anyhow logger and other dependencies.
 
