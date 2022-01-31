@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.7.6
+=====
+* Updated anyhow logger and other dependencies.
+
 1.7.5
 =====
 * Fixed regression bug with the utils.extend().
@@ -56,12 +60,12 @@
 
 1.5.2
 =====
-* Fixed exception when having unecnrypted array mixed inside an encrypted settings file.
+* Fixed exception when having unencrypted array mixed inside an encrypted settings file.
 
 1.5.1
 =====
 * Improved handling of the special settings.secret.json file.
-* Check if anyhow is present for logging, othewise does not log anything.
+* Check if anyhow is present for logging, otherwise does not log anything.
 
 1.5.0
 =====
