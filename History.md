@@ -1,8 +1,9 @@
 # Changelog for SetMeUp
 
-1.8.0
+1.8.1
 =====
 * Improved support for ESM based modules.
+* Fixed regression bug on 1.8.0 (removed from NPM).
 
 1.7.8
 =====

@@ -51,18 +51,6 @@ export function getFilePath(filename: string, basepath?: string): string {
             }
         }
 
-        // Try local dir path (ESM).
-        // @ts-ignore
-        if (import.meta) {
-            // @ts-ignore
-            filename = path.resolve(path.dirname(import.meta.url), originalFilename)
-            hasFile = fs.existsSync(filename)
-            /* istanbul ignore if */
-            if (hasFile) {
-                return filename
-            }
-        }
-
         // Check if correct full path was passed.
         hasFile = fs.existsSync(filename)
         if (hasFile) {
