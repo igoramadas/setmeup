@@ -6,8 +6,6 @@ import path from "path"
 
 /** @hidden */
 let logger = null
-/** @hidden */
-let loggerLoaded = false
 
 /**
  * Finds the correct path to the file looking first on the (optional) base path
@@ -19,50 +17,61 @@ let loggerLoaded = false
  * @protected
  */
 export function getFilePath(filename: string, basepath?: string): string {
-    const originalFilename = filename.toString()
-    let hasFile = false
+    try {
+        const originalFilename = filename.toString()
+        let hasFile = false
 
-    // Try loading the anyhow module.
-    if (!loggerLoaded) {
-        loggerLoaded = true
-
-        try {
-            logger = require("anyhow")
-        } catch (ex) {
-            // Anyhow module not found
+        // A basepath was passed? Try there first.
+        if (basepath) {
+            filename = path.resolve(basepath, originalFilename)
+            hasFile = fs.existsSync(filename)
+            /* istanbul ignore else */
+            if (hasFile) {
+                return filename
+            }
         }
-    }
 
-    // A basepath was passed? Try there first.
-    if (basepath) {
-        filename = path.resolve(basepath, originalFilename)
+        // Try running directory.
+        filename = path.resolve(process.cwd(), originalFilename)
         hasFile = fs.existsSync(filename)
-        /* istanbul ignore else */
+        /* istanbul ignore if */
         if (hasFile) {
             return filename
         }
-    }
 
-    // Try running directory.
-    filename = path.resolve(process.cwd(), originalFilename)
-    hasFile = fs.existsSync(filename)
-    /* istanbul ignore if */
-    if (hasFile) {
-        return filename
-    }
+        // Try application root path (CommonJS).
+        // @ts-ignore
+        if (require.main) {
+            // @ts-ignore
+            filename = path.resolve(path.dirname(require.main.filename), originalFilename)
+            hasFile = fs.existsSync(filename)
+            /* istanbul ignore if */
+            if (hasFile) {
+                return filename
+            }
+        }
 
-    // Try application root path.
-    filename = path.resolve(path.dirname(require.main.filename), originalFilename)
-    hasFile = fs.existsSync(filename)
-    /* istanbul ignore if */
-    if (hasFile) {
-        return filename
-    }
+        // Try local dir path (ESM).
+        // @ts-ignore
+        if (import.meta) {
+            // @ts-ignore
+            filename = path.resolve(path.dirname(import.meta.url), originalFilename)
+            hasFile = fs.existsSync(filename)
+            /* istanbul ignore if */
+            if (hasFile) {
+                return filename
+            }
+        }
 
-    // Check if correct full path was passed.
-    hasFile = fs.existsSync(filename)
-    if (hasFile) {
-        return filename
+        // Check if correct full path was passed.
+        hasFile = fs.existsSync(filename)
+        if (hasFile) {
+            return filename
+        }
+    } catch (ex) {
+        const err = `Failed to find path to file ${filename}`
+        ex.message = ex.message ? `${err}: ${ex.message}` : err
+        throw ex
     }
 
     // Nothing found, so return null.
@@ -146,6 +155,15 @@ export function parseJson(value: string | any) {
  */
 export function loadJson(filename: string, cryptoOptions?: CryptoOptions | boolean): any {
     let result = null
+
+    // Try loading the anyhow module.
+    if (!logger) {
+        try {
+            logger = require("anyhow")
+        } catch (ex) {
+            // Anyhow module not found
+        }
+    }
 
     // Found file? Load it. Try using UTF8 first, if failed, use ASCII.
     if (filename != null) {
