@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.8.2
+=====
+* Updated dependencies.
+
 1.8.1
 =====
 * Improved support for ESM based modules.
