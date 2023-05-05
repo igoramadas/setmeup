@@ -28,6 +28,38 @@ describe("SetMeUp Crypto Tests", function () {
         }
     })
 
+    it("Fails to encrypt in readOnly mode", function (done) {
+        try {
+            setmeup.readOnly = true
+            setmeup.encrypt(cryptoFilename)
+            setmeup.readOnly = false
+
+            const encrypted = JSON.parse(
+                fs.readFileSync(cryptoFilename, {
+                    encoding: "utf8"
+                })
+            )
+
+            if (encrypted.encrypted) {
+                return done("File should not be encrypted while in readOnly mode.")
+            }
+
+            done()
+        } catch (ex) {
+            done(ex)
+        }
+    })
+
+    it("Fails to encrypt null file", function (done) {
+        try {
+            setmeup.encrypt("./test/settings.null.json", {key: null})
+
+            done("Encrypting empty or null should thrown an exception.")
+        } catch (ex) {
+            done()
+        }
+    })
+
     it("Encrypt the settings file", function (done) {
         setmeup.encrypt(cryptoFilename)
 
@@ -85,13 +117,25 @@ describe("SetMeUp Crypto Tests", function () {
         setTimeout(delayLoad, 200)
     })
 
-    it("Fails to encrypt null file", function (done) {
+    it("Fails to decrypt in readOnly mode", function (done) {
         try {
-            setmeup.encrypt("./test/settings.null.json", {key: null})
+            setmeup.readOnly = true
+            setmeup.decrypt(cryptoFilename)
+            setmeup.readOnly = false
 
-            done("Encrypting empty or null should thrown an exception.")
-        } catch (ex) {
+            const encrypted = JSON.parse(
+                fs.readFileSync(cryptoFilename, {
+                    encoding: "utf8"
+                })
+            )
+
+            if (!encrypted.encrypted) {
+                return done("File should not be decrypted while in readOnly mode.")
+            }
+
             done()
+        } catch (ex) {
+            done(ex)
         }
     })
 

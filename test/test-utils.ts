@@ -1,4 +1,4 @@
-// TEST: IO
+// TEST: UTILS
 
 import {before, describe, it} from "mocha"
 require("chai").should()
@@ -33,9 +33,12 @@ describe("SetMeUp Utils Tests", function () {
     })
 
     it("Fails to get non existing file using getFilePath", function (done) {
-        let currentFile = utils.getFilePath("this-does-not.exist")
+        let undefinedFile = utils.getFilePath(undefined)
+        let nonExistingFile = utils.getFilePath("this-does-not.exist")
 
-        if (currentFile) {
+        if (undefinedFile) {
+            done("The getFilePath(undefined) should return null.")
+        } else if (nonExistingFile) {
             done("The getFilePath('this-does-not.exist') should return null.")
         } else {
             done()
