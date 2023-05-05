@@ -24,4 +24,4 @@ update:
 	npm install
 	npm run build
 
-.PHONY: docs
+.PHONY: docs test
