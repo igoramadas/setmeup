@@ -60,28 +60,16 @@ class SetMeUp {
 
     /**
      * Returns a new fresh instance of the SetMeUp module.
-     * @param doNotLoad Deprecated, if true will not load settings from file on new instance.
      * @returns New instance of SetMeUp with its own fresh settings.
      */
-    newInstance(doNotLoad?: boolean): SetMeUp {
-        return new SetMeUp(doNotLoad)
+    newInstance(): SetMeUp {
+        return new SetMeUp()
     }
 
     /**
      * Default SetMeUp constructor.
-     * @param doNotLoad Deprecated, if true will not auto load settings from files and environment variables.
      */
-    constructor(doNotLoad?: boolean) {
-        if (doNotLoad === true || doNotLoad === false) {
-            const msg = "Option doNotLoad is deprecated! In the future you will always have to call load() manually, making doNotLoad is redundant."
-            if (logger) logger.warn(msg)
-            else console.warn(msg)
-        }
-
-        if (typeof doNotLoad == "undefined" || doNotLoad === null) {
-            doNotLoad = true
-        }
-
+    constructor() {
         if (!logger) {
             try {
                 logger = require("anyhow")
@@ -102,13 +90,9 @@ class SetMeUp {
         try {
             fs.accessSync(__dirname, fs.constants.W_OK)
         } catch (err) {
+            /* istanbul ignore next */
             this.readOnly = true
             if (logger) logger.info("SetMeUp", "File system seems to be read only", "Setting readOnly = true")
-        }
-
-        /* istanbul ignore if */
-        if (!doNotLoad) {
-            this.load()
         }
     }
 
@@ -118,18 +102,26 @@ class SetMeUp {
     /** Internal, the actual settings storage object. */
     private _settings: any = {}
 
-    /** Exposes the settings object. */
+    /**
+     * Exposes the settings object.
+     */
     get settings() {
         return this._settings
     }
 
-    /** Event emitter. */
+    /**
+     * Event emitter.
+     */
     events: EventEmitter = new EventEmitter()
 
-    /** Array of loaded files. */
+    /**
+     * Array of loaded files.
+     */
     files: LoadedFile[] = []
 
-    /** Flag to avoid writing settings to disk. */
+    /**
+     * Flag to avoid writing settings to disk.
+     */
     readOnly: boolean = false
 
     // EVENTS

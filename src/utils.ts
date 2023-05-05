@@ -51,15 +51,14 @@ export function getFilePath(filename: string, basepath?: string): string {
             }
         }
 
-        // Check if correct full path was passed.
+        // Last try.
         hasFile = fs.existsSync(filename)
+        /* istanbul ignore if */
         if (hasFile) {
             return filename
         }
     } catch (ex) {
-        const err = `Failed to find path to file ${filename}`
-        ex.message = ex.message ? `${err}: ${ex.message}` : err
-        throw ex
+        if (logger) logger.error("SetMeUp.Utils.getFilePath", filename, ex)
     }
 
     // Nothing found, so return null.
@@ -234,27 +233,11 @@ export const getTag = (value) => {
 }
 
 /**
- * Check if the passed value is an object.
- * @param value Object or value.
- */
-export const isObject = (value): boolean => {
-    return typeof value === "object" && value !== null
-}
-
-/**
  * Check if the passed value is an array.
  * @param value Object or value.
  */
 export const isArray = (value): boolean => {
     return value && Array.isArray(value)
-}
-
-/**
- * Check if the passed value is a string.
- * @param value Object or value.
- */
-export const isFunction = (value): boolean => {
-    return typeof value === "function"
 }
 
 /**
