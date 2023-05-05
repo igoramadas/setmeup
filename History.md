@@ -2,6 +2,7 @@
 
 1.9.0
 =====
+* The doNotLoad instance option is now deprecated, you must always call setmeup.load() after instantiating the module.
 * Code refactoring.
 * Updated dependencies.
 

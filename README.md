@@ -1,8 +1,8 @@
 # SetMeUp
 
 [![Version](https://img.shields.io/npm/v/setmeup.svg)](https://npmjs.com/package/setmeup)
-[![Build Status](https://img.shields.io/travis/igoramadas/setmeup.svg)](https://travis-ci.org/igoramadas/setmeup)
-[![Coverage Status](https://img.shields.io/coveralls/igoramadas/setmeup.svg)](https://coveralls.io/github/igoramadas/setmeup?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/igoramadas/setmeup/badge.svg?branch=master)](https://coveralls.io/github/igoramadas/setmeup?branch=master)
+[![Build Status](https://github.com/igoramadas/setmeup/actions/workflows/build.yml/badge.svg)](https://github.com/igoramadas/setmeup/actions)
 
 Easy to use app settings module. Settings are stored and loaded from JSON files and / or environment variables, suppoort inline comments and can be (de)encrypted on-the-fly.
 

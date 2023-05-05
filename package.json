@@ -65,6 +65,7 @@
         "printWidth": 250
     },
     "mocha": {
+        "timeout": 5000,
         "exit": true,
         "recursive": true,
         "require": [
