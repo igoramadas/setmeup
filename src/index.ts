@@ -81,7 +81,7 @@ class SetMeUp {
             } catch (ex) {
                 /* istanbul ignore next */
                 if (env.NODE_ENV != "production") {
-                    console.warn("Module 'anyhow' is not installed, so SetMeUp won't log anything. Conside installing the 'anyhow' if you want to enable custom logging.")
+                    console.warn("Module 'anyhow' is not installed, consider installing the 'anyhow' if you want to enable custom logging")
                 }
             }
         }

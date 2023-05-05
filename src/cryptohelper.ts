@@ -79,7 +79,7 @@ export function cryptoMethod(action: string, filename: string, options?: CryptoO
 
     // Settings file not found or invalid? Stop here.
     if (settingsJson == null) {
-        throw new Error("Can't (de)encrypt, settings file not found or empty.")
+        throw new Error("Can't (de)encrypt, settings file not found or empty")
     }
 
     // Helper to parse and encrypt / decrypt settings data.
