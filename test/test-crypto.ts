@@ -1,16 +1,10 @@
 // TEST: CRYPTO
 
-let chai = require("chai")
-let fs = require("fs")
-let mocha = require("mocha")
-let after = mocha.after
-let before = mocha.before
-let describe = mocha.describe
-let it = mocha.it
-
-chai.should()
+import {after, before, describe, it} from "mocha"
+require("chai").should()
 
 describe("SetMeUp Crypto Tests", function () {
+    let fs = require("fs")
     let setmeup = null
     let utils = null
     let cryptoFilename = null
@@ -18,8 +12,8 @@ describe("SetMeUp Crypto Tests", function () {
     before(function () {
         require("anyhow").setup("none")
 
-        setmeup = require("../lib/index")
-        utils = require("../lib/utils")
+        setmeup = require("../src/index")
+        utils = require("../src/utils")
 
         const originalFilename = utils.getFilePath("./test/settings.test.json")
         const fileBuffer = fs.readFileSync(originalFilename)

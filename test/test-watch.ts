@@ -1,16 +1,10 @@
 // TEST: WATCH
 
-let chai = require("chai")
-let fs = require("fs")
-let mocha = require("mocha")
-let after = mocha.after
-let before = mocha.before
-let describe = mocha.describe
-let it = mocha.it
-
-chai.should()
+import {after, before, describe, it} from "mocha"
+require("chai").should()
 
 describe("SetMeUp Watch Tests", function () {
+    let fs = require("fs")
     let setmeup = null
     let utils = null
 
@@ -19,10 +13,10 @@ describe("SetMeUp Watch Tests", function () {
     before(function () {
         require("anyhow").setup("none")
 
-        setmeup = require("../lib/index")
+        setmeup = require("../src/index")
         setmeup.load("settings.test.json")
 
-        utils = require("../lib/utils")
+        utils = require("../src/utils")
     })
 
     after(function () {
@@ -42,7 +36,7 @@ describe("SetMeUp Watch Tests", function () {
 
         var newJson = utils.parseJson(originalJson)
 
-        var callback = function (watchedFile, contents) {
+        var callback = function () {
             if (doneCalled) return
             doneCalled = true
 

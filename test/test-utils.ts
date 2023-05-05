@@ -1,20 +1,15 @@
 // TEST: IO
 
-let chai = require("chai")
-let mocha = require("mocha")
-let before = mocha.before
-let describe = mocha.describe
-let it = mocha.it
+import {before, describe, it} from "mocha"
+require("chai").should()
 
-chai.should()
-
-describe("SetMeUp Crypto Tests", function () {
+describe("SetMeUp Utils Tests", function () {
     let utils = null
 
     before(function () {
         require("anyhow").setup("none")
 
-        utils = require("../lib/utils")
+        utils = require("../src/utils")
     })
 
     it("Gets file from app root folder using getFilePath", function (done) {
@@ -28,7 +23,7 @@ describe("SetMeUp Crypto Tests", function () {
     })
 
     it("Gets file from current folder using getFilePath", function (done) {
-        let currentFile = utils.getFilePath("test-utils.js", __dirname)
+        let currentFile = utils.getFilePath("test-utils.ts", __dirname)
 
         if (currentFile) {
             done()

@@ -1,16 +1,13 @@
 // TEST: MAIN
 
-let chai = require("chai")
-let fs = require("fs")
-let mocha = require("mocha")
-let after = mocha.after
-let before = mocha.before
-let describe = mocha.describe
-let it = mocha.it
+import {after, before, describe, it} from "mocha"
+require("chai").should()
 
-chai.should()
+process.env.SMU_env_var = "abc"
+process.env.SMU2_ENV2_VAR2 = "abc"
 
 describe("SetMeUp Main Tests", function () {
+    let fs = require("fs")
     let setmeup = null
 
     const settingsTemplate = {
@@ -34,7 +31,7 @@ describe("SetMeUp Main Tests", function () {
         fs.writeFileSync("./test/settings.test.json", JSON.stringify(settingsTemplate, null, 4), {encoding: "utf8"})
         fs.writeFileSync("./test/settings.secret.json", JSON.stringify(settingsTemplate, null, 4), {encoding: "utf8"})
 
-        setmeup = require("../lib/index")
+        setmeup = require("../src/index")
     })
 
     after(function () {
