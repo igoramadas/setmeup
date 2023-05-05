@@ -1,6 +1,6 @@
 {
     "name": "setmeup",
-    "version": "1.8.2",
+    "version": "1.9.0",
     "description": "SetMeUp, your single and only settings manager.",
     "keywords": [
         "setmeup",
@@ -26,26 +26,34 @@
         "node": ">= 12.0"
     },
     "scripts": {
-        "prepublishOnly": "./node_modules/.bin/tsc --removeComments",
-        "docs": "make docs",
-        "test": "make test-cover"
+        "build": "tsc -p tsconfig-build.json",
+        "build-test": "tsc -p tsconfig-test.json",
+        "clean": "rm -rf ./lib && rm -rf ./lib-test && rm -rf ./coverage && rm -rf ./docs",
+        "prebuild": "npm run clean",
+        "docs": "rm -rf ./docs && typedoc && cp CNAME docs/ && cp .nojekyll docs/",
+        "test": "npm run build-test && mocha ./test/*.ts",
+        "test-coverage": "nyc --reporter=lcov npm test"
     },
     "dependencies": {
-        "eventemitter3": "^4.0.7"
+        "eventemitter3": "^5.0.1"
     },
     "devDependencies": {
-        "@types/node": "^18.11.14",
-        "anyhow": "^3.1.2",
-        "chai": "^4.3.7",
+        "@istanbuljs/nyc-config-typescript": "^1.0.2",
+        "@types/mocha": "^10.0.1",
+        "@types/node": "^20.0.0",
+        "anyhow": "^3.3.0",
+        "chai": "<5.0.0",
         "coveralls": "^3.1.1",
         "mocha": "^10.2.0",
         "mocha-lcov-reporter": "^1.3.0",
         "nyc": "^15.1.0",
-        "typedoc": "^0.23.22",
-        "typescript": "^4.9.4"
+        "source-map-support": "^0.5.21",
+        "ts-node": "^10.9.1",
+        "typedoc": "^0.24.6",
+        "typescript": "^5.0.4"
     },
     "peerDependencies": {
-        "anyhow": "^3.1.2"
+        "anyhow": "^3.3.0"
     },
     "prettier": {
         "trailingComma": "none",
@@ -56,8 +64,21 @@
         "bracketSpacing": false,
         "printWidth": 250
     },
+    "mocha": {
+        "exit": true,
+        "recursive": true,
+        "require": [
+            "test/mocha.env",
+            "ts-node/register",
+            "source-map-support/register"
+        ]
+    },
     "nyc": {
-        "reporter": "lcov",
-        "temp-dir": "./coverage"
+        "extends": "@istanbuljs/nyc-config-typescript",
+        "temp-dir": "./coverage",
+        "reporter": [
+            "lcov",
+            "text"
+        ]
     }
 }

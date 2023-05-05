@@ -1,5 +1,10 @@
 # Changelog for SetMeUp
 
+1.9.0
+=====
+* Code refactoring.
+* Updated dependencies.
+
 1.8.2
 =====
 * Updated dependencies.
