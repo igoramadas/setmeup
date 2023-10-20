@@ -19,6 +19,7 @@ test:
 
 update:
 	-ncu -u -x chalk
+	-ncu -u --target minor
 	-rm -rf ./node_modules
 	-rm -f package-lock.json
 	npm install

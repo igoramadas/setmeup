@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.9.1
+=====
+* Updated dependencies.
+
 1.9.0
 =====
 * The doNotLoad instance option is now deprecated, you must always call setmeup.load() after instantiating the module.
