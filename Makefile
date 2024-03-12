@@ -18,7 +18,7 @@ test:
 	npm test
 
 update:
-	-ncu -u -x chalk
+	-ncu -u -x chai,chalk
 	-ncu -u --target minor
 	-rm -rf ./node_modules
 	-rm -f package-lock.json

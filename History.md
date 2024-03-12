@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+1.9.2
+=====
+* Updated dependencies.
+
 1.9.1
 =====
 * Updated dependencies.
