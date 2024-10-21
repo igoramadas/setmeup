@@ -159,7 +159,7 @@ class SetMeUp {
 
     /**
      * Load settings from the specified JSON file(s). If not files are specified, load
-     * from the defaults (settings.default.json, settings.json and settings.NODE_ENV.json).
+     * from the defaults (settings.default.json, settings.json and settings.APP_ENV.json OR settings.NODE_ENV.json).
      * @param filenames The filename or array of filenames, using relative or full path.
      * @param options Load options defining if properties should be overwritten, and root settings key.
      * @returns Returns the resulting JSON object of the loaded files, or null if nothing was loaded.
@@ -176,7 +176,7 @@ class SetMeUp {
         // No filenames passed? Load the default ones.
         /* istanbul ignore else */
         if (!filenames) {
-            filenames = ["settings.default.json", "settings.json", `settings.${env.NODE_ENV}.json`, `settings.secret.json`]
+            filenames = ["settings.default.json", "settings.json", `settings.${env.APP_ENV || env.NODE_ENV}.json`, `settings.secret.json`]
         }
         // Make sure we're dealing with array of filenames by default.
         else if (isString(filenames)) {
@@ -262,7 +262,7 @@ class SetMeUp {
 
     /**
      * Load settings from environment variables, restricting to the passed prefix.
-     * Enviroment settings as variables will be split by underscore to define its tree.
+     * Environment settings as variables will be split by underscore to define its tree.
      * @param prefix The prefix use to match relevant environment variables. Default is "SMU_", should always end with "_" (underscore).
      * @param options Load options defining if properties should be overwritten and forced to lowercase.
      * @event loadFromEnv

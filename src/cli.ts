@@ -26,7 +26,7 @@ function showHelp() {
     console.log("  $ setmeup load")
     console.log()
     console.log("If no filename is passed on print, it will load the defaults:")
-    console.log("settings.default.json, settings.json, settings.NODE_ENV.json, settings.secret.json")
+    console.log("settings.default.json, settings.json, settings.APP_ENV.json OR settings.NODE_ENV.json, settings.secret.json")
     console.log()
 }
 

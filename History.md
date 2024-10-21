@@ -1,5 +1,10 @@
 # Changelog for SetMeUp
 
+1.9.3
+=====
+* The APP_ENV environment variable will be used instead of NODE_ENV, if there's one set.
+* Updated dependencies.
+
 1.9.2
 =====
 * Updated dependencies.
