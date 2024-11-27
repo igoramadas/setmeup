@@ -204,15 +204,15 @@ export function extend(source: any, target: any, overwrite: boolean): void {
         overwrite = true
     }
 
-    // Iterade object properties (deep).
+    // Iterate object properties (deep).
     for (let prop in source) {
         const value = source[prop]
         if (value && value.constructor === Object) {
-            if (target[prop] == null) {
+            if (!(prop in target)) {
                 target[prop] = {}
             }
             extend(source[prop], target[prop], overwrite)
-        } else if (overwrite || target[prop] == null) {
+        } else if (overwrite || !(prop in target)) {
             target[prop] = source[prop]
         }
     }

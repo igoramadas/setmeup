@@ -1,5 +1,10 @@
 # Changelog for SetMeUp
 
+1.9.4
+=====
+* Improved extend() helper to avoid replacing existing properties with null values.
+* Updated dependencies.
+
 1.9.3
 =====
 * The APP_ENV environment variable will be used instead of NODE_ENV, if there's one set.
