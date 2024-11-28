@@ -1,5 +1,10 @@
 # Changelog for SetMeUp
 
+1.9.5
+=====
+* Exposed loadJson() helper to load settings directly from a JSON object.
+* Fixed issues trying to encrypt / decrypt null values.
+
 1.9.4
 =====
 * Improved extend() helper to avoid replacing existing properties with null values.

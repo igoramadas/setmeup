@@ -140,7 +140,7 @@ export function parseJson(value: string | any) {
  * @returns The parsed JSON object.
  * @protected
  */
-export function loadJson(filename: string, cryptoOptions?: CryptoOptions | boolean): any {
+export function loadFile(filename: string, cryptoOptions?: CryptoOptions | boolean): any {
     let result = null
 
     // Try loading the anyhow module.
@@ -208,7 +208,7 @@ export function extend(source: any, target: any, overwrite: boolean): void {
     for (let prop in source) {
         const value = source[prop]
         if (value && value.constructor === Object) {
-            if (!(prop in target)) {
+            if (target[prop] === null || !(prop in target)) {
                 target[prop] = {}
             }
             extend(source[prop], target[prop], overwrite)

@@ -15,5 +15,6 @@
         "a",
         true
     ],
-    "testingFileWatcher": true
+    "testingFileWatcher": true,
+    "nullKey": null
 }

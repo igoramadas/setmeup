@@ -22,7 +22,8 @@ describe("SetMeUp Main Tests", function () {
             date: "01/01/2000"
         },
         array: [1, -1, "a", true],
-        testingFileWatcher: true
+        testingFileWatcher: true,
+        nullKey: null
     }
 
     before(function () {
@@ -82,6 +83,10 @@ describe("SetMeUp Main Tests", function () {
         } else {
             done("Loaded settings from 'root' should have a property date = '01/01/2000'.")
         }
+    })
+
+    it("Replace null with object when loading settings", function () {
+        setmeup.loadJson({nullKey: {test: {value: 1}}})
     })
 
     it("Load in readOnly mode, should not destroy", function (done) {

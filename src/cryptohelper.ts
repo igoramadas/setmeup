@@ -1,7 +1,7 @@
 // SetMeUp: crypto.ts
 
 import {execSync} from "child_process"
-import {isArray, isBoolean, isNumber, isString, loadJson} from "./utils"
+import {isArray, isBoolean, isNumber, isString, loadFile} from "./utils"
 import crypto from "crypto"
 
 /** Default IV value in case one is not provided. */
@@ -75,7 +75,7 @@ export function cryptoMethod(action: string, filename: string, options?: CryptoO
         options.iv = defaultIV
     }
 
-    const settingsJson = loadJson(filename, false)
+    const settingsJson = loadFile(filename, false)
 
     // Settings file not found or invalid? Stop here.
     if (settingsJson == null) {
@@ -102,6 +102,8 @@ export function cryptoMethod(action: string, filename: string, options?: CryptoO
                     // the key based on true / false.
                     if (isBoolean(currentValue)) {
                         newValue = currentValue
+                    } else if (currentValue === null) {
+                        newValue = null
                     } else if (action == "encrypt") {
                         // Value already encrypted? Skip!
                         if (isString(currentValue) && currentValue.substring(0, 4) == "enc-") {
@@ -121,7 +123,7 @@ export function cryptoMethod(action: string, filename: string, options?: CryptoO
                                 newValue = "enc-s:"
                             }
 
-                            // Create cipher amd encrypt data.
+                            // Create cipher and encrypt data.
                             c = crypto.createCipheriv(options.cipher, options.key, options.iv)
                             newValue += c.update(currentValue.toString(), "utf8", "hex")
                             newValue += c.final("hex")

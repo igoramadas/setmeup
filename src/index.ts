@@ -1,10 +1,12 @@
 // SetMeUp: index.ts
 
 import {cryptoMethod, CryptoOptions} from "./cryptohelper"
-import {extend, getFilePath, isString, loadJson} from "./utils"
+import {extend, getFilePath, isString, loadFile} from "./utils"
 import EventEmitter from "eventemitter3"
 import fs from "fs"
 import path from "path"
+
+const defaultOptions = {overwrite: true, lowercase: false, rootKey: ""}
 
 /** @hidden */
 let rootFolder = process.cwd()
@@ -171,7 +173,7 @@ class SetMeUp {
 
         // Set default options.
         if (!options) options = {}
-        options = Object.assign({overwrite: true, rootKey: ""}, options)
+        options = Object.assign({...defaultOptions}, options)
 
         // No filenames passed? Load the default ones.
         /* istanbul ignore else */
@@ -195,7 +197,7 @@ class SetMeUp {
             const isSecret = (filename && path.basename(filename).toLowerCase() == "settings.secret.json") || null
 
             // When loading, force crypto if file is settings.secret.json.
-            let settingsJson = loadJson(filename, options.crypto || isSecret)
+            let settingsJson = loadFile(filename, options.crypto || isSecret)
 
             // File not found?
             if (settingsJson == null) {
@@ -261,6 +263,33 @@ class SetMeUp {
     }
 
     /**
+     * Load settings directly from the passed JSON object.
+     * @param data JSON data to be loaded to the settings.
+     * @param options Load options defining if properties should be overwritten, and root settings key.
+     * @returns Returns the loaded JSON object itself.
+     * @event loadJson
+     */
+    loadJson = (data: any, options?: LoadOptions): any => {
+        if (!data) return data
+
+        // Set default options.
+        if (!options) options = {}
+        options = Object.assign({...defaultOptions}, options)
+
+        // Extend loaded settings.
+        if (options.rootKey) {
+            extend(data[options.rootKey], this.settings, options.overwrite)
+        } else {
+            extend(data, this.settings, options.overwrite)
+        }
+
+        // Emit load passing prefix and loaded settings result.
+        this.events.emit("loadJson", data)
+
+        if (logger) logger.info("SetMeUp.loadJson", `Loaded keys: ${Object.keys(data).join(", ")}`)
+    }
+
+    /**
      * Load settings from environment variables, restricting to the passed prefix.
      * Environment settings as variables will be split by underscore to define its tree.
      * @param prefix The prefix use to match relevant environment variables. Default is "SMU_", should always end with "_" (underscore).
@@ -283,7 +312,7 @@ class SetMeUp {
 
         // Set default options.
         if (!options) options = {}
-        options = Object.assign({overwrite: true, lowercase: false}, options)
+        options = Object.assign({...defaultOptions}, options)
 
         // Iterate and process relevant variables.
         // Each underscore defines a level on the result tree.
