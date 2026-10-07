@@ -1,6 +1,7 @@
 // TEST: MAIN
 
 import {after, before, describe, it} from "mocha"
+import assert from "node:assert/strict"
 require("chai").should()
 
 process.env.SMU_env_var = "abc"
@@ -156,5 +157,102 @@ describe("SetMeUp Main Tests", function () {
         } else {
             done()
         }
+    })
+
+    it("Once listeners are called only once", function () {
+        const instance = setmeup.newInstance()
+        let count = 0
+
+        instance.once("test", () => count++)
+        instance.events.emit("test")
+        instance.events.emit("test")
+
+        assert.equal(count, 1)
+    })
+
+    it("Settings are updated before the load event is emitted", function () {
+        const instance = setmeup.newInstance()
+        let loadedValue = null
+
+        instance.on("load", () => (loadedValue = instance.settings.something?.thisIsNew))
+        instance.load("./test/settings.test2.json")
+
+        loadedValue.should.equal("yes")
+    })
+
+    it("Loading the same file multiple times adds it to the files list only once", function () {
+        const instance = setmeup.newInstance()
+
+        instance.load("./test/settings.test2.json")
+        instance.load("./test/settings.test2.json", {overwrite: false})
+
+        instance.files.length.should.equal(1)
+        instance.files[0].options.overwrite.should.equal(false)
+    })
+
+    it("Method loadJson returns the loaded data", function () {
+        const data = {loadJsonTest: true}
+        setmeup.loadJson(data).should.equal(data)
+    })
+
+    it("Does not pollute prototypes via loadJson or environment variables", function () {
+        const instance = setmeup.newInstance()
+
+        instance.loadJson(JSON.parse('{"__proto__": {"pollutedJson": true}, "nested": {"constructor": {"prototype": {"pollutedNested": true}}}}'))
+
+        process.env.SMU_constructor_prototype_pollutedEnv = "yes"
+        process.env.SMU___proto___pollutedEnv2 = "yes"
+        instance.loadFromEnv()
+        delete process.env.SMU_constructor_prototype_pollutedEnv
+        delete process.env.SMU___proto___pollutedEnv2
+
+        const obj: any = {}
+        assert.equal(obj.pollutedJson, undefined)
+        assert.equal(obj.pollutedNested, undefined)
+        assert.equal(obj.pollutedEnv, undefined)
+        assert.equal(obj.pollutedEnv2, undefined)
+    })
+
+    it("Load booleans and numbers from environment variables", function () {
+        const instance = setmeup.newInstance()
+        const vars = {
+            SMU3_bool_true: "true",
+            SMU3_bool_false: "FALSE",
+            SMU3_num_int: "42",
+            SMU3_num_float: "-1.5",
+            SMU3_str_zip: "01234",
+            SMU3_str_bigId: "12345678901234567890",
+            SMU3_str_empty: "",
+            SMU3_str_nan: "NaN",
+            SMU3_str_text: "abc"
+        }
+        Object.assign(process.env, vars)
+
+        instance.loadFromEnv("SMU3")
+
+        for (let key of Object.keys(vars)) delete process.env[key]
+
+        const s = instance.settings
+        s.bool.true.should.equal(true)
+        s.bool.false.should.equal(false)
+        s.num.int.should.equal(42)
+        s.num.float.should.equal(-1.5)
+        s.str.zip.should.equal("01234")
+        s.str.bigId.should.equal("12345678901234567890")
+        s.str.empty.should.equal("")
+        s.str.nan.should.equal("NaN")
+        s.str.text.should.equal("abc")
+    })
+
+    it("Nested environment variables win over a parent value", function () {
+        const instance = setmeup.newInstance()
+
+        process.env.SMU4_parent_child = "child"
+        process.env.SMU4_parent = "parent"
+        instance.loadFromEnv("SMU4")
+        delete process.env.SMU4_parent_child
+        delete process.env.SMU4_parent
+
+        instance.settings.parent.child.should.equal("child")
     })
 })

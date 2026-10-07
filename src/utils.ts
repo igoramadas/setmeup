@@ -1,11 +1,15 @@
 // SetMeUp: utils.ts
 
-import {cryptoMethod, CryptoOptions} from "./cryptohelper"
+import {cryptoMethod, legacyRegex} from "./cryptohelper"
+import {CryptoOptions} from "./types"
 import fs from "fs"
 import path from "path"
 
 /** @hidden */
 let logger = null
+
+/** Keys that could pollute object prototypes if assigned. */
+const unsafeKeys = ["__proto__", "constructor", "prototype"]
 
 /**
  * Finds the correct path to the file looking first on the (optional) base path
@@ -19,43 +23,11 @@ let logger = null
 export function getFilePath(filename: string, basepath?: string): string {
     try {
         const originalFilename = filename.toString()
-        let hasFile = false
-
-        // A basepath was passed? Try there first.
-        if (basepath) {
-            filename = path.resolve(basepath, originalFilename)
-            hasFile = fs.existsSync(filename)
-            /* istanbul ignore else */
-            if (hasFile) {
-                return filename
-            }
-        }
-
-        // Try running directory.
-        filename = path.resolve(process.cwd(), originalFilename)
-        hasFile = fs.existsSync(filename)
-        /* istanbul ignore if */
-        if (hasFile) {
-            return filename
-        }
-
-        // Try application root path (CommonJS).
-        // @ts-ignore
-        if (require.main) {
-            // @ts-ignore
-            filename = path.resolve(path.dirname(require.main.filename), originalFilename)
-            hasFile = fs.existsSync(filename)
-            /* istanbul ignore if */
-            if (hasFile) {
-                return filename
-            }
-        }
-
-        // Last try.
-        hasFile = fs.existsSync(filename)
-        /* istanbul ignore if */
-        if (hasFile) {
-            return filename
+        const mainFile = require.main?.filename ?? process.argv[1]
+        const directories = [basepath, process.cwd(), mainFile ? path.dirname(mainFile) : null].filter((directory) => directory != null)
+        const found = directories.map((directory) => path.resolve(directory, originalFilename)).find((candidate) => fs.existsSync(candidate))
+        if (found) {
+            return found
         }
     } catch (ex) {
         if (logger) logger.error("SetMeUp.Utils.getFilePath", filename, ex)
@@ -152,20 +124,12 @@ export function loadFile(filename: string, cryptoOptions?: CryptoOptions | boole
         }
     }
 
-    // Found file? Load it. Try using UTF8 first, if failed, use ASCII.
+    // Found file? Load it.
     if (filename != null) {
-        const encUtf8 = {encoding: "utf8"} as any
-        const encAscii = {encoding: "ascii"} as any
-
-        // Try parsing the file with UTF8 first, if fails, try ASCII.
         try {
-            result = fs.readFileSync(filename, encUtf8)
-            result = parseJson(result)
+            result = parseJson(fs.readFileSync(filename, {encoding: "utf8"}).replace(/^\uFEFF/, ""))
         } catch (ex) {
-            /* istanbul ignore next */
-            result = fs.readFileSync(filename, encAscii)
-            /* istanbul ignore next */
-            result = parseJson(result)
+            throw new Error(`Can't load ${filename}: ${ex.message}`, {cause: ex})
         }
     }
 
@@ -174,6 +138,10 @@ export function loadFile(filename: string, cryptoOptions?: CryptoOptions | boole
         // Ignore if crypto options passed as false.
         if (cryptoOptions === false) {
             return result
+        }
+
+        if (logger && hasLegacyValues(result)) {
+            logger.warn("SetMeUp.load", filename, `Legacy encryption (enc-) will be deprecated in a future release, please migrate encrypted settings using the CLI: '$ setmeup crypto-migrate ${filename}'`)
         }
 
         /* istanbul ignore else */
@@ -193,6 +161,14 @@ export function loadFile(filename: string, cryptoOptions?: CryptoOptions | boole
 }
 
 /**
+ * Check if the passed settings have legacy "enc-" encrypted values (deep).
+ * @param obj Settings object.
+ */
+const hasLegacyValues = (obj: any): boolean => {
+    return Object.values(obj).some((value) => (isPlainObject(value) ? hasLegacyValues(value) : isString(value) && legacyRegex.test(value as string)))
+}
+
+/**
  * Extends the target object with properties from the source.
  * @param source The source object.
  * @param target The target object.
@@ -205,17 +181,54 @@ export function extend(source: any, target: any, overwrite: boolean): void {
     }
 
     // Iterate object properties (deep).
-    for (let prop in source) {
+    for (let prop of Object.keys(source ?? {})) {
+        if (isUnsafeKey(prop)) continue
+
         const value = source[prop]
-        if (value && value.constructor === Object) {
-            if (target[prop] === null || !(prop in target)) {
+        const exists = Object.hasOwn(target, prop)
+
+        if (isPlainObject(value)) {
+            if (!exists || target[prop] === null) {
                 target[prop] = {}
             }
-            extend(source[prop], target[prop], overwrite)
-        } else if (overwrite || !(prop in target)) {
-            target[prop] = source[prop]
+            extend(value, target[prop], overwrite)
+        } else if (overwrite || !exists) {
+            target[prop] = value
         }
     }
+}
+
+/**
+ * Check if the passed key could pollute object prototypes.
+ * @param key Property key.
+ */
+export const isUnsafeKey = (key: string): boolean => {
+    return unsafeKeys.includes(key)
+}
+
+/**
+ * Check if the passed value is a plain object.
+ * @param value Object or value.
+ */
+export const isPlainObject = (value): boolean => {
+    return value != null && value.constructor === Object
+}
+
+/**
+ * Parse an environment variable value, casting booleans and numbers.
+ * Numbers are only cast if they convert back to the exact same string, so values
+ * like "007" or very large IDs are kept as strings.
+ * @param value The environment variable value.
+ */
+export const parseEnvValue = (value: string): string | number | boolean => {
+    const lower = value.toLowerCase()
+    if (lower == "true") return true
+    if (lower == "false") return false
+
+    const num = Number(value)
+    if (Number.isFinite(num) && String(num) === value) return num
+
+    return value
 }
 
 /**

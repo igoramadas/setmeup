@@ -1,7 +1,8 @@
 // SetMeUp: index.ts
 
-import {cryptoMethod, CryptoOptions} from "./cryptohelper"
-import {extend, getFilePath, isString, loadFile} from "./utils"
+import {CryptoAction, cryptoMethod} from "./cryptohelper"
+import {CryptoOptions, LoadedFile, LoadEnvOptions, LoadOptions} from "./types"
+import {extend, getFilePath, isPlainObject, isString, isUnsafeKey, loadFile, parseEnvValue} from "./utils"
 import EventEmitter from "eventemitter3"
 import fs from "fs"
 import path from "path"
@@ -16,42 +17,7 @@ let env = process.env
 let logger = null
 
 /**
- * Represents a loaded file, used on [[files]].
- */
-interface LoadedFile {
-    /** Filename of the loaded settings file. */
-    filename: string
-    /** True if file is being watched for updates (see [[watch]]). */
-    watching: boolean
-}
-
-/**
- * Represents loading from JSON options, used on [[load]].
- */
-interface LoadOptions {
-    /** Overwrite current settings with loaded ones? */
-    overwrite?: boolean
-    /** Root key of settings to be loaded. */
-    rootKey?: string
-    /** Decryption options in case file is encrypted. */
-    crypto?: CryptoOptions | boolean
-    /** Delete file after load, useful when running on shared / unsecure environments. */
-    destroy?: boolean
-}
-
-/**
- * Represents loading from environment options, used on [[loadFromEnv]].
- */
-interface LoadEnvOptions {
-    /** Overwrite current settings with loaded ones? */
-    overwrite?: boolean
-    /** Force environment variables to settings in lowercase? */
-    lowercase?: boolean
-}
-
-/**
  * This is the main SetMeUp class.
- * * @example const setmeup = require("setmeup")
  */
 class SetMeUp {
     private static _instance: SetMeUp = null
@@ -90,7 +56,7 @@ class SetMeUp {
 
         // Read only file system? Set readOnly to true.
         try {
-            fs.accessSync(__dirname, fs.constants.W_OK)
+            fs.accessSync(rootFolder, fs.constants.W_OK)
         } catch (err) {
             /* istanbul ignore next */
             this.readOnly = true
@@ -103,6 +69,9 @@ class SetMeUp {
 
     /** Internal, the actual settings storage object. */
     private _settings: any = {}
+
+    /** Internal, file watcher listeners by filename. */
+    private _watchers: Map<string, fs.StatsListener> = new Map()
 
     /**
      * Exposes the settings object.
@@ -144,7 +113,7 @@ class SetMeUp {
      * @param callback Callback function.
      */
     once = (eventName: string, callback: EventEmitter.ListenerFn): void => {
-        this.events.on(eventName, callback)
+        this.events.once(eventName, callback)
     }
 
     /**
@@ -207,19 +176,20 @@ class SetMeUp {
 
             // Add file to the `files` list, but only if not loaded previously.
             if (!options.destroy) {
-                if (!this.files.find((existing) => existing.filename == f)) {
-                    this.files.push({filename: filename, watching: false})
+                const existing = this.files.find((file) => file.filename == filename)
+
+                if (!existing) {
+                    this.files.push({filename: filename, watching: false, options: options})
                 } else {
+                    existing.options = options
                     if (logger) logger.debug("SetMeUp.load", filename, "Loaded before, so won't add to the files list")
                 }
             }
 
-            // Extend loaded settings.
-            if (options.rootKey) {
-                extend(settingsJson[options.rootKey], result, options.overwrite)
-            } else {
-                extend(settingsJson, result, options.overwrite)
-            }
+            // Extend loaded settings, before emitting so listeners get the updated settings.
+            const data = options.rootKey ? settingsJson[options.rootKey] : settingsJson
+            extend(data, result, options.overwrite)
+            extend(data, this.settings, options.overwrite)
 
             // Emit load passing filenames and loaded settings result.
             this.events.emit("load", filename, result)
@@ -254,8 +224,6 @@ class SetMeUp {
             return null
         }
 
-        // Extend loaded settings and log results.
-        extend(result, this.settings, options.overwrite)
         if (logger) logger.info("SetMeUp.load", "Loaded", loadedFilenames.join(", "))
 
         // Return the JSON representation of the loaded settings.
@@ -277,16 +245,15 @@ class SetMeUp {
         options = Object.assign({...defaultOptions}, options)
 
         // Extend loaded settings.
-        if (options.rootKey) {
-            extend(data[options.rootKey], this.settings, options.overwrite)
-        } else {
-            extend(data, this.settings, options.overwrite)
-        }
+        const loaded = options.rootKey ? data[options.rootKey] : data
+        extend(loaded, this.settings, options.overwrite)
 
         // Emit load passing prefix and loaded settings result.
         this.events.emit("loadJson", data)
 
-        if (logger) logger.info("SetMeUp.loadJson", `Loaded keys: ${Object.keys(data).join(", ")}`)
+        if (logger) logger.info("SetMeUp.loadJson", `Loaded keys: ${Object.keys(loaded || {NONE: true}).join(", ")}`)
+
+        return data
     }
 
     /**
@@ -314,51 +281,55 @@ class SetMeUp {
         if (!options) options = {}
         options = Object.assign({...defaultOptions}, options)
 
-        // Iterate and process relevant variables.
+        // Sort, iterate and process relevant variables.
         // Each underscore defines a level on the result tree.
+        keys.sort()
         for (let key of keys) {
-            if (key.substring(0, prefix.length) == prefix) {
-                const keyNoprefix = key.substring(prefix.length)
-                loadedKeys.push(keyNoprefix)
+            if (!key.startsWith(prefix)) continue
 
-                let target = result
-                let arr = keyNoprefix.split("_")
+            const keyNoprefix = key.substring(prefix.length)
+            let arr = keyNoprefix.split("_")
 
-                // Force lowercase if defined on options.
-                if (options.lowercase)
-                    for (let i = 0; i < arr.length; i++) {
-                        arr[i] = arr[i].toLowerCase()
-                    }
+            // Force lowercase if defined on options.
+            if (options.lowercase) {
+                arr = arr.map((part) => part.toLowerCase())
+            }
 
-                let limit = arr.length - 1
+            if (arr.some(isUnsafeKey)) {
+                if (logger) logger.warn("SetMeUp.loadFromEnv", `Skipping unsafe variable ${key}`)
+                continue
+            }
 
-                // Iterate keys to make the settings tree, making sure each sub-key exists.
-                for (let i = 0; i < limit; i++) {
-                    if (typeof target[arr[i]] === "undefined" || target[arr[i]] === null) {
-                        target[arr[i]] = {}
-                    }
+            loadedKeys.push(keyNoprefix)
 
-                    target = target[arr[i]]
+            const lastKey = arr.pop()
+            let target = result
+
+            // Iterate keys to make the settings tree, making sure each sub-key is an object.
+            for (let part of arr) {
+                if (!isPlainObject(target[part])) {
+                    target[part] = {}
                 }
 
-                target[arr.pop()] = process.env[key]
+                target = target[part]
             }
+
+            target[lastKey] = parseEnvValue(process.env[key])
+        }
+
+        const hasResult = Object.keys(result).length > 0
+
+        // Extend loaded settings before emitting so listeners get the updated settings.
+        if (hasResult) {
+            extend(result, this.settings, options.overwrite)
+            if (logger) logger.info("SetMeUp.loadFromEnv", "Loaded", loadedKeys.join(", "))
         }
 
         // Emit load passing prefix and loaded settings result.
         this.events.emit("loadFromEnv", prefix, result)
 
-        // Nothing loaded? Return null.
-        if (Object.keys(result).length < 1) {
-            return null
-        }
-
-        // Extend loaded settings and log results.
-        extend(result, this.settings, options.overwrite)
-        if (logger) logger.info("SetMeUp.loadFromEnv", "Loaded", loadedKeys.join(", "))
-
-        // Return the JSON representation of the loaded settings.
-        return result
+        // Return the JSON representation of the loaded settings, or null if nothing was loaded.
+        return hasResult ? result : null
     }
 
     /**
@@ -396,13 +367,7 @@ class SetMeUp {
      * @param options Options cipher, key and IV to be passed to the encryptor.
      */
     encrypt = (filename: string, options?: CryptoOptions): void => {
-        if (this.readOnly) {
-            if (logger) logger.warn("SetMeUp.encrypt", "Can't encrypt while in readOnly mode", filename)
-            return
-        }
-
-        const result = JSON.stringify(cryptoMethod("encrypt", filename, options), null, 4)
-        fs.writeFileSync(filename, result, {encoding: "utf8"})
+        this.cryptoFile("encrypt", filename, options)
     }
 
     /**
@@ -411,13 +376,23 @@ class SetMeUp {
      * @param options Options cipher, key and IV to be passed to the decryptor.
      */
     decrypt = (filename: string, options?: CryptoOptions): void => {
+        this.cryptoFile("decrypt", filename, options)
+    }
+
+    /**
+     * Run the crypto action against the file, and write it only if its contents changed.
+     */
+    private cryptoFile = (action: CryptoAction, filename: string, options?: CryptoOptions): void => {
         if (this.readOnly) {
-            if (logger) logger.warn("SetMeUp.decrypt", "Can't decrypt while in readOnly mode", filename)
+            if (logger) logger.warn(`SetMeUp.${action}`, `Can't ${action} while in readOnly mode`, filename)
             return
         }
 
-        const result = JSON.stringify(cryptoMethod("decrypt", filename, options), null, 4)
-        fs.writeFileSync(filename, result, {encoding: "utf8"})
+        const result = JSON.stringify(cryptoMethod(action, filename, options), null, 4)
+
+        if (fs.readFileSync(filename, {encoding: "utf8"}) != result) {
+            fs.writeFileSync(filename, result, {encoding: "utf8"})
+        }
     }
 
     // FILE WATCHER
@@ -435,12 +410,20 @@ class SetMeUp {
             if (filename != null && !f.watching) {
                 f.watching = true
 
-                fs.watchFile(filename, {persistent: true}, () => {
-                    this.load(filename)
+                const listener = () => {
+                    try {
+                        this.load(filename, f.options)
 
-                    /* istanbul ignore else */
-                    if (logger) logger.info("SetMeUp.watch", f, "Reloaded")
-                })
+                        /* istanbul ignore else */
+                        if (logger) logger.info("SetMeUp.watch", filename, "Reloaded")
+                    } catch (ex) {
+                        /* istanbul ignore next */
+                        if (logger) logger.error("SetMeUp.watch", filename, "Failed to reload", ex)
+                    }
+                }
+
+                this._watchers.set(filename, listener)
+                fs.watchFile(filename, {persistent: true}, listener)
             }
         }
 
@@ -452,24 +435,42 @@ class SetMeUp {
      * Unwatch changes on loaded settings files.
      */
     unwatch = (): void => {
-        try {
-            for (let f of this.files) {
-                const filename = getFilePath(f.filename)
-                f.watching = false
-
-                if (filename != null) {
-                    fs.unwatchFile(filename)
-                }
-            }
-        } catch (ex) {
-            /* istanbul ignore next */
-            if (logger) logger.error("SetMeUp.unwatch", ex)
+        for (let f of this.files) {
+            f.watching = false
         }
+
+        // Remove only our own listeners, as other instances or the app might also watch the same files.
+        for (let [filename, listener] of this._watchers) {
+            fs.unwatchFile(filename, listener)
+        }
+        this._watchers.clear()
 
         /* istanbul ignore else */
         if (logger) logger.info("SetMeUp.unwatch")
     }
 }
 
+/** @hidden */
+type SetMeUpClass = SetMeUp
+/** @hidden */
+type CryptoOptionsType = CryptoOptions
+/** @hidden */
+type LoadedFileType = LoadedFile
+/** @hidden */
+type LoadEnvOptionsType = LoadEnvOptions
+/** @hidden */
+type LoadOptionsType = LoadOptions
+
 // Exports...
-export = SetMeUp.Instance
+const setmeup = SetMeUp.Instance
+
+// Type-only namespace merged with the instance, so types can be imported by name.
+declare namespace setmeup {
+    export type SetMeUp = SetMeUpClass
+    export type CryptoOptions = CryptoOptionsType
+    export type LoadedFile = LoadedFileType
+    export type LoadEnvOptions = LoadEnvOptionsType
+    export type LoadOptions = LoadOptionsType
+}
+
+export = setmeup
