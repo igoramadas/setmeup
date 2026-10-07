@@ -255,4 +255,16 @@ describe("SetMeUp Main Tests", function () {
 
         instance.settings.parent.child.should.equal("child")
     })
+
+    it("Nested environment variables win over a parent value with mixed case and lowercase", function () {
+        const instance = setmeup.newInstance()
+
+        process.env.SMU5_PARENT_CHILD = "child"
+        process.env.SMU5_parent = "parent"
+        instance.loadFromEnv("SMU5", {lowercase: true})
+        delete process.env.SMU5_PARENT_CHILD
+        delete process.env.SMU5_parent
+
+        instance.settings.parent.child.should.equal("child")
+    })
 })

@@ -314,7 +314,10 @@ class SetMeUp {
                 target = target[part]
             }
 
-            target[lastKey] = parseEnvValue(process.env[key])
+            // Nested values win over a parent value, regardless of the variables order.
+            if (!isPlainObject(target[lastKey])) {
+                target[lastKey] = parseEnvValue(process.env[key])
+            }
         }
 
         const hasResult = Object.keys(result).length > 0
