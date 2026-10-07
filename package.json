@@ -97,5 +97,9 @@
             "lcov",
             "text"
         ]
+    },
+    "reviewAgents": {
+        "draft": "@greptile",
+        "ready": "@cubic"
     }
 }
