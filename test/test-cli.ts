@@ -67,6 +67,38 @@ describe("SetMeUp CLI Tests", function () {
         }
     })
 
+    it("CLI crypto-migrate preserves comments and skips files with nothing to migrate", function () {
+        const {spawnSync} = require("node:child_process")
+        const fs = require("fs")
+        const file = "./test/settings.cli-migrate-comments.json"
+        const key = "12345678901234561234567890123456"
+        const iv = "1234567890987654"
+        const env = {...process.env, SMU_CRYPTO_KEY: key, SMU_CRYPTO_IV: iv}
+        const c = require("crypto").createCipheriv("aes256", key, iv)
+        const legacyValue = "enc-s:" + c.update("enc2-s:looks-encrypted", "utf8", "hex") + c.final("hex")
+
+        fs.writeFileSync(file, `{\n  // Keep this comment\n  "secret": "${legacyValue}",\n  "encrypted": true\n}`)
+
+        try {
+            spawnSync("node", ["lib-test/src/cli.js", "crypto-migrate", file], {env}).status.should.equal(0)
+
+            const migrated = fs.readFileSync(file, "utf8")
+            migrated.should.contain("// Keep this comment")
+            migrated.should.match(/"secret": "enc2-s:/)
+            require("../src/index").newInstance().load(file, {crypto: {key}}).secret.should.equal("enc2-s:looks-encrypted")
+
+            const mtime = fs.statSync(file).mtimeMs
+            const result = spawnSync("node", ["lib-test/src/cli.js", "crypto-migrate", file], {env})
+
+            result.status.should.equal(0)
+            result.stdout.toString().should.contain("Nothing to crypto-migrate")
+            fs.readFileSync(file, "utf8").should.equal(migrated)
+            fs.statSync(file).mtimeMs.should.equal(mtime)
+        } finally {
+            fs.unlinkSync(file)
+        }
+    })
+
     it("CLI crypto-migrate aborts if a value would be written as plaintext", function () {
         const {spawnSync} = require("node:child_process")
         const fs = require("fs")
@@ -74,7 +106,8 @@ describe("SetMeUp CLI Tests", function () {
         const key = "12345678901234561234567890123456"
         const iv = "1234567890987654"
         const c = require("crypto").createCipheriv("aes256", key, iv)
-        const contents = JSON.stringify({secret: "enc-s:" + c.update("enc2-s:looks-encrypted", "utf8", "hex") + c.final("hex"), encrypted: true})
+        const plaintext = `enc2-s:${"0".repeat(24)}:${"0".repeat(32)}:abcd`
+        const contents = JSON.stringify({secret: "enc-s:" + c.update(plaintext, "utf8", "hex") + c.final("hex"), encrypted: true})
 
         fs.writeFileSync(file, contents)
 

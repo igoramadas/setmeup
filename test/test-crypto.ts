@@ -306,6 +306,19 @@ describe("SetMeUp Crypto Tests", function () {
             readFile().plainNumber.should.equal(5)
         })
 
+        it("Encrypts plaintext values that only start with an encryption prefix", function () {
+            fs.writeFileSync(file, JSON.stringify({enc2: "enc2-s:token", legacy: "enc-s:token"}))
+
+            setmeup.encrypt(file, {key: "right key"})
+
+            const encrypted = readFile()
+            encrypted.enc2.should.not.equal("enc2-s:token")
+            encrypted.legacy.should.not.equal("enc-s:token")
+
+            setmeup.decrypt(file, {key: "right key"})
+            readFile().should.deep.equal({enc2: "enc2-s:token", legacy: "enc-s:token"})
+        })
+
         it("Does not rewrite the file if encrypting has nothing to change", function () {
             setmeup.encrypt(file, {key: "right key"})
             const contents = fs.readFileSync(file, "utf8")

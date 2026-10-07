@@ -114,14 +114,27 @@ describe("SetMeUp Watch Tests", function () {
         }
     })
 
-    it("Watched secret file is not rewritten when reloaded", function () {
+    it("Secret file is not rewritten when reloaded", function () {
+        const os = require("os")
+        const path = require("path")
+        const folder = fs.mkdtempSync(path.join(os.tmpdir(), "setmeup-"))
+        const secretFile = path.join(folder, "settings.secret.json")
         const instance = setmeup.newInstance()
-        const secretFile = "./test/settings.secret.json"
 
-        instance.load(secretFile)
-        const mtime = fs.statSync(secretFile).mtimeMs
-        instance.load(secretFile)
+        fs.writeFileSync(secretFile, JSON.stringify({secret: "abc"}))
 
-        fs.statSync(secretFile).mtimeMs.should.equal(mtime)
+        try {
+            instance.load(secretFile)
+            const contents = fs.readFileSync(secretFile, "utf8")
+            const mtime = fs.statSync(secretFile).mtimeMs
+
+            contents.should.match(/"secret": "enc2-s:/)
+            instance.load(secretFile)
+
+            fs.readFileSync(secretFile, "utf8").should.equal(contents)
+            fs.statSync(secretFile).mtimeMs.should.equal(mtime)
+        } finally {
+            fs.rmSync(folder, {recursive: true, force: true})
+        }
     })
 })

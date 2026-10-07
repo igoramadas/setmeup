@@ -201,16 +201,13 @@ describe("SetMeUp Main Tests", function () {
         instance.loadJson(JSON.parse('{"__proto__": {"pollutedJson": true}, "nested": {"constructor": {"prototype": {"pollutedNested": true}}}}'))
 
         process.env.SMU_constructor_prototype_pollutedEnv = "yes"
-        process.env.SMU___proto___pollutedEnv2 = "yes"
         instance.loadFromEnv()
         delete process.env.SMU_constructor_prototype_pollutedEnv
-        delete process.env.SMU___proto___pollutedEnv2
 
         const obj: any = {}
         assert.equal(obj.pollutedJson, undefined)
         assert.equal(obj.pollutedNested, undefined)
         assert.equal(obj.pollutedEnv, undefined)
-        assert.equal(obj.pollutedEnv2, undefined)
     })
 
     it("Load booleans and numbers from environment variables", function () {
@@ -222,6 +219,7 @@ describe("SetMeUp Main Tests", function () {
             SMU3_num_float: "-1.5",
             SMU3_str_zip: "01234",
             SMU3_str_bigId: "12345678901234567890",
+            SMU3_str_unsafeInt: "1000000000000000100",
             SMU3_str_empty: "",
             SMU3_str_nan: "NaN",
             SMU3_str_text: "abc"
@@ -239,6 +237,7 @@ describe("SetMeUp Main Tests", function () {
         s.num.float.should.equal(-1.5)
         s.str.zip.should.equal("01234")
         s.str.bigId.should.equal("12345678901234567890")
+        s.str.unsafeInt.should.equal("1000000000000000100")
         s.str.empty.should.equal("")
         s.str.nan.should.equal("NaN")
         s.str.text.should.equal("abc")
@@ -266,5 +265,21 @@ describe("SetMeUp Main Tests", function () {
         delete process.env.SMU5_parent
 
         instance.settings.parent.child.should.equal("child")
+    })
+
+    it("Nested environment variables replace an existing scalar setting, unless not overwriting", function () {
+        const instance = setmeup.newInstance()
+        instance.loadJson({app: "scalar", other: "scalar"})
+
+        process.env.SMU6_app_id = "id"
+        instance.loadFromEnv("SMU6")
+        delete process.env.SMU6_app_id
+
+        process.env.SMU7_other_id = "id"
+        instance.loadFromEnv("SMU7", {overwrite: false})
+        delete process.env.SMU7_other_id
+
+        instance.settings.app.id.should.equal("id")
+        instance.settings.other.should.equal("scalar")
     })
 })

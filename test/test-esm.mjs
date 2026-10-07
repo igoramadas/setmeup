@@ -9,4 +9,4 @@ const testDir = dirname(fileURLToPath(import.meta.url))
 
 assert.strictEqual(setmeup, require("setmeup"))
 setmeup.load(resolve(testDir, "settings.test.json"), {overwrite: true})
-assert.ok(Object.keys(setmeup.settings).length > 0)
+assert.strictEqual(setmeup.settings.something.number, 1)
