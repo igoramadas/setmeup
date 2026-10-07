@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 
-import setmeup = require("./index")
+import {cryptoMethod, legacyRegex} from "./cryptohelper"
+import {isPlainObject, isString, loadFile} from "./utils"
+import setmeup from "./index"
+import fs from "fs"
 
 const [, , ...args] = process.argv
 const action = args[0]
@@ -21,24 +24,62 @@ function showHelp() {
     console.log("  decrypt - Decrypt the file")
     console.log("  $ setmeup decrypt ./my-settings.json")
     console.log()
+    console.log("  crypto-migrate - Convert legacy encrypted values (enc-) to the new format (enc2-)")
+    console.log("  $ setmeup crypto-migrate ./my-settings.json")
+    console.log()
     console.log("  print - Load and print settings")
-    console.log("  $ setmeup load ./my-settings.json")
-    console.log("  $ setmeup load")
+    console.log("  $ setmeup print ./my-settings.json")
+    console.log("  $ setmeup print")
     console.log()
     console.log("If no filename is passed on print, it will load the defaults:")
     console.log("settings.default.json, settings.json, settings.APP_ENV.json OR settings.NODE_ENV.json, settings.secret.json")
     console.log()
+    console.log("The encryption key can be set via the SMU_CRYPTO_KEY environment variable.")
+    console.log()
+}
+
+// Helper to run file crypto actions, which need a filename and write access.
+function cryptoAction(method: (filename: string) => void, done: string) {
+    if (!filename) {
+        throw new Error(`Missing filename for ${action}`)
+    }
+    if (setmeup.readOnly) {
+        throw new Error(`Can't ${action} ${filename}, file system is read only`)
+    }
+
+    method(filename)
+    console.log(`${done} ${filename}`)
+}
+
+// Convert legacy "enc-" values to "enc2-", leaving all other values untouched.
+// Everything is done in memory, so decrypted values are never written to disk.
+function cryptoMigrate(file: string) {
+    const migrated = cryptoMethod("encrypt", cryptoMethod("decrypt", file))
+    const original = loadFile(file, false)
+
+    const replaceLegacy = (target: any, source: any) => {
+        for (let key of Object.keys(target)) {
+            if (isPlainObject(target[key])) {
+                replaceLegacy(target[key], source[key])
+            } else if (isString(target[key]) && legacyRegex.test(target[key])) {
+                target[key] = source[key]
+            }
+        }
+    }
+
+    replaceLegacy(original, migrated)
+    fs.writeFileSync(file, JSON.stringify(original, null, 4), {encoding: "utf8"})
 }
 
 try {
-    if (action == "help") {
+    if (!action || action == "help") {
         showHelp()
     } else if (action == "encrypt") {
-        setmeup.encrypt(filename)
-        console.log(`Encrypted ${filename}`)
+        cryptoAction(setmeup.encrypt, "Encrypted")
     } else if (action == "decrypt") {
-        setmeup.decrypt(filename)
-        console.log(`Decrypted ${filename}`)
+        cryptoAction(setmeup.decrypt, "Decrypted")
+    } else if (action == "crypto-migrate") {
+        cryptoAction(cryptoMigrate, "Migrated")
     } else if (action == "print") {
         if (filename) {
             setmeup.load(filename)
@@ -51,6 +92,7 @@ try {
         console.error(`INVALID ACTION: ${action} !!!`)
         console.log()
         showHelp()
+        process.exitCode = 1
     }
 
     console.log()
@@ -58,4 +100,5 @@ try {
     console.log()
     console.error("ERROR!")
     console.error(ex)
+    process.exitCode = 1
 }

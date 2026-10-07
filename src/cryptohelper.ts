@@ -1,10 +1,13 @@
-// SetMeUp: crypto.ts
+// SetMeUp: cryptohelper.ts
 
 import {execSync} from "child_process"
-import {isArray, isBoolean, isNumber, isString, loadFile} from "./utils"
+import {CryptoOptions} from "./types"
+import {isArray, isBoolean, isNumber, isPlainObject, isString, loadFile} from "./utils"
 import crypto from "crypto"
 
-/** Default IV value in case one is not provided. */
+export type {CryptoOptions}
+
+/** Default IV value for legacy "enc-" values in case one is not provided. */
 let defaultIV = "8407198407191984"
 /** @hidden */
 let env = process.env
@@ -13,18 +16,19 @@ let logger = null
 /** @hidden */
 let loggerLoaded = false
 
+/** Salt used to derive "enc2-" keys, the key itself is expected to have enough entropy. */
+const keySalt = "SetMeUp-enc2"
+/** Derived "enc2-" keys cache, as scrypt is expensive. */
+const derivedKeys: Map<string, Buffer> = new Map()
+/** Matches legacy AES-256-CBC values with a static IV. */
+export const legacyRegex = /^enc-[asn]:/
+/** Matches AES-256-GCM values with a random IV. */
+const enc2Regex = /^enc2-[asn]:/
+
 /**
- * Encryption options for [[CryptoMethod]].
- * @protected
+ * Supported crypto actions.
  */
-export interface CryptoOptions {
-    /** Cipher to use, default is "aes256". */
-    cipher?: string
-    /** Encryption key, default is derived from current machine via [[getMachineID]]. */
-    key?: string
-    /** Encryption IV, default is "8407198407191984". */
-    iv?: string
-}
+export type CryptoAction = "encrypt" | "decrypt"
 
 /**
  * Helper to encrypt or decrypt settings files. The default encryption key
@@ -33,13 +37,15 @@ export interface CryptoOptions {
  * You can also  set them via the SMU_CRYPTO_KEY and SMU_CRYPTO_IV
  * environment variables. The default cipher algorithm is AES 256.
  * Failure to encrypt or decrypt will throw an exception.
+ * New values are encrypted as "enc2-" (AES-256-GCM, random IV per value, key derived
+ * via scrypt). Legacy "enc-" values can still be decrypted.
  * @param action Action can be "encrypt" or "decrypt".
- * @param filename The file to be encrypted or decrypted.
+ * @param source The file to be encrypted or decrypted, or its already loaded JSON (modified in place).
  * @param options Encryption options with cipher, key and IV.
  * @returns The (de)encrypted JSON object.
  * @protected
  */
-export function cryptoMethod(action: string, filename: string, options?: CryptoOptions): any {
+export function cryptoMethod(action: CryptoAction | string, source: string | any, options?: CryptoOptions): any {
     if (options == null) {
         options = {} as CryptoOptions
     }
@@ -56,6 +62,10 @@ export function cryptoMethod(action: string, filename: string, options?: CryptoO
     }
 
     action = action.toString().toLowerCase()
+
+    if (!["encrypt", "decrypt"].includes(action)) {
+        throw new Error(`Invalid crypto action: ${action}`)
+    }
 
     // Set default options.
     const defaults = {
@@ -75,100 +85,84 @@ export function cryptoMethod(action: string, filename: string, options?: CryptoO
         options.iv = defaultIV
     }
 
-    const settingsJson = loadFile(filename, false)
+    const settingsJson = isString(source) ? loadFile(source, false) : source
 
     // Settings file not found or invalid? Stop here.
     if (settingsJson == null) {
         throw new Error("Can't (de)encrypt, settings file not found or empty")
     }
 
+    // Derive the "enc2-" key from the passed key, so keys of any length can be used.
+    const getKey = (): Buffer => {
+        if (!derivedKeys.has(options.key)) {
+            derivedKeys.set(options.key, crypto.scryptSync(options.key, keySalt, 32))
+        }
+        return derivedKeys.get(options.key)
+    }
+
+    // Encrypt a value as "enc2-type:iv:tag:data", the type is authenticated so it can't be swapped.
+    const encryptValue = (value: any): string => {
+        const type = isArray(value) ? "a" : isNumber(value) ? "n" : "s"
+        const data = type == "a" ? JSON.stringify(value, null, 0) : value.toString()
+        const iv = crypto.randomBytes(12)
+        const c = crypto.createCipheriv("aes-256-gcm", getKey(), iv)
+        c.setAAD(Buffer.from(type))
+        const encrypted = Buffer.concat([c.update(data, "utf8"), c.final()])
+
+        return `enc2-${type}:${iv.toString("hex")}:${c.getAuthTag().toString("hex")}:${encrypted.toString("hex")}`
+    }
+
+    // Decrypt a "enc2-" or legacy "enc-" value, casting it back to its original type.
+    const decryptValue = (value: string): any => {
+        const [prefix, ...parts] = value.split(":")
+        const type = prefix.split("-")[1]
+        let decrypted: string
+
+        if (enc2Regex.test(value)) {
+            const [iv, tag, data] = parts
+            const c = crypto.createDecipheriv("aes-256-gcm", getKey(), Buffer.from(iv, "hex"), {authTagLength: 16})
+            c.setAAD(Buffer.from(type))
+            c.setAuthTag(Buffer.from(tag, "hex"))
+            decrypted = c.update(data, "hex", "utf8") + c.final("utf8")
+        } else {
+            const c = crypto.createDecipheriv(options.cipher, options.key, options.iv)
+            decrypted = c.update(parts[0], "hex", "utf8") + c.final("utf8")
+        }
+
+        if (type == "a") return JSON.parse(decrypted)
+        if (type == "n") return parseFloat(decrypted)
+        return decrypted
+    }
+
     // Helper to parse and encrypt / decrypt settings data.
     let parser = (obj) => {
-        let currentValue = null
-
         for (let prop in obj) {
             const value = obj[prop]
 
-            if (value != null && value.constructor === Object) {
-                parser(obj[prop])
-            } else {
-                let newValue
+            if (isPlainObject(value)) {
+                parser(value)
+                continue
+            }
 
-                try {
-                    let c
-                    currentValue = obj[prop]
+            const isLegacy = isString(value) && legacyRegex.test(value)
+            const isEnc2 = isString(value) && enc2Regex.test(value)
 
+            try {
+                if (action == "encrypt") {
                     // Do not consider booleans, as it would be easy to guess
                     // the key based on true / false.
-                    if (isBoolean(currentValue)) {
-                        newValue = currentValue
-                    } else if (currentValue === null) {
-                        newValue = null
-                    } else if (action == "encrypt") {
-                        // Value already encrypted? Skip!
-                        if (isString(currentValue) && currentValue.substring(0, 4) == "enc-") {
-                            newValue = currentValue
-                        } else {
-                            // Is an array?
-                            if (isArray(currentValue)) {
-                                newValue = "enc-a:"
-                                currentValue = JSON.stringify(currentValue, null, 0)
-                            }
-                            // Is a number?
-                            else if (isNumber(currentValue)) {
-                                newValue = "enc-n:"
-                            }
-                            // Strings, dates and everything else?
-                            else {
-                                newValue = "enc-s:"
-                            }
-
-                            // Create cipher and encrypt data.
-                            c = crypto.createCipheriv(options.cipher, options.key, options.iv)
-                            newValue += c.update(currentValue.toString(), "utf8", "hex")
-                            newValue += c.final("hex")
-                        }
-                    } else if (action == "decrypt") {
-                        // Value is an array? Return it as it is.
-                        if (isArray(currentValue)) {
-                            newValue = currentValue
-                        } else {
-                            // Split the data as "datatype:encryptedValue".
-                            const arrValue = currentValue.split(":")
-
-                            if (arrValue.length > 1 && arrValue[0].toString().substring(0, 4) == "enc-") {
-                                newValue = ""
-
-                                // Create cipher and decrypt.
-                                c = crypto.createDecipheriv(options.cipher, options.key, options.iv)
-                                newValue += c.update(arrValue[1], "hex", "utf8")
-                                newValue += c.final("utf8")
-
-                                // Cast data type (array, number or string).
-                                if (arrValue[0] === "enc-a") {
-                                    newValue = JSON.parse(newValue)
-                                } else if (arrValue[0] === "enc-n") {
-                                    newValue = parseFloat(newValue)
-                                }
-                            } else {
-                                // Value not encrypted, so keep the current.
-                                newValue = currentValue
-                            }
-                        }
-                    } else {
-                        /* istanbul ignore next */
-                        throw new Error(`Invalid action`)
+                    if (value !== null && !isBoolean(value) && !isLegacy && !isEnc2) {
+                        obj[prop] = encryptValue(value)
                     }
-                } catch (ex) {
-                    ex.friendlyMessage = `Can't ${action}: ${currentValue}. Make sure key and IV are correct for encryption.`
-
-                    if (logger) logger.error(`SetMeUp`, action, ex)
-
-                    throw ex
+                } else if (isLegacy || isEnc2) {
+                    obj[prop] = decryptValue(value)
                 }
+            } catch (ex) {
+                ex.friendlyMessage = `Can't ${action}: ${value}. Make sure key and IV are correct for encryption.`
 
-                // Update settings property value.
-                obj[prop] = newValue
+                if (logger) logger.error(`SetMeUp`, action, ex)
+
+                throw ex
             }
         }
     }
