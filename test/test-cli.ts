@@ -67,6 +67,28 @@ describe("SetMeUp CLI Tests", function () {
         }
     })
 
+    it("CLI crypto-migrate aborts if a value would be written as plaintext", function () {
+        const {spawnSync} = require("node:child_process")
+        const fs = require("fs")
+        const file = "./test/settings.cli-migrate-abort.json"
+        const key = "12345678901234561234567890123456"
+        const iv = "1234567890987654"
+        const c = require("crypto").createCipheriv("aes256", key, iv)
+        const contents = JSON.stringify({secret: "enc-s:" + c.update("enc2-s:looks-encrypted", "utf8", "hex") + c.final("hex"), encrypted: true})
+
+        fs.writeFileSync(file, contents)
+
+        try {
+            const result = spawnSync("node", ["lib-test/src/cli.js", "crypto-migrate", file], {env: {...process.env, SMU_CRYPTO_KEY: key, SMU_CRYPTO_IV: iv}})
+
+            result.status.should.equal(1)
+            result.stderr.toString().should.contain("Can't migrate secret")
+            fs.readFileSync(file, "utf8").should.equal(contents)
+        } finally {
+            fs.unlinkSync(file)
+        }
+    })
+
     it("CLI exits with an error code on failures", function () {
         const {spawnSync} = require("node:child_process")
 

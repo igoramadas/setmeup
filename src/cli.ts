@@ -54,20 +54,28 @@ function cryptoAction(method: (filename: string) => void, done: string) {
 // Convert legacy "enc-" values to "enc2-", leaving all other values untouched.
 // Everything is done in memory, so decrypted values are never written to disk.
 function cryptoMigrate(file: string) {
-    const migrated = cryptoMethod("encrypt", cryptoMethod("decrypt", file))
+    const decrypted = cryptoMethod("decrypt", file)
+    const migrated = cryptoMethod("encrypt", structuredClone(decrypted))
     const original = loadFile(file, false)
 
-    const replaceLegacy = (target: any, source: any) => {
+    const replaceLegacy = (target: any, source: any, plain: any, parentPath: string) => {
         for (let key of Object.keys(target)) {
+            const keyPath = parentPath ? `${parentPath}.${key}` : key
+
             if (isPlainObject(target[key])) {
-                replaceLegacy(target[key], source[key])
+                replaceLegacy(target[key], source[key], plain[key], keyPath)
             } else if (isString(target[key]) && legacyRegex.test(target[key])) {
+                // Encrypt skips values that look encrypted, so these would be written as plaintext.
+                if (source[key] === plain[key]) {
+                    throw new Error(`Can't migrate ${keyPath}, its decrypted value starts with an encryption prefix`)
+                }
+
                 target[key] = source[key]
             }
         }
     }
 
-    replaceLegacy(original, migrated)
+    replaceLegacy(original, migrated, decrypted, "")
     fs.writeFileSync(file, JSON.stringify(original, null, 4), {encoding: "utf8"})
 }
 
