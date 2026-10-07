@@ -30,8 +30,8 @@ import setmeup from "setmeup"
 
 const settings = setmeup.settings
 
-// Settings are not loaded automatically, so load the default files
-// (settings.default.json, settings.json, settings.APP_ENV.json and settings.secret.json).
+// Settings are not loaded automatically, so load the default files (settings.default.json,
+// settings.json, settings.APP_ENV.json or settings.NODE_ENV.json, and settings.secret.json).
 setmeup.load()
 
 // Here we load settings from a custom file as well.
@@ -95,15 +95,15 @@ const onLoad = (filename, settingsJson) => {
 // Will get triggered whenever a config file changes, after the settings were updated.
 setmeup.on("load", onLoad)
 
+// Only loaded files are watched, so load them first.
+setmeup.load()
+
 // Start watching the loaded files. Files are reloaded using the same options
 // they were originally loaded with.
 setmeup.watch()
 
-// Pretend updating files.
-myApp.writeConfig("title", "New title")
-
-// Stop watching.
-setmeup.unwatch()
+// Stop watching when the app shuts down.
+process.on("SIGTERM", () => setmeup.unwatch())
 ```
 
 ### Loading from environment variables
@@ -165,11 +165,11 @@ The file `settings.secret.json` (if there's one) will be encrypted automatically
 
 ### Legacy encrypted values (enc-)
 
-Files encrypted by SetMeUp 1.x (values with the `enc-` prefix) can still be loaded and decrypted, but legacy encryption will be deprecated in the next release, and a warning is logged whenever such a file is loaded. These use a static IV and no authentication, so you should migrate them to the new format via the command line tool, using the same key and IV they were encrypted with:
+Files encrypted by SetMeUp 1.x (values with the `enc-` prefix) can still be loaded and decrypted, but legacy encryption will be deprecated in the next release, and a warning is logged (if [anyhow](https://npmjs.com/package/anyhow) is installed) whenever such a file is loaded. These use a static IV and no authentication, so you should migrate them to the new format via the command line tool, using the exact same key and IV they were encrypted with. The legacy format requires a 32 characters key and a 16 characters IV, so replace the placeholders below with your own values:
 
-    $ SMU_CRYPTO_KEY=mykey SMU_CRYPTO_IV=myiv ./node_modules/.bin/setmeup crypto-migrate settings.secret.json
+    $ SMU_CRYPTO_KEY=0123456789abcdef0123456789abcdef SMU_CRYPTO_IV=0123456789abcdef ./node_modules/.bin/setmeup crypto-migrate settings.secret.json
 
-Only `enc-` values are converted, other values are left untouched.
+If the file was encrypted with the default key and IV, simply omit both variables. Only `enc-` values are converted, other values (including comments and formatting) are left untouched, and the file is not rewritten if there's nothing to migrate.
 
 ### Encrypting and decrypting files programmatically
 

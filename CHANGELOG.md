@@ -5,7 +5,7 @@
 - NEW: Native ESM support via package exports, alongside CommonJS.
 - NEW: Values are now encrypted as `enc2-` (AES-256-GCM, random IV per value, key of any length). Legacy `enc-` values can still be decrypted.
 - NEW: `setmeup crypto-migrate` CLI command to convert legacy `enc-` values to `enc2-`.
-- DEPRECATED: Legacy `enc-` encryption will be deprecated in the next release, loading files with `enc-` values logs a warning.
+- DEPRECATED: Legacy `enc-` encryption will be deprecated in the next release, decryption still supported for now.
 - NEW: Types `SetMeUp`, `LoadOptions`, `LoadEnvOptions`, `LoadedFile` and `CryptoOptions` are exported.
 - BREAKING: Requires Node.js 22 or newer.
 - BREAKING: `loadFromEnv()` now loads `true` / `false` as booleans and numeric values as numbers.
