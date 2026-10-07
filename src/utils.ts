@@ -141,7 +141,8 @@ export function loadFile(filename: string, cryptoOptions?: CryptoOptions | boole
         }
 
         if (logger && hasLegacyValues(result)) {
-            logger.warn("SetMeUp.load", filename, `Legacy encryption (enc-) will be deprecated in a future release, please migrate encrypted settings using the CLI: '$ setmeup crypto-migrate ${filename}'`)
+            const quotedFilename = /^[\w@%+=:,./-]+$/.test(filename) ? filename : `'${filename.replace(/'/g, "'\\''")}'`
+            logger.warn("SetMeUp.load", filename, `Legacy encryption (enc-) will be deprecated in a future release, please migrate encrypted settings using the CLI: $ setmeup crypto-migrate ${quotedFilename}`)
         }
 
         /* istanbul ignore else */
@@ -188,7 +189,11 @@ export function extend(source: any, target: any, overwrite: boolean): void {
         const exists = Object.hasOwn(target, prop)
 
         if (isPlainObject(value)) {
-            if (!exists || target[prop] === null) {
+            const current = exists ? target[prop] : null
+
+            // Missing, null or scalar values can't be extended, so replace them (if overwriting).
+            if (current == null || typeof current != "object") {
+                if (current != null && !overwrite) continue
                 target[prop] = {}
             }
             extend(value, target[prop], overwrite)
@@ -216,8 +221,8 @@ export const isPlainObject = (value): boolean => {
 
 /**
  * Parse an environment variable value, casting booleans and numbers.
- * Numbers are only cast if they convert back to the exact same string, so values
- * like "007" or very large IDs are kept as strings.
+ * Numbers are only cast if they convert back to the exact same string, and integers
+ * only if they're safe, so values like "007" or very large IDs are kept as strings.
  * @param value The environment variable value.
  */
 export const parseEnvValue = (value: string): string | number | boolean => {
@@ -226,7 +231,8 @@ export const parseEnvValue = (value: string): string | number | boolean => {
     if (lower == "false") return false
 
     const num = Number(value)
-    if (Number.isFinite(num) && String(num) === value) return num
+    const isSafe = Number.isFinite(num) && (!Number.isInteger(num) || Number.isSafeInteger(num))
+    if (isSafe && String(num) === value) return num
 
     return value
 }

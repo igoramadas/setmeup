@@ -39,7 +39,7 @@ function showHelp() {
 }
 
 // Helper to run file crypto actions, which need a filename and write access.
-function cryptoAction(method: (filename: string) => void, done: string) {
+function cryptoAction(method: (filename: string) => boolean | void, done: string) {
     if (!filename) {
         throw new Error(`Missing filename for ${action}`)
     }
@@ -47,36 +47,53 @@ function cryptoAction(method: (filename: string) => void, done: string) {
         throw new Error(`Can't ${action} ${filename}, file system is read only`)
     }
 
-    method(filename)
-    console.log(`${done} ${filename}`)
+    if (method(filename) === false) {
+        console.log(`Nothing to ${action} on ${filename}`)
+    } else {
+        console.log(`${done} ${filename}`)
+    }
 }
 
 // Convert legacy "enc-" values to "enc2-", leaving all other values untouched.
 // Everything is done in memory, so decrypted values are never written to disk.
-function cryptoMigrate(file: string) {
+// Returns false if there was nothing to migrate.
+function cryptoMigrate(file: string): boolean {
     const decrypted = cryptoMethod("decrypt", file)
     const migrated = cryptoMethod("encrypt", structuredClone(decrypted))
     const original = loadFile(file, false)
+    const replacements: [string, string][] = []
 
-    const replaceLegacy = (target: any, source: any, plain: any, parentPath: string) => {
+    const findLegacy = (target: any, source: any, plain: any, parentPath: string) => {
         for (let key of Object.keys(target)) {
             const keyPath = parentPath ? `${parentPath}.${key}` : key
 
             if (isPlainObject(target[key])) {
-                replaceLegacy(target[key], source[key], plain[key], keyPath)
+                findLegacy(target[key], source[key], plain[key], keyPath)
             } else if (isString(target[key]) && legacyRegex.test(target[key])) {
                 // Encrypt skips values that look encrypted, so these would be written as plaintext.
                 if (source[key] === plain[key]) {
-                    throw new Error(`Can't migrate ${keyPath}, its decrypted value starts with an encryption prefix`)
+                    throw new Error(`Can't migrate ${keyPath}, its decrypted value looks like an encrypted value`)
                 }
 
-                target[key] = source[key]
+                replacements.push([target[key], source[key]])
             }
         }
     }
 
-    replaceLegacy(original, migrated, decrypted, "")
-    fs.writeFileSync(file, JSON.stringify(original, null, 4), {encoding: "utf8"})
+    findLegacy(original, migrated, decrypted, "")
+
+    if (replacements.length == 0) {
+        return false
+    }
+
+    // Replace on the raw text to preserve comments and formatting. Encrypted values never need JSON escaping.
+    let contents = fs.readFileSync(file, {encoding: "utf8"})
+    for (let [legacyValue, newValue] of replacements) {
+        contents = contents.split(`"${legacyValue}"`).join(`"${newValue}"`)
+    }
+
+    fs.writeFileSync(file, contents, {encoding: "utf8"})
+    return true
 }
 
 try {

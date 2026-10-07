@@ -20,10 +20,11 @@ let loggerLoaded = false
 const keySalt = "SetMeUp-enc2"
 /** Derived "enc2-" keys cache, as scrypt is expensive. */
 const derivedKeys: Map<string, Buffer> = new Map()
-/** Matches legacy AES-256-CBC values with a static IV. */
-export const legacyRegex = /^enc-[asn]:/
+
 /** Matches AES-256-GCM values with a random IV. */
-const enc2Regex = /^enc2-[asn]:/
+const enc2Regex = /^enc2-[asn]:[0-9a-f]{24}:[0-9a-f]{32}:(?:[0-9a-f]{2})*$/
+/** Matches legacy AES-256-CBC values with a static IV. */
+export const legacyRegex = /^enc-[asn]:(?:[0-9a-f]{2})+$/
 
 /**
  * Supported crypto actions.
