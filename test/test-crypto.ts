@@ -236,6 +236,17 @@ describe("SetMeUp Crypto Tests", function () {
         }
     })
 
+    it("Fails on unsupported crypto actions", function () {
+        const {cryptoMethod} = require("../src/cryptohelper")
+        const contents = fs.readFileSync(cryptoFilename, "utf8")
+
+        for (let action of ["migrate", "invalid", ""]) {
+            assert.throws(() => cryptoMethod(action, cryptoFilename), {message: `Invalid crypto action: ${action}`})
+        }
+
+        fs.readFileSync(cryptoFilename, "utf8").should.equal(contents)
+    })
+
     describe("enc2 format", function () {
         const file = "./test/settings.enc2.json"
         const readFile = () => JSON.parse(fs.readFileSync(file, "utf8"))
