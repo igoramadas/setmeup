@@ -11,19 +11,15 @@
 - BREAKING: `loadFromEnv()` now loads `true` / `false` as booleans and numeric values as numbers.
 - BREAKING: Read only mode is now detected based on the app root folder (current working directory).
 - BREAKING: The CLI exits with code 1 on errors.
-- Settings files are also found relative to the app entry point when running as ESM.
-- The `load` and `loadFromEnv` events are emitted after the settings were updated.
-- Files reloaded by `watch()` keep their original load options.
-- Encrypting a file that has nothing to change won't rewrite it (fixes endless reloads of a watched `settings.secret.json`).
-- Fixed `once()` triggering listeners multiple times.
 - Fixed prototype pollution via `__proto__`, `constructor` and `prototype` keys.
+- Files reloaded by `watch()` keep their original load options.
+- Fixed `once()` triggering listeners multiple times.
 - Fixed `unwatch()` removing file listeners that were not created by SetMeUp.
 - Fixed duplicate entries on `files` when loading the same file multiple times.
 - Fixed decrypting files with plain numbers mixed in.
 - Fixed `loadJson()` not returning the loaded data.
 - Fixed `loadFromEnv()` failing when a variable is set both as a value and as a parent.
 - Fixed CLI help showing `load` instead of `print`.
-- Compatible with Anyhow 4.
 
 ## 1.9.5
 
