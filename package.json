@@ -39,6 +39,7 @@
         "url": "https://github.com/igoramadas/setmeup.git"
     },
     "engines": {
+        "bun": ">= 1.3",
         "node": ">= 22.0"
     },
     "scripts": {
@@ -47,6 +48,7 @@
         "clean": "rm -rf ./lib && rm -rf ./lib-test && rm -rf ./coverage",
         "prebuild": "rm -rf ./lib ./lib-test",
         "test": "npm run build && npm run build-test && mocha ./test/*.ts && node ./test/test-esm.mjs",
+        "test-bun": "npm run build && npm run build-test && bun --bun run mocha ./test/*.ts && bun ./test/test-esm.mjs",
         "test-coverage": "nyc --reporter=lcov npm test"
     },
     "dependencies": {
