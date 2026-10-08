@@ -1,5 +1,6 @@
 name: Publish to GitHub
 on:
+    workflow_dispatch:
     pull_request:
         types:
             - closed
@@ -12,7 +13,7 @@ concurrency:
 
 jobs:
     publish:
-        if: github.event.pull_request.merged == true
+        if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
         runs-on: ubuntu-latest
         permissions:
             contents: write
@@ -22,13 +23,17 @@ jobs:
         steps:
             - uses: actions/checkout@v7
               with:
-                  ref: ${{ github.event.pull_request.merge_commit_sha }}
+                  ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
                   fetch-depth: 0
             - name: Check if the version changed
               id: version
               run: |
                   VERSION=$(jq -r .version package.json)
-                  BASE_VERSION=$(git show "${{ github.event.pull_request.base.sha }}:package.json" | jq -r .version)
+                  BASE_SHA="${{ github.event.pull_request.base.sha }}"
+                  BASE_VERSION=""
+                  if [[ -n "$BASE_SHA" ]]; then
+                      BASE_VERSION=$(git show "$BASE_SHA:package.json" | jq -r .version)
+                  fi
                   echo "version=$VERSION" >> "$GITHUB_OUTPUT"
                   if [[ "$VERSION" == "$BASE_VERSION" ]]; then
                       echo "new=false" >> "$GITHUB_OUTPUT"
@@ -60,4 +65,4 @@ jobs:
                   NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             - name: Create release
               if: steps.version.outputs.new == 'true'
-              run: gh release create "v${{ steps.version.outputs.version }}" --target "${{ github.event.pull_request.merge_commit_sha }}" --title "v${{ steps.version.outputs.version }}" --generate-notes
+              run: gh release create "v${{ steps.version.outputs.version }}" --target "${{ github.event.pull_request.merge_commit_sha || github.sha }}" --title "v${{ steps.version.outputs.version }}" --generate-notes
