@@ -101,7 +101,6 @@
         ]
     },
     "reviewAgents": {
-        "draft": "@greptile",
-        "ready": "@cubic"
+        "ready": "@coderabbitai"
     }
 }
