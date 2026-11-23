@@ -180,6 +180,14 @@ await setmeup.saveToInfisical(setmeup.settings)
 
 Secrets from imported folders are loaded as well, and secrets defined on the path itself win over imported ones. Please note that setting keys containing underscores can't be round-tripped, as each underscore defines a new level on the settings tree.
 
+A few things to keep in mind when saving:
+
+- Only changed values are saved. Values that are equal to the current (expanded) value in Infisical, including imported and referenced secrets, are not copied over as literals.
+- Saving fails if a value has leading or trailing whitespace, as Infisical would trim it.
+- Saving fails if a value would replace existing nested secrets, for example saving `service.ports` as an array while `service_ports_http` exists, as nested secrets win when loading. Remove them on Infisical first.
+- On folders requiring approval for changes made by the machine identity, the changes are merged into the current settings right away, but Infisical only stores them once approved. Until then, other apps loading from Infisical will be out of sync.
+- The `siteUrl` must use HTTPS, except for local instances on localhost. The SMU_INFISICAL_* variables are never loaded as settings by `loadFromEnv()`.
+
 ## Encrypting settings
 
 The encryption features of SetMeUp can (and should!) be customized by defining the following environment variables:

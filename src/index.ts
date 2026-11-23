@@ -1,7 +1,7 @@
 // SetMeUp: index.ts
 
 import {CryptoAction, cryptoMethod} from "./cryptohelper"
-import {getInfisicalConnection, infisicalRequest, InfisicalSecret, parseInfisicalValue} from "./infisical"
+import {getInfisicalConnection, getInfisicalSecrets, infisicalLogin, infisicalRequest, parseInfisicalValue} from "./infisical"
 import {CryptoOptions, InfisicalOptions, LoadedFile, LoadEnvOptions, LoadOptions} from "./types"
 import {extend, flattenSettings, getFilePath, isArray, isPlainObject, isString, isUnsafeKey, loadFile, parseEnvValue} from "./utils"
 import EventEmitter from "eventemitter3"
@@ -279,8 +279,9 @@ class SetMeUp {
         options = Object.assign({...defaultOptions}, options)
 
         // Sort and process relevant variables, without the prefix.
+        // The Infisical connection variables are never loaded as settings.
         const keys = Object.keys(process.env)
-            .filter((key) => key.startsWith(prefix))
+            .filter((key) => key.startsWith(prefix) && !key.startsWith("SMU_INFISICAL_"))
             .sort()
         const entries = keys.map((key): [string, any] => [key.substring(prefix.length), parseEnvValue(process.env[key])])
         const {result, loadedKeys} = this.parseFlatKeys(entries, options.lowercase, "SetMeUp.loadFromEnv")
@@ -316,18 +317,7 @@ class SetMeUp {
             return null
         }
 
-        const query = new URLSearchParams({
-            projectId: connection.projectId,
-            environment: connection.environment,
-            secretPath: connection.secretPath,
-            expandSecretReferences: "true",
-            includeImports: "true"
-        })
-        const response = await infisicalRequest(connection, "GET", `/api/v4/secrets?${query}`)
-        const imported: InfisicalSecret[] = (response.imports || []).flatMap((item) => item.secrets || [])
-
-        // Secrets defined in the path itself come last, so they win over imported ones.
-        const values = new Map<string, string>([...imported, ...(response.secrets || [])].map((secret: InfisicalSecret) => [secret.secretKey, secret.secretValue]))
+        const values = await getInfisicalSecrets(connection, await infisicalLogin(connection))
         const entries = [...values].map(([key, value]): [string, any] => [key, parseInfisicalValue(value)])
         const {result, loadedKeys} = this.parseFlatKeys(entries, options.lowercase, "SetMeUp.loadFromInfisical")
         const hasResult = Object.keys(result).length > 0
@@ -346,10 +336,12 @@ class SetMeUp {
     /**
      * Save the passed settings to an Infisical project, creating or updating the secrets, and merge them into the current settings.
      * Keys are joined by underscore, so settings.app.server.hostname is saved as "app_server_hostname".
-     * Arrays are saved as JSON, null values are skipped.
+     * Arrays are saved as JSON, null values are skipped. Secrets that already have the same (expanded) value are not saved again.
+     * Fails if a value has leading or trailing whitespace (Infisical trims values), or if existing secrets nested under
+     * a saved key would take precedence over it when loading.
      * @param data Settings to be saved. Pass the settings object itself to save all current settings.
      * @param options Infisical connection options.
-     * @returns Returns the saved secret keys.
+     * @returns Returns the saved (changed) secret keys.
      * @event saveToInfisical
      */
     saveToInfisical = async (data: any, options?: InfisicalOptions): Promise<string[]> => {
@@ -358,17 +350,45 @@ class SetMeUp {
             throw new Error("Infisical clientId is required to save settings")
         }
 
-        const secrets = flattenSettings(data).map(([secretKey, value]) => ({secretKey: secretKey, secretValue: isArray(value) ? JSON.stringify(value) : String(value)}))
+        const entries = flattenSettings(data).map(([key, value]): [string, string] => [key, isArray(value) ? JSON.stringify(value) : String(value)])
+        if (entries.length == 0) {
+            this.events.emit("saveToInfisical", [])
+            return []
+        }
+
+        const untrimmed = entries.filter(([, value]) => value != value.trim()).map(([key]) => key)
+        if (untrimmed.length > 0) {
+            throw new Error(`Infisical trims secret values, can't save values with leading or trailing whitespace: ${untrimmed.join(", ")}`)
+        }
+
+        const accessToken = await infisicalLogin(connection)
+        const existing = await getInfisicalSecrets(connection, accessToken)
+
+        // Existing nested secrets win over a parent value when loading, so a parent can't replace them.
+        const savedKeys = entries.map(([key]) => key)
+        const conflicts = [...existing.keys()].filter((existingKey) => !savedKeys.includes(existingKey) && savedKeys.some((key) => existingKey.startsWith(`${key}_`)))
+        if (conflicts.length > 0) {
+            throw new Error(`Existing Infisical secrets would override the saved values, remove them first: ${conflicts.join(", ")}`)
+        }
+
+        // Skip unchanged values, so imported and referenced secrets are not copied as literals.
+        const secrets = entries.filter(([key, value]) => existing.get(key) !== value).map(([key, value]) => ({secretKey: key, secretValue: value}))
         const keys = secrets.map((secret) => secret.secretKey)
 
         if (secrets.length > 0) {
             const body = {projectId: connection.projectId, environment: connection.environment, secretPath: connection.secretPath, mode: "upsert", secrets: secrets}
-            await infisicalRequest(connection, "PATCH", "/api/v4/secrets/batch", body)
+            const response = await infisicalRequest(connection, accessToken, "PATCH", "/api/v4/secrets/batch", body)
 
-            if (data !== this.settings) {
-                extend(data, this.settings, true)
+            // Changes to folders requiring approval are only stored once approved.
+            if (response?.approval && logger) {
+                logger.warn("SetMeUp.saveToInfisical", `${connection.environment}${connection.secretPath}`, "Changes pending approval", keys.join(", "))
+            } else if (logger) {
+                logger.info("SetMeUp.saveToInfisical", `${connection.environment}${connection.secretPath}`, "Saved", keys.join(", "))
             }
-            if (logger) logger.info("SetMeUp.saveToInfisical", `${connection.environment}${connection.secretPath}`, "Saved", keys.join(", "))
+        }
+
+        if (data !== this.settings) {
+            extend(data, this.settings, true)
         }
 
         this.events.emit("saveToInfisical", keys)

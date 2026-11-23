@@ -44,18 +44,21 @@ export function getInfisicalConnection(options?: InfisicalOptions): InfisicalCon
         throw new Error("Infisical clientSecret and projectId are required when the clientId is set")
     }
 
+    // Credentials and settings must not be sent in cleartext, except to a local Infisical instance.
+    const siteUrl = new URL(connection.siteUrl)
+    if (siteUrl.protocol != "https:" && !["localhost", "127.0.0.1", "[::1]"].includes(siteUrl.hostname)) {
+        throw new Error(`Infisical siteUrl must use HTTPS: ${connection.siteUrl}`)
+    }
+
     return connection
 }
 
 /**
- * Call the Infisical API using a fresh Universal Auth access token.
+ * Log in to Infisical using Universal Auth.
  * @param connection Infisical connection settings.
- * @param method HTTP method.
- * @param urlPath API path, including the query string.
- * @param body Optional JSON body.
- * @returns The parsed JSON response.
+ * @returns The access token.
  */
-export async function infisicalRequest(connection: InfisicalConnection, method: string, urlPath: string, body?: any): Promise<any> {
+export async function infisicalLogin(connection: InfisicalConnection): Promise<string> {
     const login = await fetch(new URL("/api/v1/auth/universal-auth/login", connection.siteUrl), {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -65,8 +68,20 @@ export async function infisicalRequest(connection: InfisicalConnection, method: 
     if (!login.ok) {
         throw new Error(`Infisical login failed: ${login.status} ${await login.text()}`)
     }
-    const {accessToken} = await login.json()
 
+    return (await login.json()).accessToken
+}
+
+/**
+ * Call the Infisical API.
+ * @param connection Infisical connection settings.
+ * @param accessToken Access token returned by [[infisicalLogin]].
+ * @param method HTTP method.
+ * @param urlPath API path, including the query string.
+ * @param body Optional JSON body.
+ * @returns The parsed JSON response.
+ */
+export async function infisicalRequest(connection: InfisicalConnection, accessToken: string, method: string, urlPath: string, body?: any): Promise<any> {
     const response = await fetch(new URL(urlPath, connection.siteUrl), {
         method: method,
         headers: {Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json"},
@@ -78,6 +93,27 @@ export async function infisicalRequest(connection: InfisicalConnection, method: 
     }
 
     return response.json()
+}
+
+/**
+ * Get the secrets of the connection path, including imported ones, with references expanded.
+ * Secrets defined in the path itself win over imported ones.
+ * @param connection Infisical connection settings.
+ * @param accessToken Access token returned by [[infisicalLogin]].
+ * @returns Map of secret keys and values.
+ */
+export async function getInfisicalSecrets(connection: InfisicalConnection, accessToken: string): Promise<Map<string, string>> {
+    const query = new URLSearchParams({
+        projectId: connection.projectId,
+        environment: connection.environment,
+        secretPath: connection.secretPath,
+        expandSecretReferences: "true",
+        includeImports: "true"
+    })
+    const response = await infisicalRequest(connection, accessToken, "GET", `/api/v4/secrets?${query}`)
+    const imported: InfisicalSecret[] = (response.imports || []).flatMap((item) => item.secrets || [])
+
+    return new Map<string, string>([...imported, ...(response.secrets || [])].map((secret: InfisicalSecret) => [secret.secretKey, secret.secretValue]))
 }
 
 /**

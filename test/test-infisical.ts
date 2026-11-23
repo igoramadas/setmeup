@@ -9,10 +9,10 @@ describe("SetMeUp Infisical Tests", function () {
     let calls: {url: URL; init: RequestInit}[] = []
     let setmeup = null
 
-    // Mock fetch, replying to the login and then to the actual API call.
-    const mockFetch = (body: any, status: number = 200) => {
+    // Mock fetch, replying to the login and then to each API call, in order.
+    const mockFetch = (...bodies: any[]) => {
         calls = []
-        const responses = [Response.json({accessToken: "access-token"}), new Response(JSON.stringify(body), {status: status})]
+        const responses = [Response.json({accessToken: "access-token"}), ...bodies.map((body) => (body instanceof Response ? body : Response.json(body)))]
         globalThis.fetch = async (url: any, init?: RequestInit) => {
             calls.push({url: new URL(String(url)), init: init})
             return responses.shift()
@@ -81,30 +81,76 @@ describe("SetMeUp Infisical Tests", function () {
     })
 
     it("Save settings to Infisical", async function () {
-        mockFetch({secrets: []})
+        mockFetch({secrets: [{secretKey: "service_port", secretValue: "9090"}], imports: [{secrets: [{secretKey: "debug", secretValue: "true"}]}]}, {secrets: []})
 
         const keys = await setmeup.saveToInfisical({service: {urlBackend: "https://new", port: 9090, hosts: ["c"], empty: null}, debug: false}, {...connection, siteUrl: "https://eu.infisical.com"})
 
-        assert.deepEqual(keys, ["service_urlBackend", "service_port", "service_hosts", "debug"])
+        assert.deepEqual(keys, ["service_urlBackend", "service_hosts", "debug"])
         assert.equal(setmeup.settings.service.urlBackend, "https://new")
-        assert.equal(calls[1].url.href, "https://eu.infisical.com/api/v4/secrets/batch")
-        assert.equal(calls[1].init.method, "PATCH")
-        assert.deepEqual(JSON.parse(String(calls[1].init.body)), {
+        assert.equal(calls[1].url.href.split("?")[0], "https://eu.infisical.com/api/v4/secrets")
+        assert.equal(calls[2].url.href, "https://eu.infisical.com/api/v4/secrets/batch")
+        assert.equal(calls[2].init.method, "PATCH")
+        assert.equal(new Headers(calls[2].init.headers).get("Authorization"), "Bearer access-token")
+        assert.deepEqual(JSON.parse(String(calls[2].init.body)), {
             projectId: "project-id",
             environment: "prod",
             secretPath: "/",
             mode: "upsert",
             secrets: [
                 {secretKey: "service_urlBackend", secretValue: "https://new"},
-                {secretKey: "service_port", secretValue: "9090"},
                 {secretKey: "service_hosts", secretValue: '["c"]'},
                 {secretKey: "debug", secretValue: "false"}
             ]
         })
     })
 
+    it("Skip saving unchanged values", async function () {
+        mockFetch({secrets: [{secretKey: "service_port", secretValue: "9090"}]})
+
+        assert.deepEqual(await setmeup.saveToInfisical({service: {port: 9090}}, connection), [])
+        assert.equal(calls.length, 2)
+        assert.deepEqual(await setmeup.saveToInfisical({empty: null}, connection), [])
+    })
+
+    it("Save changes pending approval", async function () {
+        mockFetch({secrets: []}, {approval: {id: "approval-id"}})
+        assert.deepEqual(await setmeup.saveToInfisical({service: {approved: false}}, connection), ["service_approved"])
+    })
+
+    it("Refuse to replace existing nested secrets", async function () {
+        mockFetch({secrets: [{secretKey: "service_ports_http", secretValue: "80"}]})
+        await assert.rejects(setmeup.saveToInfisical({service: {ports: [443]}}, connection), /override the saved values, remove them first: service_ports_http/)
+        assert.equal(calls.length, 2)
+    })
+
+    it("Refuse to save values with edge whitespace", async function () {
+        mockFetch()
+        await assert.rejects(setmeup.saveToInfisical({password: "pass "}, connection), /leading or trailing whitespace: password/)
+        assert.equal(calls.length, 0)
+    })
+
+    it("Require HTTPS except for localhost", async function () {
+        await assert.rejects(setmeup.loadFromInfisical({...connection, siteUrl: "http://infisical.example.com"}), /must use HTTPS/)
+
+        mockFetch({secrets: []})
+        assert.equal(await setmeup.loadFromInfisical({...connection, siteUrl: "http://localhost:8080"}), null)
+        assert.equal(calls[0].url.origin, "http://localhost:8080")
+    })
+
+    it("Does not load the Infisical connection from env", function () {
+        process.env.SMU_INFISICAL_CLIENT_SECRET = "client-secret"
+        process.env.SMU_INFISICALTEST = "yes"
+        setmeup.loadFromEnv()
+        delete process.env.SMU_INFISICAL_CLIENT_SECRET
+        delete process.env.SMU_INFISICALTEST
+
+        assert.equal(setmeup.settings.INFISICALTEST, "yes")
+        assert.equal(setmeup.settings.infisical, undefined)
+        assert.equal(setmeup.settings.INFISICAL, undefined)
+    })
+
     it("Fails when Infisical rejects the request", async function () {
-        mockFetch("Forbidden", 403)
+        mockFetch(new Response("Forbidden", {status: 403}))
         await assert.rejects(setmeup.loadFromInfisical(connection), /Infisical GET \/api\/v4\/secrets failed: 403/)
     })
 })
