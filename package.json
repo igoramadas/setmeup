@@ -1,6 +1,6 @@
 {
     "name": "setmeup",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "description": "SetMeUp, your single and only settings manager.",
     "keywords": [
         "setmeup",
@@ -56,7 +56,7 @@
     },
     "devDependencies": {
         "@istanbuljs/nyc-config-typescript": "^1.0.2",
-        "@types/node": "^26.6.5",
+        "@types/node": "^26.6.6",
         "anyhow": "^4.0.0",
         "chai": "^4.5.0",
         "coveralls": "^3.1.1",
