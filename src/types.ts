@@ -47,3 +47,26 @@ export interface LoadedFile {
     /** Options used to load the file, reused when reloading it via watch(). */
     options?: LoadOptions
 }
+
+/**
+ * Infisical connection and load options, used on loadFromInfisical() and saveToInfisical().
+ * Connection values default to their matching SMU_INFISICAL_* environment variables.
+ */
+export interface InfisicalOptions {
+    /** Universal Auth machine identity client ID, default is $SMU_INFISICAL_CLIENT_ID. */
+    clientId?: string
+    /** Universal Auth machine identity client secret, default is $SMU_INFISICAL_CLIENT_SECRET. */
+    clientSecret?: string
+    /** Infisical project ID, default is $SMU_INFISICAL_PROJECT_ID. */
+    projectId?: string
+    /** Environment slug, default is $SMU_INFISICAL_ENVIRONMENT or "prod". */
+    environment?: string
+    /** Secret path (folder), default is $SMU_INFISICAL_SECRET_PATH or "/". */
+    secretPath?: string
+    /** Infisical URL, default is $SMU_INFISICAL_SITE_URL or "https://app.infisical.com". */
+    siteUrl?: string
+    /** Overwrite current settings with loaded ones? Used on load only. */
+    overwrite?: boolean
+    /** Force secret keys to settings in lowercase? Used on load only. */
+    lowercase?: boolean
+}

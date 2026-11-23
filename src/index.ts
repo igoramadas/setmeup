@@ -1,8 +1,9 @@
 // SetMeUp: index.ts
 
 import {CryptoAction, cryptoMethod} from "./cryptohelper"
-import {CryptoOptions, LoadedFile, LoadEnvOptions, LoadOptions} from "./types"
-import {extend, getFilePath, isPlainObject, isString, isUnsafeKey, loadFile, parseEnvValue} from "./utils"
+import {getInfisicalConnection, infisicalRequest, InfisicalSecret, parseInfisicalValue} from "./infisical"
+import {CryptoOptions, InfisicalOptions, LoadedFile, LoadEnvOptions, LoadOptions} from "./types"
+import {extend, flattenSettings, getFilePath, isArray, isPlainObject, isString, isUnsafeKey, loadFile, parseEnvValue} from "./utils"
 import EventEmitter from "eventemitter3"
 import fs from "fs"
 import path from "path"
@@ -264,10 +265,6 @@ class SetMeUp {
      * @event loadFromEnv
      */
     loadFromEnv = (prefix?: string, options?: LoadEnvOptions): any => {
-        let keys = Object.keys(process.env)
-        let loadedKeys = []
-        let result = {}
-
         // Use "SMU_" as default prefix.
         if (!prefix || prefix == "") {
             prefix = "SMU_"
@@ -281,45 +278,12 @@ class SetMeUp {
         if (!options) options = {}
         options = Object.assign({...defaultOptions}, options)
 
-        // Sort, iterate and process relevant variables.
-        // Each underscore defines a level on the result tree.
-        keys.sort()
-        for (let key of keys) {
-            if (!key.startsWith(prefix)) continue
-
-            const keyNoprefix = key.substring(prefix.length)
-            let arr = keyNoprefix.split("_")
-
-            // Force lowercase if defined on options.
-            if (options.lowercase) {
-                arr = arr.map((part) => part.toLowerCase())
-            }
-
-            if (arr.some(isUnsafeKey)) {
-                if (logger) logger.warn("SetMeUp.loadFromEnv", `Skipping unsafe variable ${key}`)
-                continue
-            }
-
-            loadedKeys.push(keyNoprefix)
-
-            const lastKey = arr.pop()
-            let target = result
-
-            // Iterate keys to make the settings tree, making sure each sub-key is an object.
-            for (let part of arr) {
-                if (!isPlainObject(target[part])) {
-                    target[part] = {}
-                }
-
-                target = target[part]
-            }
-
-            // Nested values win over a parent value, regardless of the variables order.
-            if (!isPlainObject(target[lastKey])) {
-                target[lastKey] = parseEnvValue(process.env[key])
-            }
-        }
-
+        // Sort and process relevant variables, without the prefix.
+        const keys = Object.keys(process.env)
+            .filter((key) => key.startsWith(prefix))
+            .sort()
+        const entries = keys.map((key): [string, any] => [key.substring(prefix.length), parseEnvValue(process.env[key])])
+        const {result, loadedKeys} = this.parseFlatKeys(entries, options.lowercase, "SetMeUp.loadFromEnv")
         const hasResult = Object.keys(result).length > 0
 
         // Extend loaded settings before emitting so listeners get the updated settings.
@@ -333,6 +297,130 @@ class SetMeUp {
 
         // Return the JSON representation of the loaded settings, or null if nothing was loaded.
         return hasResult ? result : null
+    }
+
+    /**
+     * Load settings from an Infisical project, with keys split by underscore the same way as on [[loadFromEnv]] (without a prefix).
+     * For instance the secret "app_server_hostname" is loaded as settings.app.server.hostname. JSON arrays are loaded as arrays.
+     * Does nothing if no Infisical client ID was set via options or $SMU_INFISICAL_CLIENT_ID.
+     * @param options Infisical connection options, and load options defining if properties should be overwritten and forced to lowercase.
+     * @returns Returns the loaded settings, or null if nothing was loaded.
+     * @event loadFromInfisical
+     */
+    loadFromInfisical = async (options?: InfisicalOptions): Promise<any> => {
+        options = Object.assign({...defaultOptions}, options)
+
+        const connection = getInfisicalConnection(options)
+        if (!connection) {
+            if (logger) logger.debug("SetMeUp.loadFromInfisical", "No Infisical client ID set, won't load")
+            return null
+        }
+
+        const query = new URLSearchParams({
+            projectId: connection.projectId,
+            environment: connection.environment,
+            secretPath: connection.secretPath,
+            expandSecretReferences: "true",
+            includeImports: "true"
+        })
+        const response = await infisicalRequest(connection, "GET", `/api/v4/secrets?${query}`)
+        const imported: InfisicalSecret[] = (response.imports || []).flatMap((item) => item.secrets || [])
+
+        // Secrets defined in the path itself come last, so they win over imported ones.
+        const values = new Map<string, string>([...imported, ...(response.secrets || [])].map((secret: InfisicalSecret) => [secret.secretKey, secret.secretValue]))
+        const entries = [...values].map(([key, value]): [string, any] => [key, parseInfisicalValue(value)])
+        const {result, loadedKeys} = this.parseFlatKeys(entries, options.lowercase, "SetMeUp.loadFromInfisical")
+        const hasResult = Object.keys(result).length > 0
+
+        // Extend loaded settings before emitting so listeners get the updated settings.
+        if (hasResult) {
+            extend(result, this.settings, options.overwrite)
+            if (logger) logger.info("SetMeUp.loadFromInfisical", `${connection.environment}${connection.secretPath}`, "Loaded", loadedKeys.join(", "))
+        }
+
+        this.events.emit("loadFromInfisical", result)
+
+        return hasResult ? result : null
+    }
+
+    /**
+     * Save the passed settings to an Infisical project, creating or updating the secrets, and merge them into the current settings.
+     * Keys are joined by underscore, so settings.app.server.hostname is saved as "app_server_hostname".
+     * Arrays are saved as JSON, null values are skipped.
+     * @param data Settings to be saved. Pass the settings object itself to save all current settings.
+     * @param options Infisical connection options.
+     * @returns Returns the saved secret keys.
+     * @event saveToInfisical
+     */
+    saveToInfisical = async (data: any, options?: InfisicalOptions): Promise<string[]> => {
+        const connection = getInfisicalConnection(options)
+        if (!connection) {
+            throw new Error("Infisical clientId is required to save settings")
+        }
+
+        const secrets = flattenSettings(data).map(([secretKey, value]) => ({secretKey: secretKey, secretValue: isArray(value) ? JSON.stringify(value) : String(value)}))
+        const keys = secrets.map((secret) => secret.secretKey)
+
+        if (secrets.length > 0) {
+            const body = {projectId: connection.projectId, environment: connection.environment, secretPath: connection.secretPath, mode: "upsert", secrets: secrets}
+            await infisicalRequest(connection, "PATCH", "/api/v4/secrets/batch", body)
+
+            if (data !== this.settings) {
+                extend(data, this.settings, true)
+            }
+            if (logger) logger.info("SetMeUp.saveToInfisical", `${connection.environment}${connection.secretPath}`, "Saved", keys.join(", "))
+        }
+
+        this.events.emit("saveToInfisical", keys)
+
+        return keys
+    }
+
+    /**
+     * Build a settings tree out of flat keys, where each underscore defines a level on the tree.
+     * @param entries Array of key and (already parsed) value pairs.
+     * @param lowercase Force keys to lowercase?
+     * @param source Caller name used for logging.
+     * @returns The settings tree and the list of loaded keys.
+     */
+    private parseFlatKeys = (entries: [string, any][], lowercase: boolean, source: string): {result: any; loadedKeys: string[]} => {
+        const loadedKeys = []
+        const result = {}
+
+        for (let [key, value] of entries) {
+            let arr = key.split("_")
+
+            // Force lowercase if defined on options.
+            if (lowercase) {
+                arr = arr.map((part) => part.toLowerCase())
+            }
+
+            if (arr.some(isUnsafeKey)) {
+                if (logger) logger.warn(source, `Skipping unsafe key ${key}`)
+                continue
+            }
+
+            loadedKeys.push(key)
+
+            const lastKey = arr.pop()
+            let target = result
+
+            // Iterate keys to make the settings tree, making sure each sub-key is an object.
+            for (let part of arr) {
+                if (!isPlainObject(target[part])) {
+                    target[part] = {}
+                }
+
+                target = target[part]
+            }
+
+            // Nested values win over a parent value, regardless of the keys order.
+            if (!isPlainObject(target[lastKey])) {
+                target[lastKey] = value
+            }
+        }
+
+        return {result, loadedKeys}
     }
 
     /**
@@ -460,6 +548,8 @@ type CryptoOptionsType = CryptoOptions
 /** @hidden */
 type LoadedFileType = LoadedFile
 /** @hidden */
+type InfisicalOptionsType = InfisicalOptions
+/** @hidden */
 type LoadEnvOptionsType = LoadEnvOptions
 /** @hidden */
 type LoadOptionsType = LoadOptions
@@ -471,6 +561,7 @@ const setmeup = SetMeUp.Instance
 declare namespace setmeup {
     export type SetMeUp = SetMeUpClass
     export type CryptoOptions = CryptoOptionsType
+    export type InfisicalOptions = InfisicalOptionsType
     export type LoadedFile = LoadedFileType
     export type LoadEnvOptions = LoadEnvOptionsType
     export type LoadOptions = LoadOptionsType
