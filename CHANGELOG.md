@@ -3,7 +3,6 @@
 ## 2.1.0
 
 - NEW: Infisical integration with `loadFromInfisical()` and `saveToInfisical()`.
-- `loadFromEnv()` does not load the SMU_INFISICAL_* connection variables as settings.
 
 ## 2.0.0
 
