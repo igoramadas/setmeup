@@ -2,8 +2,7 @@
 
 ## 2.1.0
 
-- NEW: `loadFromInfisical()` and `saveToInfisical()` to load and save settings with Infisical, with no extra dependencies.
-- NEW: Type `InfisicalOptions` is exported.
+- NEW: Infisical integration with `loadFromInfisical()` and `saveToInfisical()`.
 
 ## 2.0.0
 
