@@ -283,3 +283,27 @@ export const isBoolean = (value): boolean => {
 export const isNumber = (value): boolean => {
     return typeof value === "number" || typeof value === "bigint"
 }
+
+/**
+ * Flatten a settings object into underscore joined keys, the reverse of how environment variables are loaded.
+ * Null and undefined values are skipped.
+ * @param data Settings object.
+ * @param prefix Prefix for the keys, used for nested values.
+ * @returns Array of key and value pairs.
+ */
+export const flattenSettings = (data: any, prefix: string = ""): [string, any][] => {
+    const result: [string, any][] = []
+
+    for (let key of Object.keys(data ?? {})) {
+        if (isUnsafeKey(key)) continue
+
+        const value = data[key]
+        if (isPlainObject(value)) {
+            result.push(...flattenSettings(value, `${prefix}${key}_`))
+        } else if (value != null) {
+            result.push([`${prefix}${key}`, value])
+        }
+    }
+
+    return result
+}

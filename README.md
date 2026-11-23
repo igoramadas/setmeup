@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/igoramadas/setmeup/badge.svg?branch=master)](https://coveralls.io/github/igoramadas/setmeup?branch=master)
 [![Build Status](https://github.com/igoramadas/setmeup/actions/workflows/build.yml/badge.svg)](https://github.com/igoramadas/setmeup/actions)
 
-Easy to use app settings module. Settings are stored and loaded from JSON files and / or environment variables, support inline comments and can be (de)encrypted on-the-fly.
+Easy to use app settings module. Settings are stored and loaded from JSON files, environment variables and / or Infisical, support inline comments and can be (de)encrypted on-the-fly.
 
 ## Configuration files
 
@@ -57,7 +57,7 @@ Types are bundled, and can be imported by name both on CommonJS and ESM:
 
 ```typescript
 import setmeup from "setmeup"
-import type {CryptoOptions, LoadedFile, LoadEnvOptions, LoadOptions, SetMeUp} from "setmeup"
+import type {CryptoOptions, InfisicalOptions, LoadedFile, LoadEnvOptions, LoadOptions, SetMeUp} from "setmeup"
 
 const options: LoadOptions = {overwrite: false}
 const instance: SetMeUp = setmeup.newInstance()
@@ -148,6 +148,45 @@ setmeup.loadFromEnv(null, {lowercase: true})
 // You can also disable overwriting settings already defined.
 setmeup.loadFromEnv(null, {overwrite: false})
 ```
+
+### Loading and saving with Infisical
+
+Settings can also be loaded from and saved to an [Infisical](https://infisical.com) project, using a [Universal Auth](https://infisical.com/docs/documentation/platform/identities/universal-auth) machine identity. No extra dependencies are needed, as SetMeUp calls the Infisical API directly. Secret keys follow the same format as environment variables, but without a prefix, so the secret `service_urlBackend` maps to `settings.service.urlBackend`.
+
+The connection is set with the following environment variables, or via the options passed to each method:
+
+- SMU_INFISICAL_CLIENT_ID - machine identity client ID (option `clientId`)
+- SMU_INFISICAL_CLIENT_SECRET - machine identity client secret (option `clientSecret`)
+- SMU_INFISICAL_PROJECT_ID - project ID (option `projectId`)
+- SMU_INFISICAL_ENVIRONMENT - environment slug, default is "prod" (option `environment`)
+- SMU_INFISICAL_SECRET_PATH - secret path (folder), default is "/" (option `secretPath`)
+- SMU_INFISICAL_SITE_URL - Infisical URL, default is "https://app.infisical.com" (option `siteUrl`)
+
+```javascript
+// Load settings from Infisical, does nothing if no client ID was set.
+// Values are parsed the same way as environment variables, and JSON arrays are loaded as arrays.
+await setmeup.loadFromInfisical()
+
+// Options can also be passed directly, here forcing keys to lowercase and not overwriting existing settings.
+await setmeup.loadFromInfisical({environment: "staging", secretPath: "/myapp", lowercase: true, overwrite: false})
+
+// Save (create or update) settings to Infisical, here stored as service_urlBackend and service_ports.
+// Saved values are also merged into the current settings. Arrays are saved as JSON, null values are skipped.
+await setmeup.saveToInfisical({service: {urlBackend: "https://api.myapp.com", ports: [80, 443]}})
+
+// Or save all current settings.
+await setmeup.saveToInfisical(setmeup.settings)
+```
+
+Secrets from imported folders are loaded as well, and secrets defined on the path itself win over imported ones. Please note that setting keys containing underscores can't be round-tripped, as each underscore defines a new level on the settings tree.
+
+A few things to keep in mind when saving:
+
+- Only changed values are saved. Values that are equal to the current (expanded) value in Infisical, including imported and referenced secrets, are not copied over as literals.
+- Saving fails if a value has leading or trailing whitespace, as Infisical would trim it.
+- Saving fails if a value would replace existing nested secrets, for example saving `service.ports` as an array while `service_ports_http` exists, as nested secrets win when loading. Remove them on Infisical first.
+- On folders requiring approval for changes made by the machine identity, the changes are merged into the current settings right away, but Infisical only stores them once approved. Until then, other apps loading from Infisical will be out of sync.
+- The `siteUrl` must use HTTPS, except for local instances on localhost. The SMU_INFISICAL_* variables are never loaded as settings by `loadFromEnv()`.
 
 ## Encrypting settings
 

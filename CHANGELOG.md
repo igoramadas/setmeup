@@ -1,5 +1,9 @@
 # Changelog for SetMeUp
 
+## 2.1.0
+
+- NEW: Infisical integration with `loadFromInfisical()` and `saveToInfisical()`.
+
 ## 2.0.0
 
 - NEW: Native ESM support via package exports, alongside CommonJS.
