@@ -1,5 +1,10 @@
 # Changelog for SetMeUp
 
+## 2.1.0
+
+- NEW: `loadFromInfisical()` and `saveToInfisical()` to load and save settings with Infisical, with no extra dependencies.
+- NEW: Type `InfisicalOptions` is exported.
+
 ## 2.0.0
 
 - NEW: Native ESM support via package exports, alongside CommonJS.
